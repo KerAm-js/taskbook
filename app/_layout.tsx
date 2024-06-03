@@ -1,21 +1,55 @@
-import { Stack } from "expo-router";
+import { useFonts } from "expo-font";
+import { SplashScreen, Stack } from "expo-router";
+import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+SplashScreen.preventAutoHideAsync();
+
 export default function RootLayout() {
+  const [fontsLoaded, fontError] = useFonts({
+    "Gilroy-medium": require("@/assets/fonts/Gilroy-Medium.ttf"),
+    "Gilroy-semibold": require("@/assets/fonts/Gilroy-Semibold.ttf"),
+    "Gilroy-bold": require("@/assets/fonts/Gilroy-Bold.ttf"),
+  });
+
+  useEffect(() => {
+    if (fontsLoaded || fontError) SplashScreen.hideAsync();
+  }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) return null;
+
   return (
     <SafeAreaProvider>
       <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false, title: 'Главная' }} />
-        <Stack.Screen name="history" options={{ title: 'Дневник задач' }} />
-        <Stack.Screen name="taskForm" options={{ title: 'Новая задача' }} />
-        <Stack.Screen name="settings/index" options={{ title: 'Настройки' }} />
-        <Stack.Screen name="settings/language" options={{ title: 'Язык' }} />
-        <Stack.Screen name="settings/theme" options={{ title: 'Тема' }} />
-        <Stack.Screen name="settings/reminders/index" options={{ title: 'Напоминания' }} />
-        <Stack.Screen name="settings/reminders/count" options={{ title: 'Количество' }} />
-        <Stack.Screen name="settings/reminders/interval" options={{ title: 'Интервал' }} />
-        <Stack.Screen name="settings/reminders/morningTime" options={{ title: 'Начало дня' }} />
-        <Stack.Screen name="settings/reminders/eveningTime" options={{ title: 'Конец дня' }} />
+        <Stack.Screen
+          name="index"
+          options={{ headerShown: false, title: "Главная" }}
+        />
+        <Stack.Screen name="history" options={{ title: "Дневник задач" }} />
+        <Stack.Screen name="taskForm" options={{ title: "Новая задача" }} />
+        <Stack.Screen name="settings/index" options={{ title: "Настройки" }} />
+        <Stack.Screen name="settings/language" options={{ title: "Язык" }} />
+        <Stack.Screen name="settings/theme" options={{ title: "Тема" }} />
+        <Stack.Screen
+          name="settings/reminders/index"
+          options={{ title: "Напоминания" }}
+        />
+        <Stack.Screen
+          name="settings/reminders/count"
+          options={{ title: "Количество", presentation: "modal" }}
+        />
+        <Stack.Screen
+          name="settings/reminders/interval"
+          options={{ title: "Интервал", presentation: "modal" }}
+        />
+        <Stack.Screen
+          name="settings/reminders/morningTime"
+          options={{ title: "Начало дня", presentation: "modal" }}
+        />
+        <Stack.Screen
+          name="settings/reminders/eveningTime"
+          options={{ title: "Конец дня", presentation: "modal" }}
+        />
       </Stack>
     </SafeAreaProvider>
   );
