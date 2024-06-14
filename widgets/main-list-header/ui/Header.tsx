@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { FC, useState } from "react";
+import React, { FC, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, {
   useAnimatedReaction,
@@ -12,20 +12,20 @@ import Animated, {
 import ProgressBar from "./ProgressBar";
 import * as Haptics from "expo-haptics";
 import NavBar from "./NavBar";
-import { THEME_COLORS } from "@/shared/constants/colors";
-import ThemeText from "@/shared/ui/themeText";
-import { SCREEN_PADDING } from "@/shared/constants/views";
 import { useSageAreaPadding } from "@/shared/hooks/useSafeAreaPadding";
+import { SCREEN_PADDING } from "@/shared/config/style/views";
+import { CustomText, THEME_COLORS } from "@/shared";
+import Calendar from "./Calendar";
 
 const CONTENT_HEIGHTS = {
   min: 0,
-  mid: 84,
-  max: 145,
+  mid: 89,
+  max: 150,
 };
 
 const Header: FC<{
-  scrollsToBottom: { value: boolean };
-}> = ({ scrollsToBottom }) => {
+  scrollClamp: { value: number };
+}> = ({ scrollClamp }) => {
   const [isCalendarOpened, setCalendarOpened] = useState<boolean>(false);
   const { paddingTop } = useSageAreaPadding();
 
@@ -56,26 +56,13 @@ const Header: FC<{
     });
   };
 
-  useAnimatedReaction(
-    () => scrollsToBottom.value,
-    (curr, prev) => {
-      if (prev === curr) return;
-      opacity.value = scrollsToBottom.value
-        ? withTiming(0, { duration: 100 })
-        : withDelay(200, withTiming(1));
-      height.value = withTiming(
-        scrollsToBottom.value ? MIN_HEIGHT : MAX_HEIGHT
-      );
-    },
-    [scrollsToBottom.value, isCalendarOpened]
-  );
-
   const contentStyleAnim = useAnimatedStyle(() => {
     return {
       height: height.value,
       opacity: opacity.value,
+      display: height.value === MIN_HEIGHT ? "none" : "flex",
     };
-  }, [height.value, opacity.value]);
+  }, [height.value, opacity.value, isCalendarOpened]);
 
   const titleStyleAnim = useAnimatedStyle(() => {
     return {
@@ -91,11 +78,28 @@ const Header: FC<{
     return {
       zIndex: -1,
       transform: [{ translateY: calendarTranslate.value }],
+      display: calendarTranslate.value === -TRANSLATE ? "none" : "flex",
       opacity: isCalendarOpened
-        ? withTiming(1, { duration: 80 })
+        ? withTiming(1, { duration: 150 })
         : withTiming(0, { duration: 80 }),
     };
   }, [isCalendarOpened]);
+
+  useAnimatedReaction(
+    () => scrollClamp.value,
+    (curr, prev) => {
+      if (prev === curr) return;
+      if (curr < 1 && curr > -1) {
+        return;
+      }
+      opacity.value =
+        curr > 0
+          ? withTiming(0, { duration: 100 })
+          : withDelay(200, withTiming(1));
+      height.value = withTiming(curr > 0 ? MIN_HEIGHT : MAX_HEIGHT);
+    },
+    [scrollClamp.value, isCalendarOpened]
+  );
 
   return (
     <View style={[styles.container, { paddingTop }]}>
@@ -106,22 +110,12 @@ const Header: FC<{
           toggleCalendarOpened={toggleCalendarOpened}
         />
         <Animated.View style={titleStyleAnim}>
-          <ThemeText style={styles.title} type="title-big" theme="night">
+          <CustomText style={styles.title} type="title-big" theme="night">
             today
-          </ThemeText>
+          </CustomText>
         </Animated.View>
-        <Animated.View
-          style={[
-            {
-              backgroundColor: THEME_COLORS.standart.accent,
-              height: 91,
-            },
-            calendarStyleAnim,
-          ]}
-        >
-          <ThemeText style={styles.title} type="title-big" theme="night">
-            may
-          </ThemeText>
+        <Animated.View style={calendarStyleAnim}>
+          <Calendar isCalendarOpened={isCalendarOpened} />
         </Animated.View>
       </Animated.View>
       <ProgressBar progress={50} />
@@ -129,14 +123,15 @@ const Header: FC<{
   );
 };
 
-export default Header;
+export default React.memo(Header);
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: THEME_COLORS.standart.accent,
+    backgroundColor: THEME_COLORS.branded.accent,
     width: "100%",
   },
   title: {
     marginLeft: SCREEN_PADDING,
+    color: THEME_COLORS.night.text,
   },
 });

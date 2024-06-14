@@ -1,5 +1,5 @@
-import { ScrollWithHeader } from "@/widgets/scrollWithHeader";
+import { MainListHeader } from "@/widgets/main-list-header";
 
 export default function Main() {
-  return <ScrollWithHeader />;
+  return <MainListHeader />;
 }

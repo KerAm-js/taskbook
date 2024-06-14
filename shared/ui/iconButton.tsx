@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Pressable } from "react-native";
 import { SvgXml } from "react-native-svg";
 
-const IconButton: FC<{
+export const IconButton: FC<{
   width?: number;
   height?: number;
   iconWidth?: number;
@@ -31,5 +31,3 @@ const IconButton: FC<{
     </Pressable>
   );
 };
-
-export default IconButton;
