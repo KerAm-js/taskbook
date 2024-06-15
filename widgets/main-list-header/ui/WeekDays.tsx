@@ -10,6 +10,9 @@ import React, { FC } from "react";
 import { View, Pressable, StyleSheet, Dimensions } from "react-native";
 
 const WIDTH = Dimensions.get("screen").width;
+const BUTTON_WIDTH = WIDTH * 0.132;
+
+console.log(WIDTH);
 
 const WeekDays: FC<{
   data: TCalendarWeek;
@@ -37,7 +40,7 @@ const WeekDays: FC<{
               <CustomText
                 style={styles.dateTitle}
                 translate={false}
-                type="text-middle-semibold"
+                type={isSelected ? "text-semibold" : "text"}
               >
                 {day.getDate().toString()}
               </CustomText>
@@ -54,14 +57,14 @@ export default React.memo(WeekDays);
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    paddingHorizontal: SCREEN_PADDING - (40 - 30) / 2,
+    paddingHorizontal: SCREEN_PADDING - (BUTTON_WIDTH - 30) / 2,
     justifyContent: "space-between",
     width: WIDTH,
   },
   dateButton: {
     paddingTop: 20,
-    width: 40,
-    height: 50,
+    width: BUTTON_WIDTH,
+    height: 60,
     alignItems: "center",
   },
   todayTitleWrapper: {

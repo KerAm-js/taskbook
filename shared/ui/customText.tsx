@@ -38,16 +38,26 @@ export const CustomText: FC<
     case "text-bold": {
       break;
     }
+    case "text": {
+      fontWeight = "medium";
+      fontFamily = "Gilroy-medium";
+      break;
+    }
     case "text-semibold": {
       fontWeight = "semibold";
       fontFamily = "Gilroy-semibold";
       break;
     }
     case "text-middle": {
+      fontSize = 15;
+      lineHeight = 18;
       fontWeight = "medium";
+      fontFamily = "Gilroy-medium";
       break;
     }
     case "text-middle-semibold": {
+      fontSize = 15;
+      lineHeight = 18;
       fontWeight = "semibold";
       fontFamily = "Gilroy-semibold";
       break;

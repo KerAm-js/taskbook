@@ -42,8 +42,8 @@ const Calendar: FC<{ isCalendarOpened: boolean }> = () => {
           preventHandler.value = false;
         }
       } else {
-        scrollToStartBtnOpacity.value = withTiming(index.value > 0 ? 1 : 0);
         const i = Math.round(event.contentOffset.x / WIDTH);
+        scrollToStartBtnOpacity.value = withTiming(i > 0 ? 1 : 0);
         if (index.value !== i) {
           index.value = i;
           const data = {
@@ -183,6 +183,8 @@ const styles = StyleSheet.create({
   monthContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     marginHorizontal: SCREEN_PADDING,
+    height: 30,
   },
 });
