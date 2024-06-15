@@ -1,5 +1,4 @@
 import { closeCalendarSvg } from "@/assets/svg/closeCalendar";
-import { folderSvg } from "@/assets/svg/folder";
 import { openCalendarSvg } from "@/assets/svg/openCalendar";
 import { settingsSvg } from "@/assets/svg/settings";
 import { taskHistorySvg } from "@/assets/svg/taskHistory";
@@ -16,16 +15,16 @@ const NavBar: FC<{
     <View style={[styles.navBar]}>
       <IconButton
         xml={settingsSvg(THEME_COLORS.night.accent)}
-        onPress={() => console.log("some")}
+        onPress={() => router.navigate("/settings")}
+        iconWidth={26}
+        iconHeight={26}
       />
       <View style={styles.navBarRight}>
         <IconButton
-          xml={folderSvg(THEME_COLORS.night.accent)}
-          onPress={() => console.log("some")}
-        />
-        <IconButton
           xml={taskHistorySvg(THEME_COLORS.night.accent)}
           onPress={() => router.navigate("/history")}
+          iconWidth={26}
+          iconHeight={26}
         />
         <IconButton
           xml={
@@ -33,6 +32,8 @@ const NavBar: FC<{
               ? closeCalendarSvg(THEME_COLORS.night.accent)
               : openCalendarSvg(THEME_COLORS.night.accent)
           }
+          iconWidth={26}
+          iconHeight={26}
           onPress={toggleCalendarOpened}
         />
       </View>
@@ -47,11 +48,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
-    marginBottom: 12,
+    marginBottom: 25 - (40 - 24) / 2,
     paddingHorizontal: SCREEN_PADDING - (40 - 24) / 2,
   },
   navBarRight: {
     flexDirection: "row",
     alignItems: "center",
+    gap: 5,
   },
-})
+});

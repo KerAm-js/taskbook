@@ -1,53 +1,69 @@
-import { CustomText, i18n, THEME_COLORS } from "@/shared";
+import {
+  CustomText,
+  getCalendarWeeks,
+  i18n,
+  TCalendarWeek,
+  THEME_COLORS,
+} from "@/shared";
 import { SCREEN_PADDING } from "@/shared/config/style/views";
 import { MONTHS, WEEK_DAYS } from "@/shared/consts/datetime";
-import { getCalendarWeeks, TCalendarWeek } from "@/shared/lib/dates";
-import { FC, useState } from "react";
-import { Dimensions, ListRenderItemInfo, StyleSheet, View } from "react-native";
+import { FC, useRef, useState } from "react";
+import { Dimensions, StyleSheet, View } from "react-native";
 import Animated, {
   runOnJS,
   useAnimatedScrollHandler,
+  useAnimatedStyle,
   useSharedValue,
+  withTiming,
 } from "react-native-reanimated";
-import DateItem from "./DateItem";
+import ScrollToStartButton from "./ScrollToStart";
+import WeekDays from "./WeekDays";
 
 const WIDTH = Dimensions.get("screen").width;
-
-const renderItem = ({ item }: ListRenderItemInfo<TCalendarWeek>) => {
-  return <DateItem data={item} />;
-};
 
 const keyExtractor = (item: TCalendarWeek) => item.days[0].valueOf().toString();
 
 const Calendar: FC<{ isCalendarOpened: boolean }> = () => {
   const index = useSharedValue(0);
+  const listRef = useRef<Animated.FlatList<TCalendarWeek> | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [weeks, setWeeks] = useState(getCalendarWeeks());
-  const [year, setYear] = useState(new Date().getFullYear());
-  const [currentMonths, setCurrentMonths] = useState<
-    [number, number | undefined]
-  >(weeks[0].months);
+  const [titleData, setTitleData] = useState({
+    months: weeks[0].months,
+    year: new Date().getFullYear(),
+  });
+  const scrollToStartBtnOpacity = useSharedValue(0);
+  const preventHandler = useSharedValue(false);
 
   const handler = useAnimatedScrollHandler({
     onScroll: (event) => {
-      const i = Math.round(event.contentOffset.x / WIDTH);
-      if (index.value !== i) {
-        index.value = i;
-        console.log(weeks[i])
-        runOnJS(setCurrentMonths)(weeks[i].months);
-        if (weeks[i].year != year) {
-          runOnJS(setYear)(weeks[i].year);
+      if (preventHandler.value) {
+        if (event.contentOffset.x === 0) {
+          preventHandler.value = false;
+        }
+      } else {
+        scrollToStartBtnOpacity.value = withTiming(index.value > 0 ? 1 : 0);
+        const i = Math.round(event.contentOffset.x / WIDTH);
+        if (index.value !== i) {
+          index.value = i;
+          const data = {
+            months: weeks[i].months,
+            year:
+              weeks[i].year != titleData.year ? weeks[i].year : titleData.year,
+          };
+          runOnJS(setTitleData)(data);
         }
       }
     },
+    onEndDrag: () => {},
   });
 
   const monthString =
-    i18n.t(MONTHS[currentMonths[0]]) +
-    (typeof currentMonths[1] === "number"
-      ? " / " + i18n.t(MONTHS[currentMonths[1]])
+    i18n.t(MONTHS[titleData.months[0]]) +
+    (typeof titleData.months[1] === "number"
+      ? " / " + i18n.t(MONTHS[titleData.months[1]])
       : "") +
-    (year != new Date().getFullYear() ? " " + year : "");
+    (titleData.year != new Date().getFullYear() ? " " + titleData.year : "");
 
   const updateCalendar = () => {
     const lastDate = weeks[weeks.length - 1].days[6];
@@ -65,24 +81,59 @@ const Calendar: FC<{ isCalendarOpened: boolean }> = () => {
     ]);
   };
 
-  console.log("============================");
+  const scrollToStart = () => {
+    if (listRef.current) {
+      preventHandler.value = true;
+      listRef.current.scrollToIndex({ animated: true, index: 0 });
+      setSelectedDate(new Date());
+    }
+  };
+
+  const scrollToStartBtnStyleAnim = useAnimatedStyle(() => {
+    return {
+      opacity: scrollToStartBtnOpacity.value,
+      display: scrollToStartBtnOpacity.value === 0 ? "none" : "flex",
+    };
+  }, [scrollToStartBtnOpacity.value]);
+
+  const onPress = (date: Date) => {
+    setSelectedDate(date);
+  };
 
   return (
     <View style={styles.container}>
-      <CustomText translate={false} style={styles.title} type="title-big">
-        {monthString}
-      </CustomText>
+      <View style={styles.monthContainer}>
+        <CustomText translate={false} style={styles.title} type="title-big">
+          {monthString}
+        </CustomText>
+        <Animated.View style={scrollToStartBtnStyleAnim}>
+          <ScrollToStartButton onPress={scrollToStart} />
+        </Animated.View>
+      </View>
       <View style={styles.weekContainer}>
         <View style={styles.weekDaysList}>
-          {WEEK_DAYS.map((i) => (
-            <CustomText key={i.full} style={styles.weekDay} type="text-middle">
-              {i.short}
+          {WEEK_DAYS.map((item) => (
+            <CustomText
+              key={item.full}
+              style={styles.weekDay}
+              type="text-middle"
+            >
+              {item.short}
             </CustomText>
           ))}
         </View>
         <Animated.FlatList
+          ref={listRef}
           data={weeks}
-          renderItem={renderItem}
+          renderItem={({ item }) => {
+            return (
+              <WeekDays
+                onPress={onPress}
+                selectedDate={selectedDate}
+                data={item}
+              />
+            );
+          }}
           onScroll={handler}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -109,12 +160,10 @@ const styles = StyleSheet.create({
     backgroundColor: THEME_COLORS.branded.accent,
   },
   title: {
-    marginLeft: SCREEN_PADDING,
     color: THEME_COLORS.night.text,
-    lineHeight: 31,
   },
   weekContainer: {
-    paddingTop: 15,
+    paddingTop: 17,
   },
   weekDaysList: {
     top: 15,
@@ -130,5 +179,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 2,
     lineHeight: 18,
+  },
+  monthContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginHorizontal: SCREEN_PADDING,
   },
 });

@@ -7,7 +7,7 @@ export interface IThemeTextProps {
   isTextGrey?: boolean;
   children: string;
   theme?: keyof typeof THEME_COLORS;
-  style?: TextStyle;
+  style?: TextStyle | Array<TextStyle>;
 }
 
 export const ThemeText: FC<IThemeTextProps> = ({

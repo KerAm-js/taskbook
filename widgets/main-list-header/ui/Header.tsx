@@ -20,7 +20,7 @@ import Calendar from "./Calendar";
 const CONTENT_HEIGHTS = {
   min: 0,
   mid: 89,
-  max: 150,
+  max: 165,
 };
 
 const Header: FC<{
@@ -70,7 +70,7 @@ const Header: FC<{
         ? withTiming(0, { duration: 80 })
         : withTiming(1, { duration: 80 }),
       position: "absolute",
-      bottom: 9,
+      bottom: 10,
     };
   });
 
@@ -95,7 +95,7 @@ const Header: FC<{
       opacity.value =
         curr > 0
           ? withTiming(0, { duration: 100 })
-          : withDelay(200, withTiming(1));
+          : withDelay(150, withTiming(1, {duration: 150}));
       height.value = withTiming(curr > 0 ? MIN_HEIGHT : MAX_HEIGHT);
     },
     [scrollClamp.value, isCalendarOpened]

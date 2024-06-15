@@ -21,14 +21,18 @@ export const CustomText: FC<
 > = ({ translate = true, type, children, connectTheme, ...props }) => {
   let fontSize: TextStyle["fontSize"] = 17;
   let fontWeight: TextStyle["fontWeight"] = "bold";
+  let fontFamily: TextStyle["fontFamily"] = "Gilroy-bold";
+  let lineHeight: TextStyle["lineHeight"] = 21;
 
   switch (type) {
     case "title": {
       fontSize = 21;
+      lineHeight = 26;
       break;
     }
     case "title-big": {
-      fontSize = 25;
+      fontSize = 24;
+      lineHeight = 30;
       break;
     }
     case "text-bold": {
@@ -36,6 +40,7 @@ export const CustomText: FC<
     }
     case "text-semibold": {
       fontWeight = "semibold";
+      fontFamily = "Gilroy-semibold";
       break;
     }
     case "text-middle": {
@@ -44,15 +49,19 @@ export const CustomText: FC<
     }
     case "text-middle-semibold": {
       fontWeight = "semibold";
+      fontFamily = "Gilroy-semibold";
       break;
     }
     case "text-middle-bold": {
       fontSize = 15;
+      lineHeight = 18;
       break;
     }
     case "text-small": {
       fontSize = 12;
+      lineHeight = 14;
       fontWeight = "medium";
+      fontFamily = "Gilroy-medium";
       break;
     }
   }
@@ -65,7 +74,7 @@ export const CustomText: FC<
 
   return (
     <Text
-      style={[{ fontSize, fontWeight, fontFamily: "Gilroy-bold" }, props.style]}
+      style={[{ fontSize, fontWeight, fontFamily }, props.style]}
     >
       {string}
     </Text>
