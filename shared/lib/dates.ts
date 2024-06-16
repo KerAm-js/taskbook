@@ -1,10 +1,3 @@
-type TDayType = {
-  date: Date;
-  isCurrentMonth: boolean;
-};
-
-type TCalendarMonthItemType = Array<Array<TDayType>>;
-
 export type TCalendarWeek = {
   days: Array<Date>;
   months: [number, number | undefined];
@@ -35,7 +28,7 @@ const getWeek = (fDate: Date): TCalendarWeek => {
   return result;
 };
 
-export const isDatesEquals = (fDate: Date, sDate: Date) => {
+export const isDatesEqual = (fDate: Date, sDate: Date) => {
   return (
     new Date(fDate.valueOf()).setHours(0, 0, 0, 0) ===
     new Date(sDate.valueOf()).setHours(0, 0, 0, 0)
@@ -74,51 +67,6 @@ export const getCalendarWeeks = (
       currDate.getMonth(),
       currDate.getDate() + 7
     );
-  }
-
-  return result;
-};
-
-export const getMonthCalendarArray = (
-  month: number,
-  year: number
-): TCalendarMonthItemType => {
-  const result: TCalendarMonthItemType = [[], [], [], [], [], []];
-  const firstWeekDayOfMonth = new Date(year, month, 1).getDay() || 7;
-  let isCurrentMonth = false;
-
-  for (let i = 0; i < 42; i++) {
-    const line = Math.round(i / 7);
-    const date = new Date(year, month, i - firstWeekDayOfMonth + 2);
-
-    if (line === 0 && date.getDate() === 1) isCurrentMonth = true;
-    else if (line > 0 && date.getDate() === 1) isCurrentMonth = false;
-
-    result[line][i - line * 7] = {
-      date,
-      isCurrentMonth,
-    };
-  }
-
-  return result;
-};
-
-export const getCalendarArray = (
-  fromDate: Date,
-  monthsCount: number
-): Array<TCalendarMonthItemType> => {
-  const result: Array<TCalendarMonthItemType> = [];
-
-  if (monthsCount < 0) {
-    return [];
-  }
-
-  for (
-    let i = fromDate.getMonth();
-    i <= fromDate.getMonth() + monthsCount;
-    i++
-  ) {
-    result.push(getMonthCalendarArray(i, fromDate.getFullYear()));
   }
 
   return result;

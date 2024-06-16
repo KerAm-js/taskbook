@@ -12,9 +12,8 @@ import Animated, {
 import ProgressBar from "./ProgressBar";
 import * as Haptics from "expo-haptics";
 import NavBar from "./NavBar";
-import { useSageAreaPadding } from "@/shared/hooks/useSafeAreaPadding";
 import { SCREEN_PADDING } from "@/shared/config/style/views";
-import { CustomText, THEME_COLORS } from "@/shared";
+import { CustomText, THEME_COLORS, useSafeAreaPadding } from "@/shared";
 import Calendar from "./Calendar";
 
 const CONTENT_HEIGHTS = {
@@ -27,22 +26,17 @@ const Header: FC<{
   scrollClamp: { value: number };
 }> = ({ scrollClamp }) => {
   const [isCalendarOpened, setCalendarOpened] = useState<boolean>(false);
-  const { paddingTop } = useSageAreaPadding();
+  const { paddingTop } = useSafeAreaPadding();
 
-  const MIN_HEIGHT = CONTENT_HEIGHTS.min;
-  const MAX_HEIGHT = isCalendarOpened
-    ? CONTENT_HEIGHTS.max
-    : CONTENT_HEIGHTS.mid;
+  const MIN_H = CONTENT_HEIGHTS.min;
+  const MAX_H = isCalendarOpened ? CONTENT_HEIGHTS.max : CONTENT_HEIGHTS.mid;
   const TRANSLATE = CONTENT_HEIGHTS.max - CONTENT_HEIGHTS.mid;
 
-  const height = useSharedValue(MAX_HEIGHT);
+  const height = useSharedValue(MAX_H);
   const opacity = useSharedValue(1);
   const calendarTranslate = useSharedValue(isCalendarOpened ? 0 : -TRANSLATE);
 
-  const toggleCalendarOpened = () => {
-    const isOpened = !isCalendarOpened;
-    setCalendarOpened(isOpened);
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+  const openCalendarAnim = (isOpened: boolean) => {
     height.value = withSpring(
       isOpened ? CONTENT_HEIGHTS.max : CONTENT_HEIGHTS.mid,
       {
@@ -56,11 +50,26 @@ const Header: FC<{
     });
   };
 
+  const toggleHeaderVisibleAnim = (clamp: number) => {
+    'worklet'
+    opacity.value =
+      clamp > 0
+        ? withTiming(0, { duration: 100 })
+        : withDelay(150, withTiming(1, { duration: 150 }));
+    height.value = withTiming(clamp > 0 ? MIN_H : MAX_H);
+  };
+
+  const toggleCalendarOpened = () => {
+    setCalendarOpened(!isCalendarOpened);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    openCalendarAnim(!isCalendarOpened);
+  };
+
   const contentStyleAnim = useAnimatedStyle(() => {
     return {
       height: height.value,
       opacity: opacity.value,
-      display: height.value === MIN_HEIGHT ? "none" : "flex",
+      display: height.value === MIN_H ? "none" : "flex",
     };
   }, [height.value, opacity.value, isCalendarOpened]);
 
@@ -79,24 +88,17 @@ const Header: FC<{
       zIndex: -1,
       transform: [{ translateY: calendarTranslate.value }],
       display: calendarTranslate.value === -TRANSLATE ? "none" : "flex",
-      opacity: isCalendarOpened
-        ? withTiming(1, { duration: 150 })
-        : withTiming(0, { duration: 80 }),
+      opacity: withTiming(isCalendarOpened ? 1 : 0, {
+        duration: isCalendarOpened ? 150 : 80,
+      }),
     };
   }, [isCalendarOpened]);
 
   useAnimatedReaction(
     () => scrollClamp.value,
     (curr, prev) => {
-      if (prev === curr) return;
-      if (curr < 1 && curr > -1) {
-        return;
-      }
-      opacity.value =
-        curr > 0
-          ? withTiming(0, { duration: 100 })
-          : withDelay(150, withTiming(1, {duration: 150}));
-      height.value = withTiming(curr > 0 ? MIN_HEIGHT : MAX_HEIGHT);
+      if (prev === curr || (curr < 1 && curr > -1)) return;
+      toggleHeaderVisibleAnim(scrollClamp.value);
     },
     [scrollClamp.value, isCalendarOpened]
   );

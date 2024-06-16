@@ -1,6 +1,6 @@
 import {
   CustomText,
-  isDatesEquals,
+  isDatesEqual,
   isToday,
   SCREEN_PADDING,
   TCalendarWeek,
@@ -12,8 +12,6 @@ import { View, Pressable, StyleSheet, Dimensions } from "react-native";
 const WIDTH = Dimensions.get("screen").width;
 const BUTTON_WIDTH = WIDTH * 0.132;
 
-console.log(WIDTH);
-
 const WeekDays: FC<{
   data: TCalendarWeek;
   selectedDate: Date;
@@ -22,7 +20,7 @@ const WeekDays: FC<{
   return (
     <View style={styles.container}>
       {data.days.map((day) => {
-        const isSelected = isDatesEquals(day, selectedDate);
+        const isSelected = isDatesEqual(day, selectedDate);
         return (
           <Pressable
             onPress={() => onPress(day)}
