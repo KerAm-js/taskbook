@@ -1,3 +1,4 @@
+import { ScrollToStartButton, WeekDays } from "@/features/tasks/change-date";
 import {
   CustomText,
   getCalendarWeeks,
@@ -16,8 +17,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import ScrollToStartButton from "./ScrollToStart";
-import WeekDays from "./WeekDays";
 
 const WIDTH = Dimensions.get("screen").width;
 
@@ -157,7 +156,6 @@ export default Calendar;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: THEME_COLORS.branded.accent,
   },
   title: {
     color: THEME_COLORS.night.text,

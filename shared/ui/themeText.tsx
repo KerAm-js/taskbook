@@ -1,25 +1,27 @@
-import { FC } from "react";
+import { FC, PropsWithChildren } from "react";
 import { Text, TextStyle } from "react-native";
-import { useThemeColor } from "../hooks/useThemeColor";
-import { THEME_COLORS } from "../config/style/colors";
+import { TTheme } from "../config/style/colors";
+import { useThemeColors } from "../hooks/useTheme";
 
-export interface IThemeTextProps {
+export interface IThemeTextProps extends PropsWithChildren {
   isTextGrey?: boolean;
   children: string;
-  theme?: keyof typeof THEME_COLORS;
+  defaultTheme?: TTheme;
   style?: TextStyle | Array<TextStyle>;
 }
 
-export const ThemeText: FC<IThemeTextProps> = ({
+export const ThemedText: FC<IThemeTextProps> = ({
   children,
   isTextGrey,
-  theme,
+  defaultTheme,
   style,
 }) => {
-  const color = useThemeColor({
-    colorName: isTextGrey ? "textGrey" : "text",
-    theme,
-  });
-
-  return <Text style={[{ color }, style]}>{children}</Text>;
+  const { text, textGrey } = useThemeColors(defaultTheme);
+  if (children) {
+    return (
+      <Text style={[{ color: isTextGrey ? textGrey : text }, style]}>
+        {children}
+      </Text>
+    );
+  }
 };

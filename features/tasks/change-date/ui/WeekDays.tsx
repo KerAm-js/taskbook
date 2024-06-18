@@ -12,11 +12,11 @@ import { View, Pressable, StyleSheet, Dimensions } from "react-native";
 const WIDTH = Dimensions.get("screen").width;
 const BUTTON_WIDTH = WIDTH * 0.132;
 
-const WeekDays: FC<{
+export const WeekDays: FC<{
   data: TCalendarWeek;
   selectedDate: Date;
   onPress: (date: Date) => void;
-}> = ({ data, selectedDate, onPress }) => {
+}> = React.memo(({ data, selectedDate, onPress }) => {
   return (
     <View style={styles.container}>
       {data.days.map((day) => {
@@ -48,9 +48,7 @@ const WeekDays: FC<{
       })}
     </View>
   );
-};
-
-export default React.memo(WeekDays);
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -66,7 +64,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   todayTitleWrapper: {
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: THEME_COLORS.night.accent_opacity,
   },
   selected: {

@@ -4,7 +4,7 @@ import { FC } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 
-const ScrollToStartButton: FC<{ onPress: () => void }> = ({ onPress }) => {
+export const ScrollToStartButton: FC<{ onPress: () => void }> = ({ onPress }) => {
   return (
     <Pressable onPress={onPress} style={styles.container}>
       <View style={styles.circle}>
@@ -17,8 +17,6 @@ const ScrollToStartButton: FC<{ onPress: () => void }> = ({ onPress }) => {
     </Pressable>
   );
 };
-
-export default ScrollToStartButton;
 
 const styles = StyleSheet.create({
   container: {

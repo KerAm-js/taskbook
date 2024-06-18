@@ -1,7 +1,9 @@
+import { store } from "@/appLayer/store";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Provider } from "react-redux";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -19,38 +21,43 @@ export default function RootLayout() {
   if (!fontsLoaded && !fontError) return null;
 
   return (
-    <SafeAreaProvider>
-      <Stack>
-        <Stack.Screen
-          name="index"
-          options={{ headerShown: false, title: "Главная" }}
-        />
-        <Stack.Screen name="history" options={{ title: "Дневник задач" }} />
-        <Stack.Screen name="taskForm" options={{ title: "Новая задача" }} />
-        <Stack.Screen name="settings/index" options={{ title: "Настройки" }} />
-        <Stack.Screen name="settings/language" options={{ title: "Язык" }} />
-        <Stack.Screen name="settings/theme" options={{ title: "Тема" }} />
-        <Stack.Screen
-          name="settings/reminders/index"
-          options={{ title: "Напоминания" }}
-        />
-        <Stack.Screen
-          name="settings/reminders/count"
-          options={{ title: "Количество", presentation: "modal" }}
-        />
-        <Stack.Screen
-          name="settings/reminders/interval"
-          options={{ title: "Интервал", presentation: "modal" }}
-        />
-        <Stack.Screen
-          name="settings/reminders/morningTime"
-          options={{ title: "Начало дня", presentation: "modal" }}
-        />
-        <Stack.Screen
-          name="settings/reminders/eveningTime"
-          options={{ title: "Конец дня", presentation: "modal" }}
-        />
-      </Stack>
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <Stack>
+          <Stack.Screen
+            name="index"
+            options={{ headerShown: false, title: "Главная" }}
+          />
+          <Stack.Screen name="history" options={{ title: "Дневник задач" }} />
+          <Stack.Screen name="taskForm" options={{ title: "Новая задача" }} />
+          <Stack.Screen
+            name="settings/index"
+            options={{ title: "Настройки" }}
+          />
+          <Stack.Screen name="settings/language" options={{ title: "Язык" }} />
+          <Stack.Screen name="settings/theme" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="settings/reminders/index"
+            options={{ title: "Напоминания" }}
+          />
+          <Stack.Screen
+            name="settings/reminders/count"
+            options={{ title: "Количество", presentation: "modal" }}
+          />
+          <Stack.Screen
+            name="settings/reminders/interval"
+            options={{ title: "Интервал", presentation: "modal" }}
+          />
+          <Stack.Screen
+            name="settings/reminders/morningTime"
+            options={{ title: "Начало дня", presentation: "modal" }}
+          />
+          <Stack.Screen
+            name="settings/reminders/eveningTime"
+            options={{ title: "Конец дня", presentation: "modal" }}
+          />
+        </Stack>
+      </SafeAreaProvider>
+    </Provider>
   );
 }

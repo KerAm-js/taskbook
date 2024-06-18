@@ -2,21 +2,17 @@ import {
   GestureResponderEvent,
   ListRenderItemInfo,
   StyleSheet,
-  Text,
-  View,
 } from "react-native";
-import Animated, { useSharedValue } from "react-native-reanimated";
-import Header from "./Header";
+import Animated from "react-native-reanimated";
 import React, { FC, useRef, useState } from "react";
-import { PADDING_TOP } from "@/shared";
-import { OpenTaskFormBtn } from "@/features/task/open-task-form";
+import { PADDING_TOP, ThemedText, ThemedView } from "@/shared";
 
 const Component: FC<{ item: string }> = React.memo(({ item }) => {
   return (
-    <View
+    <ThemedView
+      colorName="input"
       style={{
         height: 70,
-        backgroundColor: "#ddd",
         marginVertical: 10,
         marginHorizontal: 10,
         alignItems: "center",
@@ -25,8 +21,8 @@ const Component: FC<{ item: string }> = React.memo(({ item }) => {
         borderCurve: "continuous",
       }}
     >
-      <Text>{item}</Text>
-    </View>
+      <ThemedText>{item}</ThemedText>
+    </ThemedView>
   );
 });
 
@@ -36,14 +32,15 @@ const renderItem = ({ item }: ListRenderItemInfo<string>) => (
 
 const keyExtractor = (item: string) => item;
 
-export const MainListHeader = () => {
+export const TaskList: FC<{ scrollClamp: { value: number } }> = ({
+  scrollClamp,
+}) => {
   const [data, setData] = useState<string[]>(
     Array(15)
       .fill(1)
       .map((_, i) => i.toString())
   );
   const touchStartY = useRef(0);
-  const scrollClamp = useSharedValue(0);
 
   const onTouchStart = (e: GestureResponderEvent) => {
     touchStartY.current = e.nativeEvent.locationY;
@@ -54,31 +51,25 @@ export const MainListHeader = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Header scrollClamp={scrollClamp} />
-      <Animated.FlatList
-        scrollEventThrottle={16}
-        style={styles.scroll}
-        contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={false}
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        bounces={false}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-      />
-      <OpenTaskFormBtn />
-    </View>
+    <Animated.FlatList
+      scrollEventThrottle={16}
+      style={styles.scroll}
+      contentContainerStyle={styles.contentContainer}
+      showsVerticalScrollIndicator={false}
+      data={data}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      bounces={false}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   contentContainer: {
     paddingTop: PADDING_TOP,
+    paddingBottom: 200,
   },
   scroll: {
     flex: 1,

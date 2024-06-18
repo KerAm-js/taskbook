@@ -1,5 +1,9 @@
 import { plusSvg } from "@/assets/svg/plus";
-import { SCREEN_PADDING, THEME_COLORS, useSafeAreaPadding } from "@/shared";
+import {
+  SCREEN_PADDING,
+  useSafeAreaPadding,
+  useThemeColors,
+} from "@/shared";
 import { Pressable, StyleSheet, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -13,23 +17,34 @@ import { SvgXml } from "react-native-svg";
 export const OpenTaskFormBtn = () => {
   const { paddingBottom } = useSafeAreaPadding();
   const scale = useSharedValue(1);
-  const buttonStyleAnim = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  const colors = useThemeColors();
+
+  const buttonStyleAnim = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+      backgroundColor: colors.accent,
+    };
+  });
 
   const onPress = () => {
     scale.value = withSequence(
-      withTiming(0.9, { duration: 100 }),
-      withTiming(1, { duration: 100 })
+      withTiming(0.9, { duration: 150 }),
+      withTiming(1, { duration: 150 })
     );
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
   return (
     <View style={[styles.container, { paddingBottom }]}>
-      <Animated.View style={buttonStyleAnim}>
+      <Animated.View
+        style={[
+          styles.buttonContainer,
+          { shadowColor: colors.accent },
+          buttonStyleAnim,
+        ]}
+      >
         <Pressable onPress={onPress} style={styles.button}>
-          <SvgXml xml={plusSvg(THEME_COLORS.night.accent)} />
+          <SvgXml xml={plusSvg(colors.background)} />
         </Pressable>
       </Animated.View>
     </View>
@@ -44,19 +59,21 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     paddingHorizontal: SCREEN_PADDING,
   },
-  button: {
+  buttonContainer: {
     width: 54,
     height: 54,
     borderRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: THEME_COLORS.branded.accent,
-    shadowColor: "#000",
     shadowOffset: {
-      height: 2,
+      height: 0,
       width: 0,
     },
-    shadowOpacity: 0.5,
+    shadowOpacity: 1,
     shadowRadius: 2,
+  },
+  button: {
+    width: 54,
+    height: 54,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

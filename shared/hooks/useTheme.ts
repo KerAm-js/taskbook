@@ -1,0 +1,51 @@
+import { RootState } from "@/appLayer/store";
+import { useSelector } from "react-redux";
+import { THEME_COLORS, TTheme } from "../config/style/colors";
+import { useState, useEffect } from "react";
+import {
+  useSharedValue,
+  withTiming,
+  useAnimatedStyle,
+  interpolateColor,
+} from "react-native-reanimated";
+
+export const useTheme = () => {
+  const theme = useSelector((state: RootState) => state.theme.theme);
+  return theme;
+};
+
+export function useThemeColors(defaultTheme?: TTheme) {
+  const theme = useTheme();
+  return THEME_COLORS[defaultTheme || theme];
+}
+
+export const useAnimatedThemeStyle = (
+  colorName: keyof typeof THEME_COLORS.branded
+): ReturnType<typeof useAnimatedStyle> => {
+  const colors = useThemeColors();
+  const colorProgress = useSharedValue(0);
+  const [fColor, setFColor] = useState(colors[colorName]);
+  const [sColor, setSColor] = useState(colors[colorName]);
+
+  const onColorChangeHanlder = (newColor: string) => {
+    if (sColor) {
+      setFColor(sColor);
+    }
+    colorProgress.value = 0;
+    setSColor(newColor);
+    colorProgress.value = withTiming(1);
+  };
+
+  useEffect(() => {
+    onColorChangeHanlder(colors[colorName]);
+  }, [colors]);
+
+  const style = useAnimatedStyle(() => {
+    const c = interpolateColor(colorProgress.value, [0, 1], [fColor, sColor]);
+    return {
+      backgroundColor: c,
+    };
+  });
+
+  return style;
+};

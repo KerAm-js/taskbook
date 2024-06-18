@@ -23,6 +23,11 @@ export const TRANSLATIONS = {
     [MONTHS[9]]: "Октябрь",
     [MONTHS[10]]: "Ноябрь",
     [MONTHS[11]]: "Декабрь",
+    branded: "Фирменная Taskbook",
+    purple: "Фиолетовая",
+    darkBlue: "Тёмно-синяя",
+    night: "Ночная",
+    theme: "Тема",
   },
   en: {
     today: "Today",
@@ -46,5 +51,10 @@ export const TRANSLATIONS = {
     [MONTHS[9]]: MONTHS[9].toUpperCase,
     [MONTHS[10]]: MONTHS[10].toUpperCase,
     [MONTHS[11]]: MONTHS[11].toUpperCase,
+    branded: "Taskbook branded",
+    purple: "Purple",
+    darkBlue: "Dark blue",
+    night: "Night",
+    theme: "Тема",
   },
 };

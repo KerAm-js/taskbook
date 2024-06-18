@@ -1,12 +1,14 @@
 import { FC } from "react";
 import { Text, TextStyle } from "react-native";
 import { i18n } from "../config/i18n/i18n";
-import { IThemeTextProps, ThemeText } from "./themeText";
+import { IThemeTextProps, ThemedText } from "./themeText";
+import { THEME_COLORS } from "../config/style/colors";
 
 export const CustomText: FC<
   {
-    connectTheme?: boolean;
+    themed?: boolean;
     translate?: boolean;
+    colorName?: keyof typeof THEME_COLORS.branded;
     type:
       | "title"
       | "title-big"
@@ -18,7 +20,15 @@ export const CustomText: FC<
       | "text-middle-semibold"
       | "text-small";
   } & IThemeTextProps
-> = ({ translate = true, type, children, connectTheme, ...props }) => {
+> = ({
+  translate = true,
+  type,
+  children,
+  defaultTheme,
+  colorName,
+  themed,
+  ...props
+}) => {
   let fontSize: TextStyle["fontSize"] = 17;
   let fontWeight: TextStyle["fontWeight"] = "bold";
   let fontFamily: TextStyle["fontFamily"] = "Gilroy-bold";
@@ -78,14 +88,21 @@ export const CustomText: FC<
 
   const string = translate ? i18n.t(children) : children;
 
-  if (connectTheme) {
-    return <ThemeText {...props}>{string}</ThemeText>;
+  if (themed) {
+    return (
+      <ThemedText {...props} defaultTheme={defaultTheme}>
+        {string}
+      </ThemedText>
+    );
   }
 
+  const color =
+    defaultTheme && colorName
+      ? THEME_COLORS[defaultTheme][colorName]
+      : undefined;
+
   return (
-    <Text
-      style={[{ fontSize, fontWeight, fontFamily }, props.style]}
-    >
+    <Text style={[{ fontSize, fontWeight, fontFamily, color }, props.style]}>
       {string}
     </Text>
   );

@@ -9,20 +9,16 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import ProgressBar from "./ProgressBar";
+import ProgressBar from "./components/ProgressBar";
 import * as Haptics from "expo-haptics";
-import NavBar from "./NavBar";
+import NavBar from "./components/NavBar";
 import { SCREEN_PADDING } from "@/shared/config/style/views";
-import { CustomText, THEME_COLORS, useSafeAreaPadding } from "@/shared";
-import Calendar from "./Calendar";
+import { CustomText, THEME_COLORS, ThemedView, useSafeAreaPadding } from "@/shared";
+import Calendar from "./components/Calendar";
+import { CONTENT_HEIGHTS } from "../config";
+import { HEADER_SHADOW, HEADER_SHADOW_NIGHT } from "@/shared/config/style/styles";
 
-const CONTENT_HEIGHTS = {
-  min: 0,
-  mid: 89,
-  max: 165,
-};
-
-const Header: FC<{
+export const MainHeader: FC<{
   scrollClamp: { value: number };
 }> = ({ scrollClamp }) => {
   const [isCalendarOpened, setCalendarOpened] = useState<boolean>(false);
@@ -104,7 +100,7 @@ const Header: FC<{
   );
 
   return (
-    <View style={[styles.container, { paddingTop }]}>
+    <ThemedView colorName="header" style={{ paddingTop }} nightStyle={styles.shadowNight}>
       <StatusBar style="light" />
       <Animated.View style={[contentStyleAnim]}>
         <NavBar
@@ -112,7 +108,7 @@ const Header: FC<{
           toggleCalendarOpened={toggleCalendarOpened}
         />
         <Animated.View style={titleStyleAnim}>
-          <CustomText style={styles.title} type="title-big" theme="night">
+          <CustomText style={styles.title} type="title-big" defaultTheme="night">
             today
           </CustomText>
         </Animated.View>
@@ -121,16 +117,16 @@ const Header: FC<{
         </Animated.View>
       </Animated.View>
       <ProgressBar progress={50} />
-    </View>
+    </ThemedView>
   );
 };
 
-export default React.memo(Header);
-
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: THEME_COLORS.branded.accent,
-    width: "100%",
+    ...HEADER_SHADOW,
+  },
+  shadowNight: {
+    ...HEADER_SHADOW_NIGHT
   },
   title: {
     marginLeft: SCREEN_PADDING,

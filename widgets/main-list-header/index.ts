@@ -1,1 +1,0 @@
-export { MainListHeader } from "./ui/MainListHeader";
