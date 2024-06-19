@@ -90,7 +90,7 @@ export const CustomText: FC<
 
   if (themed) {
     return (
-      <ThemedText {...props} defaultTheme={defaultTheme}>
+      <ThemedText {...props} style={[{ fontSize, fontWeight, fontFamily, ...props.style }]} defaultTheme={defaultTheme}>
         {string}
       </ThemedText>
     );

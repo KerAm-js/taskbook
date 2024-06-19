@@ -1,18 +1,27 @@
-import { Link } from "expo-router";
-import { View } from "react-native";
+import { Header, PADDING_TOP, SCREEN_PADDING, ThemedView } from "@/shared";
+import { SettingsList } from "@/widgets/settings";
+import { ScrollView, StyleSheet } from "react-native";
 
 export default function Settings() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Link href="settings/language">Language</Link>
-      <Link href="settings/theme">Theme</Link>
-      <Link href="settings/reminders">Reminders</Link>
-    </View>
+    <ThemedView colorName="background" style={styles.container}>
+      <Header title="settings" />
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+      >
+        <SettingsList />
+      </ScrollView>
+    </ThemedView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  contentContainer: {
+    paddingTop: PADDING_TOP,
+    paddingHorizontal: SCREEN_PADDING,
+  },
+});

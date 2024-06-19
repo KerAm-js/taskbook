@@ -1,3 +1,4 @@
+export { Setting } from "./ui/setting";
 export { Header } from "./ui/header";
 export { ThemedText } from "./ui/themeText";
 export { ThemedView } from "./ui/themedView";
@@ -19,4 +20,3 @@ export {
   isToday,
 } from "./lib/dates";
 export { i18n } from "./config/i18n/i18n";
-

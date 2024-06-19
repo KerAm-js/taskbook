@@ -15,7 +15,7 @@ const NavBar: FC<{
     <View style={[styles.navBar]}>
       <IconButton
         xml={settingsSvg(THEME_COLORS.night.accent)}
-        onPress={() => router.navigate("/settings/theme")}
+        onPress={() => router.navigate("/settings")}
         iconWidth={26}
         iconHeight={26}
       />

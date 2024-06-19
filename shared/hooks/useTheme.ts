@@ -28,9 +28,7 @@ export const useAnimatedThemeStyle = (
   const [sColor, setSColor] = useState(colors[colorName]);
 
   const onColorChangeHanlder = (newColor: string) => {
-    if (sColor) {
-      setFColor(sColor);
-    }
+    setFColor(sColor);
     colorProgress.value = 0;
     setSColor(newColor);
     colorProgress.value = withTiming(1);

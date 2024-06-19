@@ -23,10 +23,9 @@ export default function RootLayout() {
   return (
     <Provider store={store}>
       <SafeAreaProvider>
-        <Stack>
+        <Stack screenOptions={{headerShown: false}}>
           <Stack.Screen
             name="index"
-            options={{ headerShown: false, title: "Главная" }}
           />
           <Stack.Screen name="history" options={{ title: "Дневник задач" }} />
           <Stack.Screen name="taskForm" options={{ title: "Новая задача" }} />

@@ -5,7 +5,10 @@ import {
 } from "react-native";
 import Animated from "react-native-reanimated";
 import React, { FC, useRef, useState } from "react";
-import { PADDING_TOP, ThemedText, ThemedView } from "@/shared";
+import { PADDING_TOP, THEME_COLORS, ThemedText, ThemedView } from "@/shared";
+import { SvgXml } from "react-native-svg";
+import { emptyTaskListSvg } from "@/assets/svg/emptyTaskList";
+import { EmptyListImage } from "./EmptyListImage";
 
 const Component: FC<{ item: string }> = React.memo(({ item }) => {
   return (
@@ -36,7 +39,7 @@ export const TaskList: FC<{ scrollClamp: { value: number } }> = ({
   scrollClamp,
 }) => {
   const [data, setData] = useState<string[]>(
-    Array(15)
+    Array(0)
       .fill(1)
       .map((_, i) => i.toString())
   );
@@ -62,6 +65,7 @@ export const TaskList: FC<{ scrollClamp: { value: number } }> = ({
       bounces={false}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
+      ListEmptyComponent={EmptyListImage}
     />
   );
 };

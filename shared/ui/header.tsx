@@ -18,6 +18,7 @@ export const Header: FC<{ title: string; rotateLeftIcon?: boolean }> = ({ title,
 
   const navigation = useNavigation();
 
+
   const goBack = () => navigation.goBack();
 
   return (
