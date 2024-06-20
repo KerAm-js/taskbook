@@ -35,6 +35,11 @@ export const TRANSLATIONS = {
     language: "Язык",
     fastInputMode: "Режим быстрого ввода",
     settings: "Настройки",
+    reminders: "Напоминания",
+    shareWithFriend: "Поделиться с другом",
+    writeReview: 'Написать отзыв',
+    feedback: 'Обратная связь',
+    supportProject: 'Поддержать проект',
   },
   en: {
     today: "Today",
@@ -70,5 +75,10 @@ export const TRANSLATIONS = {
     language: "Language",
     fastInputMode: "Fast input mode",
     settings: "Settings",
+    reminders: "Reminders",
+    shareWithFriend: "Share with a friend",
+    writeReview: 'Write a review',
+    feedback: 'Feedback',
+    supportProject: 'Support the project',
   },
 };

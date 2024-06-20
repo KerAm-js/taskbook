@@ -30,10 +30,17 @@ export const COLORS = {
   whiteOpacity: "rgba(250, 250, 250, 0.25)",
   white: "#fff",
   input: "#f5f5f5",
-  shadow: "#DAE0EB"
+  shadow: "#DAE0EB",
 };
 
-export const THEME_COLORS: {[key in TTheme]: TColorSet} = {
+export const THEME_GRADIENTS: { [key in TTheme]: Array<string> } = {
+  branded: ["#004FA6", "#007AFF"],
+  night: ["#5F6B95", "#363C55"],
+  darkBlue: ["#363C55", "#5F6B95"],
+  purple: ["#464490", "#7C78FF"],
+};
+
+export const THEME_COLORS: { [key in TTheme]: TColorSet } = {
   branded: {
     text: "#000",
     accent: COLORS.blue,
@@ -83,10 +90,3 @@ export const THEME_COLORS: {[key in TTheme]: TColorSet} = {
     header: COLORS.purple,
   },
 };
-
-// const THEME_INDEXES: {[key in TThemes]: number} = {
-//   branded: 0,
-//   purple: 1,
-//   darkBlue: 2,
-//   night: 3,
-// }

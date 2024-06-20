@@ -13,10 +13,19 @@ import ProgressBar from "./components/ProgressBar";
 import * as Haptics from "expo-haptics";
 import NavBar from "./components/NavBar";
 import { SCREEN_PADDING } from "@/shared/config/style/views";
-import { CustomText, THEME_COLORS, ThemedView, useSafeAreaPadding } from "@/shared";
+import {
+  CustomText,
+  THEME_COLORS,
+  ThemedGradient,
+  ThemedView,
+  useSafeAreaPadding,
+} from "@/shared";
 import Calendar from "./components/Calendar";
 import { CONTENT_HEIGHTS } from "../config";
-import { HEADER_SHADOW, HEADER_SHADOW_NIGHT } from "@/shared/config/style/styles";
+import {
+  HEADER_SHADOW,
+  HEADER_SHADOW_NIGHT,
+} from "@/shared/config/style/styles";
 
 export const MainHeader: FC<{
   scrollClamp: { value: number };
@@ -47,7 +56,7 @@ export const MainHeader: FC<{
   };
 
   const toggleHeaderVisibleAnim = (clamp: number) => {
-    'worklet'
+    "worklet";
     opacity.value =
       clamp > 0
         ? withTiming(0, { duration: 100 })
@@ -100,7 +109,8 @@ export const MainHeader: FC<{
   );
 
   return (
-    <ThemedView colorName="header" style={{ paddingTop }} nightStyle={styles.shadowNight}>
+    <View style={{ paddingTop }}>
+      <ThemedGradient />
       <StatusBar style="light" />
       <Animated.View style={[contentStyleAnim]}>
         <NavBar
@@ -108,7 +118,11 @@ export const MainHeader: FC<{
           toggleCalendarOpened={toggleCalendarOpened}
         />
         <Animated.View style={titleStyleAnim}>
-          <CustomText style={styles.title} type="title-big" defaultTheme="night">
+          <CustomText
+            style={styles.title}
+            type="title-big"
+            defaultTheme="night"
+          >
             today
           </CustomText>
         </Animated.View>
@@ -117,7 +131,7 @@ export const MainHeader: FC<{
         </Animated.View>
       </Animated.View>
       <ProgressBar progress={50} />
-    </ThemedView>
+    </View>
   );
 };
 
@@ -126,7 +140,7 @@ const styles = StyleSheet.create({
     ...HEADER_SHADOW,
   },
   shadowNight: {
-    ...HEADER_SHADOW_NIGHT
+    ...HEADER_SHADOW_NIGHT,
   },
   title: {
     marginLeft: SCREEN_PADDING,

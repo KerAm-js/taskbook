@@ -1,6 +1,10 @@
 import { bellSvg } from "@/assets/svg/bell";
+import { dialogSvg } from "@/assets/svg/dialog";
+import { dollarSvg } from "@/assets/svg/dollar";
 import { earthSvg } from "@/assets/svg/earth";
+import { forwardLeftSvg } from "@/assets/svg/forwardLeft";
 import { keyboardSvg } from "@/assets/svg/keyboard";
+import { medalSvg } from "@/assets/svg/medal";
 import { paletteSvg } from "@/assets/svg/palette";
 import { Setting, ThemedView } from "@/shared";
 import { router } from "expo-router";
@@ -23,7 +27,7 @@ export const SettingsList = () => {
       />
       <Setting
         type="navigate"
-        title="settings"
+        title="reminders"
         onPress={() => router.navigate("settings/reminders")}
         xmlGetter={bellSvg}
       />
@@ -39,30 +43,32 @@ export const SettingsList = () => {
         onPress={() => router.navigate("settings/language")}
         xmlGetter={earthSvg}
       />
+
       <ThemedView style={styles.line} colorName="lineGrey" />
+
       <Setting
         type="navigate"
-        title="language"
-        onPress={() => router.navigate("settings/language")}
-        xmlGetter={earthSvg}
+        title="shareWithFriend"
+        onPress={() => {}}
+        xmlGetter={forwardLeftSvg}
       />
       <Setting
         type="navigate"
-        title="language"
-        onPress={() => router.navigate("settings/language")}
-        xmlGetter={earthSvg}
+        title="writeReview"
+        onPress={() => {}}
+        xmlGetter={medalSvg}
       />
       <Setting
         type="navigate"
-        title="language"
-        onPress={() => router.navigate("settings/language")}
-        xmlGetter={earthSvg}
+        title="feedback"
+        onPress={() => {}}
+        xmlGetter={dialogSvg}
       />
       <Setting
         type="navigate"
-        title="language"
-        onPress={() => router.navigate("settings/language")}
-        xmlGetter={earthSvg}
+        title="supportProject"
+        onPress={() => {}}
+        xmlGetter={dollarSvg}
       />
     </View>
   );

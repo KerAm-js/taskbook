@@ -1,3 +1,4 @@
+export { ThemedGradient } from "./ui/ThemedGradient";
 export { Setting } from "./ui/setting";
 export { Header } from "./ui/header";
 export { ThemedText } from "./ui/themeText";

@@ -2,10 +2,11 @@ import { FC, PropsWithChildren } from "react";
 import { Text, TextStyle } from "react-native";
 import { TTheme } from "../config/style/colors";
 import { useThemeColors } from "../hooks/useTheme";
+import { TRANSLATIONS } from "../config/i18n/translations";
 
 export interface IThemeTextProps extends PropsWithChildren {
   isTextGrey?: boolean;
-  children: string;
+  children: keyof typeof TRANSLATIONS.ru;
   defaultTheme?: TTheme;
   style?: TextStyle | Array<TextStyle>;
 }

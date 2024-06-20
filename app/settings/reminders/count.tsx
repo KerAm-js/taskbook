@@ -1,3 +1,4 @@
+import { Header } from "@/shared";
 import { Text, View } from "react-native";
 
 export default function Count() {
@@ -5,11 +6,9 @@ export default function Count() {
     <View
       style={{
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
       }}
     >
-      <Text>Count</Text>
+      <Header title="count" />
     </View>
   )
 }

@@ -86,7 +86,7 @@ export const CustomText: FC<
     }
   }
 
-  const string = translate ? i18n.t(children) : children;
+  const string = translate ? i18n.t(children.toString()) : children;
 
   if (themed) {
     return (
