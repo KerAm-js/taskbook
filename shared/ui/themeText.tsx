@@ -8,7 +8,7 @@ export interface IThemeTextProps extends PropsWithChildren {
   isTextGrey?: boolean;
   children: keyof typeof TRANSLATIONS.ru;
   defaultTheme?: TTheme;
-  style?: TextStyle | Array<TextStyle>;
+  style?: TextStyle | Array<TextStyle | false>;
 }
 
 export const ThemedText: FC<IThemeTextProps> = ({

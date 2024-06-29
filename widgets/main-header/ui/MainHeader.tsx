@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { FC, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import Animated, {
   useAnimatedReaction,
   useAnimatedStyle,
@@ -15,17 +15,16 @@ import NavBar from "./components/NavBar";
 import { SCREEN_PADDING } from "@/shared/config/style/views";
 import {
   CustomText,
+  HEADER_SHADOW,
+  HEADER_SHADOW_NIGHT,
   THEME_COLORS,
   ThemedGradient,
   ThemedView,
+  TITLE_BIG_STYLE,
   useSafeAreaPadding,
 } from "@/shared";
 import Calendar from "./components/Calendar";
 import { CONTENT_HEIGHTS } from "../config";
-import {
-  HEADER_SHADOW,
-  HEADER_SHADOW_NIGHT,
-} from "@/shared/config/style/styles";
 
 export const MainHeader: FC<{
   scrollClamp: { value: number };
@@ -45,13 +44,13 @@ export const MainHeader: FC<{
     height.value = withSpring(
       isOpened ? CONTENT_HEIGHTS.max : CONTENT_HEIGHTS.mid,
       {
-        duration: 1000,
-        dampingRatio: 0.48,
+        duration: 1500,
+        dampingRatio: 0.42,
       }
     );
     calendarTranslate.value = withSpring(isOpened ? 0 : -TRANSLATE, {
-      duration: 1000,
-      dampingRatio: 0.48,
+      duration: 1500,
+      dampingRatio: 0.42,
     });
   };
 
@@ -85,6 +84,7 @@ export const MainHeader: FC<{
         : withTiming(1, { duration: 80 }),
       position: "absolute",
       bottom: 10,
+      zIndex: -2
     };
   });
 
@@ -109,7 +109,11 @@ export const MainHeader: FC<{
   );
 
   return (
-    <View style={{ paddingTop }}>
+    <ThemedView
+      colorName="background"
+      nightStyle={styles.shadowNight}
+      style={[styles.container, { paddingTop }]}
+    >
       <ThemedGradient />
       <StatusBar style="light" />
       <Animated.View style={[contentStyleAnim]}>
@@ -120,7 +124,6 @@ export const MainHeader: FC<{
         <Animated.View style={titleStyleAnim}>
           <CustomText
             style={styles.title}
-            type="title-big"
             defaultTheme="night"
           >
             today
@@ -131,13 +134,14 @@ export const MainHeader: FC<{
         </Animated.View>
       </Animated.View>
       <ProgressBar progress={50} />
-    </View>
+    </ThemedView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     ...HEADER_SHADOW,
+    zIndex: 1
   },
   shadowNight: {
     ...HEADER_SHADOW_NIGHT,
@@ -145,5 +149,6 @@ const styles = StyleSheet.create({
   title: {
     marginLeft: SCREEN_PADDING,
     color: THEME_COLORS.night.text,
+    ...TITLE_BIG_STYLE
   },
 });

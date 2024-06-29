@@ -9,88 +9,20 @@ export const CustomText: FC<
     themed?: boolean;
     translate?: boolean;
     colorName?: keyof typeof THEME_COLORS.branded;
-    type:
-      | "title"
-      | "title-big"
-      | "text"
-      | "text-bold"
-      | "text-semibold"
-      | "text-middle"
-      | "text-middle-bold"
-      | "text-middle-semibold"
-      | "text-small";
   } & IThemeTextProps
 > = ({
   translate = true,
-  type,
   children,
   defaultTheme,
   colorName,
   themed,
   ...props
 }) => {
-  let fontSize: TextStyle["fontSize"] = 17;
-  let fontWeight: TextStyle["fontWeight"] = "bold";
-  let fontFamily: TextStyle["fontFamily"] = "Gilroy-bold";
-  let lineHeight: TextStyle["lineHeight"] = 21;
-
-  switch (type) {
-    case "title": {
-      fontSize = 21;
-      lineHeight = 26;
-      break;
-    }
-    case "title-big": {
-      fontSize = 24;
-      lineHeight = 30;
-      break;
-    }
-    case "text-bold": {
-      break;
-    }
-    case "text": {
-      fontWeight = "medium";
-      fontFamily = "Gilroy-medium";
-      break;
-    }
-    case "text-semibold": {
-      fontWeight = "semibold";
-      fontFamily = "Gilroy-semibold";
-      break;
-    }
-    case "text-middle": {
-      fontSize = 15;
-      lineHeight = 18;
-      fontWeight = "medium";
-      fontFamily = "Gilroy-medium";
-      break;
-    }
-    case "text-middle-semibold": {
-      fontSize = 15;
-      lineHeight = 18;
-      fontWeight = "semibold";
-      fontFamily = "Gilroy-semibold";
-      break;
-    }
-    case "text-middle-bold": {
-      fontSize = 15;
-      lineHeight = 18;
-      break;
-    }
-    case "text-small": {
-      fontSize = 12;
-      lineHeight = 14;
-      fontWeight = "medium";
-      fontFamily = "Gilroy-medium";
-      break;
-    }
-  }
-
   const string = translate ? i18n.t(children.toString()) : children;
 
   if (themed) {
     return (
-      <ThemedText {...props} style={[{ fontSize, fontWeight, fontFamily, ...props.style }]} defaultTheme={defaultTheme}>
+      <ThemedText {...props} defaultTheme={defaultTheme}>
         {string}
       </ThemedText>
     );
@@ -102,7 +34,14 @@ export const CustomText: FC<
       : undefined;
 
   return (
-    <Text style={[{ fontSize, fontWeight, fontFamily, color }, props.style]}>
+    <Text
+      style={[
+        {
+          color,
+        },
+        props.style,
+      ]}
+    >
       {string}
     </Text>
   );

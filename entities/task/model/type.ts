@@ -1,9 +1,10 @@
 export interface ITask {
   id: string;
   title: string;
-  description: string;
-  reminderHour: number;
-  reminderMinute: number;
+  description?: string;
+  remindTime?: number;
   date: number;
-  isRegular: boolean;
+  isRegular?: boolean;
+  isCompleted: boolean;
+  isEditing?: boolean;
 }

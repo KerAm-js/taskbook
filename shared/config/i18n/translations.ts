@@ -40,6 +40,10 @@ export const TRANSLATIONS = {
     writeReview: 'Написать отзыв',
     feedback: 'Обратная связь',
     supportProject: 'Поддержать проект',
+    daily: 'Ежедневно',
+    weekly: 'Еженедельно',
+    monthly: 'Ежемесячно',
+    note: 'Заметка',
   },
   en: {
     today: "Today",
@@ -80,5 +84,9 @@ export const TRANSLATIONS = {
     writeReview: 'Write a review',
     feedback: 'Feedback',
     supportProject: 'Support the project',
+    daily: 'Daily',
+    weekly: 'Weekly',
+    monthly: 'Monthly',
+    note: 'Note',
   },
 };

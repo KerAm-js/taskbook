@@ -11,11 +11,11 @@ import { useTheme } from "../hooks/useTheme";
 
 export const AnimatedCheck: FC<{
   defaultTheme?: TTheme;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   isChecked: boolean;
   borderRadius?: number;
-}> = ({ defaultTheme, width, height, isChecked, borderRadius }) => {
+}> = ({ defaultTheme, width = 20, height = 20, isChecked, borderRadius }) => {
 
   const theme = useTheme();
 
@@ -36,6 +36,7 @@ export const AnimatedCheck: FC<{
           height: height,
           borderColor: borderColor,
           borderRadius: borderRadius || width / 2,
+          borderWidth: isChecked ? 0 : 2
         },
         styles.container,
       ]}
@@ -63,7 +64,6 @@ export const AnimatedCheck: FC<{
 
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 2,
     borderCurve: 'continuous'
   },
   background: {

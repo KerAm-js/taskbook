@@ -3,46 +3,23 @@ import {
   ListRenderItemInfo,
   StyleSheet,
 } from "react-native";
-import Animated from "react-native-reanimated";
+import Animated, { LinearTransition } from "react-native-reanimated";
 import React, { FC, useRef, useState } from "react";
-import { PADDING_TOP, THEME_COLORS, ThemedText, ThemedView } from "@/shared";
-import { SvgXml } from "react-native-svg";
-import { emptyTaskListSvg } from "@/assets/svg/emptyTaskList";
+import { PADDING_TOP, SCREEN_PADDING } from "@/shared";
 import { EmptyListImage } from "./EmptyListImage";
+import { ITask, useTasks } from "@/entities/task";
+import { Card } from "./Card";
 
-const Component: FC<{ item: string }> = React.memo(({ item }) => {
-  return (
-    <ThemedView
-      colorName="input"
-      style={{
-        height: 70,
-        marginVertical: 10,
-        marginHorizontal: 10,
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: 15,
-        borderCurve: "continuous",
-      }}
-    >
-      <ThemedText>{item}</ThemedText>
-    </ThemedView>
-  );
-});
-
-const renderItem = ({ item }: ListRenderItemInfo<string>) => (
-  <Component item={item} />
+const renderItem = ({ item }: ListRenderItemInfo<ITask>) => (
+  <Card {...item} />
 );
 
-const keyExtractor = (item: string) => item;
+const keyExtractor = (item: ITask) => item.id;
 
 export const TaskList: FC<{ scrollClamp: { value: number } }> = ({
   scrollClamp,
 }) => {
-  const [data, setData] = useState<string[]>(
-    Array(0)
-      .fill(1)
-      .map((_, i) => i.toString())
-  );
+  const tasks = useTasks();
   const touchStartY = useRef(0);
 
   const onTouchStart = (e: GestureResponderEvent) => {
@@ -59,12 +36,12 @@ export const TaskList: FC<{ scrollClamp: { value: number } }> = ({
       style={styles.scroll}
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
-      data={data}
+      data={tasks}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
-      bounces={false}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
+      itemLayoutAnimation={LinearTransition.duration(300)}
+      // onTouchStart={onTouchStart}
+      // onTouchEnd={onTouchEnd}
       ListEmptyComponent={EmptyListImage}
     />
   );
@@ -74,6 +51,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: PADDING_TOP,
     paddingBottom: 200,
+    paddingHorizontal: SCREEN_PADDING,
   },
   scroll: {
     flex: 1,

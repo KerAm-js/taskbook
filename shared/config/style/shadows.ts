@@ -6,7 +6,6 @@ export const HEADER_SHADOW: ViewStyle = {
     height: 4,
     width: 0,
   },
-  flexDirection: "row",
   shadowOpacity: 0.25,
   shadowRadius: 2,
   shadowColor: "#000",

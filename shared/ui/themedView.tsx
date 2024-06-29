@@ -5,19 +5,29 @@ import { useTheme } from "../hooks/useTheme";
 
 interface IProps extends PropsWithChildren {
   colorName: keyof typeof THEME_COLORS.branded;
+  nightColorName?: keyof typeof THEME_COLORS.branded;
   style?: Array<ViewStyle | false> | ViewStyle;
   nightStyle?: Array<ViewStyle | false> | ViewStyle;
 }
 
 export const ThemedView: FC<IProps> = ({
   colorName,
+  nightColorName,
   style,
   nightStyle,
   children,
 }) => {
   const theme = useTheme();
+  const color =
+    theme === "night" && nightColorName ? nightColorName : colorName;
   return (
-    <View style={[{ backgroundColor: THEME_COLORS[theme][colorName]}, style, theme === 'night' && nightStyle]}>
+    <View
+      style={[
+        { backgroundColor: THEME_COLORS[theme][color] },
+        style,
+        theme === "night" && nightStyle,
+      ]}
+    >
       {children}
     </View>
   );

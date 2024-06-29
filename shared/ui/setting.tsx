@@ -6,10 +6,11 @@ import { CustomText } from "./customText";
 import { Toggle } from "./toggle";
 import { arrowLeftSvg } from "@/assets/svg/arrowLeft";
 import { useThemeColors } from "../hooks/useTheme";
+import { TEXT_STYLE } from "../config/style/texts";
 
 export const Setting: FC<{
   onPress: () => void;
-  xmlGetter: (color: string) => string;
+  xmlGetter?: (color: string) => string;
   type: "toggle" | "navigate" | "value";
   title: string;
   value?: string;
@@ -20,15 +21,17 @@ export const Setting: FC<{
   return (
     <Pressable onPress={onPress} style={styles.container}>
       <ThemedView style={styles.themedView} colorName="input">
-        <ThemedView colorName="accent" style={styles.iconContainer}>
-          <SvgXml xml={xmlGetter(background)} width={20} height={20} />
-        </ThemedView>
-        <CustomText themed style={styles.title} type="text">
+        {xmlGetter && (
+          <ThemedView colorName="accent" style={styles.iconContainer}>
+            <SvgXml xml={xmlGetter(background)} width={20} height={20} />
+          </ThemedView>
+        )}
+        <CustomText themed style={styles.title}>
           {title}
         </CustomText>
         <View style={styles.leftContainer}>
           {type === "value" && (
-            <CustomText themed type="text">
+            <CustomText themed colorName="textGrey" style={styles.title}>
               {value || ""}
             </CustomText>
           )}
@@ -56,7 +59,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     flexDirection: "row",
-    borderRadius: 10,
+    borderRadius: 12,
     borderCurve: "continuous",
     alignItems: "center",
   },
@@ -73,6 +76,10 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
+    ...TEXT_STYLE,
+  },
+  value: {
+    ...TEXT_STYLE,
   },
   arrowStyle: {
     transform: [{ rotate: "180deg" }],

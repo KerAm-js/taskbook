@@ -9,15 +9,18 @@ import { THEME_COLORS } from "../config/style/colors";
 import { SvgXml } from "react-native-svg";
 import { SCREEN_PADDING } from "../config/style/views";
 import { useNavigation } from "expo-router";
-import { HEADER_SHADOW } from "../config/style/styles";
+import { HEADER_SHADOW } from "../config/style/shadows";
+import { TEXT_STYLE } from "../config/style/texts";
 
-export const Header: FC<{ title: string; rotateLeftIcon?: boolean }> = ({ title, rotateLeftIcon }) => {
+export const Header: FC<{ title: string; rotateLeftIcon?: boolean }> = ({
+  title,
+  rotateLeftIcon,
+}) => {
   const styleAnim = useAnimatedThemeStyle("header");
   const theme = useTheme();
   const { paddingTop: top } = useSafeAreaPadding();
 
   const navigation = useNavigation();
-
 
   const goBack = () => navigation.goBack();
 
@@ -25,7 +28,7 @@ export const Header: FC<{ title: string; rotateLeftIcon?: boolean }> = ({ title,
     <Animated.View
       style={[
         styles.container,
-        theme === 'night' && styles.nightShadow,
+        theme === "night" && styles.nightShadow,
         {
           paddingTop: top,
         },
@@ -37,13 +40,13 @@ export const Header: FC<{ title: string; rotateLeftIcon?: boolean }> = ({ title,
           xml={arrowLeftSvg(THEME_COLORS.night.accent)}
           width={18}
           height={18}
-          style={rotateLeftIcon && {transform: [{rotate: '-90deg'}]}}
+          style={rotateLeftIcon && { transform: [{ rotate: "-90deg" }] }}
         />
       </Pressable>
-      <CustomText type="text-bold" defaultTheme="night" colorName="accent">
+      <CustomText style={styles.title} defaultTheme="night" colorName="accent">
         {title}
       </CustomText>
-      <View style={styles.right} /> 
+      <View style={styles.right} />
       {/* чисто для удобства */}
     </Animated.View>
   );
@@ -54,18 +57,22 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     zIndex: 1,
+    flexDirection: "row",
     ...HEADER_SHADOW,
   },
   nightShadow: {
     shadowOpacity: 0,
     borderBottomWidth: 1,
-    borderBottomColor: THEME_COLORS.night.lineGrey
+    borderBottomColor: THEME_COLORS.night.lineGrey,
   },
   left: {
     justifyContent: "center",
     paddingHorizontal: SCREEN_PADDING,
     height: 40,
     width: 80,
+  },
+  title: {
+    ...TEXT_STYLE,
   },
   right: {
     height: 40,

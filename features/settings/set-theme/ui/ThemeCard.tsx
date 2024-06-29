@@ -4,6 +4,7 @@ import {
   THEME_COLORS,
   useTheme,
   COLORS,
+  TEXT_BOLD_STYLE,
 } from "@/shared";
 import { FC } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
@@ -46,7 +47,7 @@ export const ThemeCard: FC<{ theme: TTheme }> = ({ theme }) => {
               { backgroundColor: THEME_COLORS[theme].header },
             ]}
           >
-            <CustomText type="text-bold" style={styles.title}>
+            <CustomText style={styles.title}>
               {theme}
             </CustomText>
             <AnimatedCheck
@@ -135,6 +136,7 @@ const styles = StyleSheet.create({
   title: {
     color: THEME_COLORS.night.text,
     alignSelf: "flex-end",
+    ...TEXT_BOLD_STYLE
   },
   body: {
     padding: 15,

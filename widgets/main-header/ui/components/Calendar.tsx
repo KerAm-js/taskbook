@@ -4,7 +4,9 @@ import {
   getCalendarWeeks,
   i18n,
   TCalendarWeek,
+  TEXT_MIDDLE_STYLE,
   THEME_COLORS,
+  TITLE_BIG_STYLE,
 } from "@/shared";
 import { SCREEN_PADDING } from "@/shared/config/style/views";
 import { MONTHS, WEEK_DAYS } from "@/shared/consts/datetime";
@@ -102,7 +104,7 @@ const Calendar: FC<{ isCalendarOpened: boolean }> = () => {
   return (
     <View style={styles.container}>
       <View style={styles.monthContainer}>
-        <CustomText translate={false} style={styles.title} type="title-big">
+        <CustomText translate={false} style={styles.title}>
           {monthString}
         </CustomText>
         <Animated.View style={scrollToStartBtnStyleAnim}>
@@ -115,7 +117,6 @@ const Calendar: FC<{ isCalendarOpened: boolean }> = () => {
             <CustomText
               key={item.full}
               style={styles.weekDay}
-              type="text-middle"
             >
               {item.short}
             </CustomText>
@@ -159,6 +160,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: THEME_COLORS.night.text,
+    ...TITLE_BIG_STYLE
   },
   weekContainer: {
     paddingTop: 17,
@@ -177,6 +179,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 2,
     lineHeight: 18,
+    ...TEXT_MIDDLE_STYLE,
   },
   monthContainer: {
     flexDirection: "row",

@@ -1,9 +1,5 @@
 import { plusSvg } from "@/assets/svg/plus";
-import {
-  SCREEN_PADDING,
-  useSafeAreaPadding,
-  useThemeColors,
-} from "@/shared";
+import { SCREEN_PADDING, useSafeAreaPadding, useThemeColors } from "@/shared";
 import { Pressable, StyleSheet, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -13,8 +9,10 @@ import Animated, {
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import { SvgXml } from "react-native-svg";
+import { useTaskActions } from "@/entities/task";
 
 export const OpenTaskFormBtn = () => {
+  const { addTask } = useTaskActions();
   const { paddingBottom } = useSafeAreaPadding();
   const scale = useSharedValue(1);
   const colors = useThemeColors();
@@ -32,14 +30,20 @@ export const OpenTaskFormBtn = () => {
       withTiming(1, { duration: 150 })
     );
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    addTask({
+      id: new Date().valueOf().toString(),
+      title: "Task",
+      isCompleted: false,
+      date: new Date().setHours(0, 0, 0, 0),
+      remindTime: new Date().setHours(23, 30, 0, 0),
+    });
   };
 
   return (
-    <View style={[styles.container, { paddingBottom }]}>
       <Animated.View
         style={[
           styles.buttonContainer,
-          { shadowColor: colors.accent },
+          { shadowColor: colors.accent, bottom: paddingBottom, right: SCREEN_PADDING },
           buttonStyleAnim,
         ]}
       >
@@ -47,17 +51,12 @@ export const OpenTaskFormBtn = () => {
           <SvgXml xml={plusSvg(colors.background)} />
         </Pressable>
       </Animated.View>
-    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    width: "100%",
-    bottom: 0,
-    alignItems: "flex-end",
-    paddingHorizontal: SCREEN_PADDING,
+    
   },
   buttonContainer: {
     width: 54,
@@ -69,6 +68,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 1,
     shadowRadius: 2,
+    position: "absolute",
   },
   button: {
     width: 54,

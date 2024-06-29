@@ -6,6 +6,7 @@ import {
   TCalendarWeek,
   THEME_COLORS,
 } from "@/shared";
+import { TEXT_SEMIBOLD_STYLE, TEXT_STYLE } from "@/shared/config/style/texts";
 import React, { FC } from "react";
 import { View, Pressable, StyleSheet, Dimensions } from "react-native";
 
@@ -36,9 +37,8 @@ export const WeekDays: FC<{
               ]}
             >
               <CustomText
-                style={styles.dateTitle}
+                style={[styles.dateTitle, isSelected && styles.selectedDateTitle]}
                 translate={false}
-                type={isSelected ? "text-semibold" : "text"}
               >
                 {day.getDate().toString()}
               </CustomText>
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   todayTitleWrapper: {
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: THEME_COLORS.night.accent_opacity,
   },
   selected: {
@@ -87,6 +87,9 @@ const styles = StyleSheet.create({
   },
   dateTitle: {
     color: THEME_COLORS.night.text,
-    lineHeight: 18,
+    ...TEXT_STYLE
   },
+  selectedDateTitle: {
+    ...TEXT_SEMIBOLD_STYLE
+  }
 });
