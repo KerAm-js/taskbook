@@ -1,14 +1,13 @@
 import { FC, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { ITask } from "../model/type";
-import { useThemeColors } from "@/shared";
+import { ThemedText } from "@/shared";
 import { TaskInfo } from "./TaskInfo";
 import { bellOutlineSvg } from "@/assets/svg/bellOutline";
 import { repeatSvg } from "@/assets/svg/repeat";
 import { noteSvg } from "@/assets/svg/note";
 import Animated, {
   Easing,
-  interpolateColor,
   useAnimatedStyle,
   useSharedValue,
   withSequence,
@@ -23,7 +22,6 @@ export const TaskRow: FC<ITask> = ({
   isCompleted,
   description,
 }) => {
-  const { text, textGrey } = useThemeColors();
   const remindDate = remindTime ? new Date(remindTime) : null;
   const remindString = remindDate
     ? remindDate.getHours() + ":" + remindDate.getMinutes()
@@ -32,20 +30,16 @@ export const TaskRow: FC<ITask> = ({
   const colorProgress = useSharedValue(0);
   const translateX = useSharedValue(0);
 
-  const titleStyleAnim = useAnimatedStyle(() => {
-    const color = interpolateColor(
-      colorProgress.value,
-      [0, 1],
-      [text, textGrey]
-    );
+  const easing = Easing.out(Easing.quad);
+
+  const styleAnim = useAnimatedStyle(() => {
     return {
-      color,
+      opacity: withTiming(isCompleted ? 0.4 : 1, { duration: 200, easing }),
       transform: [{ translateX: translateX.value }],
     };
   }, [isCompleted]);
 
   useEffect(() => {
-    const easing = Easing.out(Easing.quad)
     colorProgress.value = withTiming(isCompleted ? 1 : 0);
     if (isCompleted) {
       translateX.value = withSequence(
@@ -56,11 +50,9 @@ export const TaskRow: FC<ITask> = ({
   }, [isCompleted]);
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, styleAnim]}>
       <View style={styles.titleContainer}>
-        <Animated.Text style={[styles.title, titleStyleAnim]}>
-          {title}
-        </Animated.Text>
+        <ThemedText style={styles.title}>{title}</ThemedText>
       </View>
       <View style={styles.infoContainer}>
         {remindString && (
@@ -73,7 +65,7 @@ export const TaskRow: FC<ITask> = ({
           <TaskInfo translateTitle xmlGetter={noteSvg} title="note" />
         )}
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
