@@ -32,7 +32,7 @@ export const AnimatedCheck: FC<{
     height: height,
     borderColor: borderColor,
     borderRadius: borderRadius || width / 2,
-    borderWidth: isChecked ? 0 : 2,
+    borderWidth: isChecked ? 0 : 1.5,
   };
 
   const backgroundStyle = {

@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...TEXT_STYLES.standartSemibold,
+    letterSpacing: 0.5
   },
   right: {
     height: 40,

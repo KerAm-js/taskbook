@@ -9,6 +9,6 @@ export const ThemedIcon: FC<
     colorName?: keyof typeof THEME_COLORS.branded;
   }
 > = ({ xmlGetter, colorName = "accent", ...props }) => {
-  const colors = useThemeColors();
+  const { colors } = useThemeColors();
   return <SvgXml xml={xmlGetter(colors[colorName])} {...props} />;
 };

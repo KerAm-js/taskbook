@@ -5,18 +5,22 @@ import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { SvgXml } from "react-native-svg";
 
 export const EmptyListImage = () => {
-  const { accent } = useThemeColors();
+  const { colors } = useThemeColors();
   return (
-    <Animated.View entering={FadeIn.delay(200)} exiting={FadeOut.duration(200)} style={styles.container}>
-      <SvgXml xml={emptyTaskListSvg(accent)} width={250} height={250} />
+    <Animated.View
+      entering={FadeIn.delay(200)}
+      exiting={FadeOut.duration(200)}
+      style={styles.container}
+    >
+      <SvgXml xml={emptyTaskListSvg(colors.accent)} width={250} height={250} />
     </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: (Dimensions.get('screen').height - 200) / 2 - 250,
-    justifyContent: 'center',
-    alignItems: 'center',
-  }
-})
+    paddingTop: (Dimensions.get("screen").height - 200) / 2 - 250,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

@@ -16,14 +16,16 @@ export const Setting: FC<{
   value?: string;
   toggleValue?: boolean;
 }> = ({ onPress, xmlGetter, type, title, value, toggleValue }) => {
-  const { grey, background } = useThemeColors();
+  const {
+    colors,
+  } = useThemeColors();
 
   return (
     <Pressable onPress={onPress} style={styles.container}>
       <ThemedView style={styles.themedView} colorName="backgroundSecond">
         {xmlGetter && (
           <ThemedView colorName="accent" style={styles.iconContainer}>
-            <SvgXml xml={xmlGetter(background)} width={20} height={20} />
+            <SvgXml xml={xmlGetter(colors.background)} width={20} height={20} />
           </ThemedView>
         )}
         <CustomText themed style={styles.title}>
@@ -39,7 +41,7 @@ export const Setting: FC<{
           {(type === "navigate" || type === "value") && (
             <SvgXml
               style={styles.arrowStyle}
-              xml={arrowLeftSvg(grey)}
+              xml={arrowLeftSvg(colors.grey)}
               width={16}
               height={16}
             />

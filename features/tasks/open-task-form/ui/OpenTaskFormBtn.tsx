@@ -15,7 +15,7 @@ export const OpenTaskFormBtn = () => {
   const { addTask } = useTaskActions();
   const { paddingBottom } = useSafeAreaPadding();
   const scale = useSharedValue(1);
-  const colors = useThemeColors();
+  const { colors } = useThemeColors();
 
   const buttonStyleAnim = useAnimatedStyle(() => {
     return {
@@ -29,13 +29,14 @@ export const OpenTaskFormBtn = () => {
       withTiming(0.9, { duration: 150 }),
       withTiming(1, { duration: 150 })
     );
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     addTask({
-      id: new Date().valueOf().toString(),
-      title: "Task",
+      id: new Date().valueOf(),
+      title: "",
+      isEditing: true,
       isCompleted: false,
       date: new Date().setHours(0, 0, 0, 0),
-      remindTime: new Date().setHours(23, 30, 0, 0),
+      // remindTime: new Date().setHours(23, 30, 0, 0),
     });
   };
 

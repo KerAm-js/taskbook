@@ -16,13 +16,13 @@ export const useTheme = () => {
 
 export function useThemeColors(defaultTheme?: TTheme) {
   const theme = useTheme();
-  return THEME_COLORS[defaultTheme || theme];
+  return { colors: THEME_COLORS[defaultTheme || theme], theme };
 }
 
 export const useAnimatedThemeStyle = (
   colorName: keyof typeof THEME_COLORS.branded
 ): ReturnType<typeof useAnimatedStyle> => {
-  const colors = useThemeColors();
+  const { colors } = useThemeColors();
   const colorProgress = useSharedValue(0);
   const [fColor, setFColor] = useState(colors[colorName]);
   const [sColor, setSColor] = useState(colors[colorName]);

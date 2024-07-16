@@ -20,15 +20,17 @@ import { trashSvg } from "@/assets/svg/trash";
 const TRANSLATE_THRESHOLD = 100;
 const { width: WIDTH } = Dimensions.get("screen");
 
-export const Card: FC<ITask> = (task) => {
-  const { deleteTask, toggleTask } = useTaskActions();
+export const Card: FC<ITask> = React.memo((task) => {
+  console.log(task.id)
+  const { deleteTask, toggleTask, toggleIsEditing } = useTaskActions();
   const translationX = useSharedValue(0);
   const opacity = useSharedValue(1);
   const isOverdraggedRight = useSharedValue(false);
   const isOverdraggedLeft = useSharedValue(false);
 
   const panGesture = Gesture.Pan()
-    .onChange((event) => {
+    .minDistance(30)
+    .onUpdate((event) => {
       translationX.value = event.translationX;
       if (
         event.translationX < TRANSLATE_THRESHOLD &&
@@ -41,7 +43,7 @@ export const Card: FC<ITask> = (task) => {
         !isOverdraggedRight.value
       ) {
         isOverdraggedRight.value = true;
-        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
+        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
       }
       if (
         event.translationX > -TRANSLATE_THRESHOLD &&
@@ -54,7 +56,7 @@ export const Card: FC<ITask> = (task) => {
         !isOverdraggedLeft.value
       ) {
         isOverdraggedLeft.value = true;
-        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
+        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
       }
     })
     .onEnd((event) => {
@@ -76,13 +78,30 @@ export const Card: FC<ITask> = (task) => {
     [translationX.value, opacity.value]
   );
 
+  const toggleButtonStyleAnim = useAnimatedStyle(
+    () => ({
+      opacity: withTiming(task.isEditing && !task.title ? 0 : 1),
+    }),
+    [task.isEditing]
+  );
+
+  const taskRowStyleAnim = useAnimatedStyle(
+    () => ({
+      transform: [{ translateX: withTiming(task.isEditing && !task.title ? -28 : 0) }],
+    }),
+    [task.isEditing]
+  );
+
   return (
     <Animated.View
       entering={FadeInRight.duration(300).withInitialValues({
         transform: [{ translateX: 80 }],
       })}
     >
-      <Pressable onPress={() => console.log(task.id)} style={styles.container}>
+      <Pressable
+        onPress={() => toggleIsEditing({ id: task.id })}
+        style={styles.container}
+      >
         <AnimatedIcon
           xmlGetter={layersSvg}
           opacity={opacity}
@@ -99,11 +118,15 @@ export const Card: FC<ITask> = (task) => {
               colorName="background"
               nightColorName="backgroundSecond"
             >
-              <ToggleTask
-                isCompleted={task.isCompleted}
-                onPress={() => toggleTask(task.id)}
-              />
-              <TaskRow {...task} />
+              <Animated.View style={toggleButtonStyleAnim}>
+                <ToggleTask
+                  isCompleted={task.isCompleted}
+                  onPress={() => toggleTask(task.id)}
+                />
+              </Animated.View>
+              <Animated.View style={[taskRowStyleAnim, { flex: 1 }]}>
+                <TaskRow {...task} />
+              </Animated.View>
             </ThemedView>
           </GestureDetector>
         </Animated.View>
@@ -116,7 +139,7 @@ export const Card: FC<ITask> = (task) => {
       </Pressable>
     </Animated.View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -127,7 +150,6 @@ const styles = StyleSheet.create({
     minHeight: 50,
     borderRadius: 12,
     borderCurve: "continuous",
-    paddingBottom: 8,
     shadowOffset: {
       height: 8,
       width: 0,

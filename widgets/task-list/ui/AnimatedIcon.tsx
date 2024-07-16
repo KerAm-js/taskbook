@@ -27,7 +27,7 @@ export const AnimatedIcon: FC<{
   side = "right",
 }) => {
   const easing = Easing.out(Easing.quad);
-  const colors = useThemeColors();
+  const { colors } = useThemeColors();
 
   const redIconStyleAnim = useAnimatedStyle(
     () => ({
@@ -52,7 +52,7 @@ export const AnimatedIcon: FC<{
   const containerStyleAnim = useAnimatedStyle(
     () => ({
       opacity: opacity.value,
-      display: isOppositeOverDragged.value ? 'none' : 'flex'
+      display: isOppositeOverDragged.value ? "none" : "flex",
     }),
     [opacity.value]
   );

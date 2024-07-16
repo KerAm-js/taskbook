@@ -1,6 +1,8 @@
 import {
   GestureResponderEvent,
+  KeyboardAvoidingView,
   ListRenderItemInfo,
+  Platform,
   StyleSheet,
 } from "react-native";
 import Animated, {
@@ -15,7 +17,7 @@ import { Card } from "./Card";
 
 const renderItem = ({ item }: ListRenderItemInfo<ITask>) => <Card {...item} />;
 
-const keyExtractor = (item: ITask) => item.id;
+const keyExtractor = (item: ITask) => item.id.toString();
 
 export const TaskList: FC<{ scrollClamp: SharedValue<number> }> = ({
   scrollClamp,
@@ -32,19 +34,25 @@ export const TaskList: FC<{ scrollClamp: SharedValue<number> }> = ({
   };
 
   return (
-    <Animated.FlatList
-      scrollEventThrottle={16}
-      style={styles.scroll}
-      contentContainerStyle={styles.contentContainer}
-      showsVerticalScrollIndicator={false}
-      data={tasks}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-      itemLayoutAnimation={LinearTransition.duration(300)}
-      // onTouchStart={onTouchStart}
-      // onTouchEnd={onTouchEnd}
-      ListEmptyComponent={EmptyListImage}
-    />
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={40}
+    >
+      <Animated.FlatList
+        scrollEventThrottle={16}
+        style={styles.scroll}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+        data={tasks}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        itemLayoutAnimation={LinearTransition.duration(300)}
+        // onTouchStart={onTouchStart}
+        // onTouchEnd={onTouchEnd}
+        ListEmptyComponent={EmptyListImage}
+      />
+    </KeyboardAvoidingView>
   );
 };
 

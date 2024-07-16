@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
   container: {
     paddingRight: 10,
     paddingLeft: 15,
-    paddingTop: 15,
+    height: 50,
+    justifyContent: 'center',
   },
 });

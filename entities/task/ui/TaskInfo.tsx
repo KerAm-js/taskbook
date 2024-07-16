@@ -1,6 +1,7 @@
 import { CustomText, TEXT_STYLES, useThemeColors } from "@/shared";
 import { FC } from "react";
 import { StyleSheet, View } from "react-native";
+import Animated, { FadeIn } from "react-native-reanimated";
 import { SvgXml } from "react-native-svg";
 
 interface IProps {
@@ -18,9 +19,12 @@ export const TaskInfo: FC<IProps> = ({
   backgroundColor,
   translateTitle,
 }) => {
-  const { text, lineGrey } = useThemeColors();
+  const {
+    colors: { text, lineGrey },
+  } = useThemeColors();
   return (
-    <View
+    <Animated.View
+      entering={FadeIn}
       style={[
         styles.container,
         { backgroundColor: backgroundColor || lineGrey },
@@ -35,7 +39,7 @@ export const TaskInfo: FC<IProps> = ({
           {title}
         </CustomText>
       )}
-    </View>
+    </Animated.View>
   );
 };
 

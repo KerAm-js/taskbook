@@ -11,7 +11,7 @@ import Animated, {
 import { COLORS } from "../config/style/colors";
 
 export const Toggle: FC<{ value: boolean }> = ({ value }) => {
-  const { grey } = useThemeColors();
+  const { colors } = useThemeColors();
 
   const colorProgress = useSharedValue(0);
 
@@ -19,7 +19,7 @@ export const Toggle: FC<{ value: boolean }> = ({ value }) => {
     const backgroundColor = interpolateColor(
       colorProgress.value,
       [0, 1],
-      [grey, COLORS.green]
+      [colors.grey, COLORS.green]
     );
     return {
       backgroundColor,

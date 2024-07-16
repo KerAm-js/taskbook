@@ -17,7 +17,9 @@ export const ThemedText: FC<IThemeTextProps> = ({
   defaultTheme,
   style,
 }) => {
-  const { text, textGrey } = useThemeColors(defaultTheme);
+  const {
+    colors: { text, textGrey },
+  } = useThemeColors(defaultTheme);
   if (children) {
     return (
       <Text style={[{ color: isTextGrey ? textGrey : text }, style]}>
