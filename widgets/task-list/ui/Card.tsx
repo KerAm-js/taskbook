@@ -41,7 +41,7 @@ export const Card: FC<ITask> = (task) => {
         !isOverdraggedRight.value
       ) {
         isOverdraggedRight.value = true;
-        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Rigid);
+        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
       }
       if (
         event.translationX > -TRANSLATE_THRESHOLD &&
@@ -54,7 +54,7 @@ export const Card: FC<ITask> = (task) => {
         !isOverdraggedLeft.value
       ) {
         isOverdraggedLeft.value = true;
-        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Rigid);
+        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
       }
     })
     .onEnd((event) => {
@@ -87,6 +87,7 @@ export const Card: FC<ITask> = (task) => {
           xmlGetter={layersSvg}
           opacity={opacity}
           isOverDragged={isOverdraggedRight}
+          isOppositeOverDragged={isOverdraggedLeft}
           colorName="accent"
           side="left"
         />
@@ -110,6 +111,7 @@ export const Card: FC<ITask> = (task) => {
           xmlGetter={trashSvg}
           opacity={opacity}
           isOverDragged={isOverdraggedLeft}
+          isOppositeOverDragged={isOverdraggedRight}
         />
       </Pressable>
     </Animated.View>

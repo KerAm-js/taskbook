@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     width: 26,
     height: 26,
     padding: 3,
-    borderRadius: 6,
+    borderRadius: 7,
     marginRight: 10,
     borderCurve: "continuous",
   },
