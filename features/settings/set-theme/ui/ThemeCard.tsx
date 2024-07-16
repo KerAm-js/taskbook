@@ -4,7 +4,7 @@ import {
   THEME_COLORS,
   useTheme,
   COLORS,
-  TEXT_BOLD_STYLE,
+  TEXT_STYLES,
 } from "@/shared";
 import { FC } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   title: {
     color: THEME_COLORS.night.text,
     alignSelf: "flex-end",
-    ...TEXT_BOLD_STYLE
+    ...TEXT_STYLES.standartBold,
   },
   body: {
     padding: 15,

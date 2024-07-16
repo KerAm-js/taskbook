@@ -10,10 +10,11 @@ import Animated, {
   Easing,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withSequence,
   withTiming,
 } from "react-native-reanimated";
-import { TEXT_STYLE } from "@/shared/config/style/texts";
+import { TEXT_STYLES } from "@/shared/config/style/texts";
 
 export const TaskRow: FC<ITask> = ({
   remindTime,
@@ -29,12 +30,13 @@ export const TaskRow: FC<ITask> = ({
 
   const colorProgress = useSharedValue(0);
   const translateX = useSharedValue(0);
+  const opacity = useSharedValue(1);
 
   const easing = Easing.out(Easing.quad);
 
   const styleAnim = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(isCompleted ? 0.4 : 1, { duration: 200, easing }),
+      opacity: opacity.value,
       transform: [{ translateX: translateX.value }],
     };
   }, [isCompleted]);
@@ -47,6 +49,10 @@ export const TaskRow: FC<ITask> = ({
         withTiming(0, { duration: 200, easing })
       );
     }
+    opacity.value = withDelay(
+      isCompleted ? 700 : 0,
+      withTiming(isCompleted ? 0.4 : 1)
+    );
   }, [isCompleted]);
 
   return (
@@ -77,11 +83,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0,
   },
   title: {
-    ...TEXT_STYLE,
+    ...TEXT_STYLES.standart,
   },
   titleContainer: {
     marginTop: 15,
-    height: TEXT_STYLE.lineHeight,
+    height: TEXT_STYLES.standart.lineHeight,
     marginBottom: 8,
   },
   infoContainer: {

@@ -3,20 +3,21 @@ import {
   ListRenderItemInfo,
   StyleSheet,
 } from "react-native";
-import Animated, { LinearTransition } from "react-native-reanimated";
+import Animated, {
+  LinearTransition,
+  SharedValue,
+} from "react-native-reanimated";
 import React, { FC, useRef, useState } from "react";
 import { PADDING_TOP, SCREEN_PADDING } from "@/shared";
 import { EmptyListImage } from "./EmptyListImage";
 import { ITask, useTasks } from "@/entities/task";
 import { Card } from "./Card";
 
-const renderItem = ({ item }: ListRenderItemInfo<ITask>) => (
-  <Card {...item} />
-);
+const renderItem = ({ item }: ListRenderItemInfo<ITask>) => <Card {...item} />;
 
 const keyExtractor = (item: ITask) => item.id;
 
-export const TaskList: FC<{ scrollClamp: { value: number } }> = ({
+export const TaskList: FC<{ scrollClamp: SharedValue<number> }> = ({
   scrollClamp,
 }) => {
   const tasks = useTasks();

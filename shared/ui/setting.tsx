@@ -1,12 +1,12 @@
 import { FC } from "react";
-import { ThemedView } from "./themedView";
+import { ThemedView } from "./ThemedView";
 import { Pressable, StyleSheet, View } from "react-native";
 import { SvgXml } from "react-native-svg";
-import { CustomText } from "./customText";
-import { Toggle } from "./toggle";
+import { CustomText } from "./CustomText";
+import { Toggle } from "./Toggle";
 import { arrowLeftSvg } from "@/assets/svg/arrowLeft";
 import { useThemeColors } from "../hooks/useTheme";
-import { TEXT_STYLE } from "../config/style/texts";
+import { TEXT_STYLES } from "../config/style/texts";
 
 export const Setting: FC<{
   onPress: () => void;
@@ -20,7 +20,7 @@ export const Setting: FC<{
 
   return (
     <Pressable onPress={onPress} style={styles.container}>
-      <ThemedView style={styles.themedView} colorName="input">
+      <ThemedView style={styles.themedView} colorName="backgroundSecond">
         {xmlGetter && (
           <ThemedView colorName="accent" style={styles.iconContainer}>
             <SvgXml xml={xmlGetter(background)} width={20} height={20} />
@@ -76,10 +76,10 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    ...TEXT_STYLE,
+    ...TEXT_STYLES.standart,
   },
   value: {
-    ...TEXT_STYLE,
+    ...TEXT_STYLES.standart,
   },
   arrowStyle: {
     transform: [{ rotate: "180deg" }],

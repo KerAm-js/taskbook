@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { FC, useState } from "react";
 import { StyleSheet } from "react-native";
 import Animated, {
+  SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
@@ -20,14 +21,14 @@ import {
   THEME_COLORS,
   ThemedGradient,
   ThemedView,
-  TITLE_BIG_STYLE,
+  TEXT_STYLES,
   useSafeAreaPadding,
 } from "@/shared";
 import Calendar from "./components/Calendar";
 import { CONTENT_HEIGHTS } from "../config";
 
 export const MainHeader: FC<{
-  scrollClamp: { value: number };
+  scrollClamp: SharedValue<number>;
 }> = ({ scrollClamp }) => {
   const [isCalendarOpened, setCalendarOpened] = useState<boolean>(false);
   const { paddingTop } = useSafeAreaPadding();
@@ -149,6 +150,6 @@ const styles = StyleSheet.create({
   title: {
     marginLeft: SCREEN_PADDING,
     color: THEME_COLORS.night.text,
-    ...TITLE_BIG_STYLE
+    ...TEXT_STYLES.titleBig
   },
 });

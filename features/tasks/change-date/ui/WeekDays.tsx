@@ -6,7 +6,7 @@ import {
   TCalendarWeek,
   THEME_COLORS,
 } from "@/shared";
-import { TEXT_SEMIBOLD_STYLE, TEXT_STYLE } from "@/shared/config/style/texts";
+import { TEXT_STYLES } from "@/shared/config/style/texts";
 import React, { FC } from "react";
 import { View, Pressable, StyleSheet, Dimensions } from "react-native";
 
@@ -87,9 +87,9 @@ const styles = StyleSheet.create({
   },
   dateTitle: {
     color: THEME_COLORS.night.text,
-    ...TEXT_STYLE
+    ...TEXT_STYLES.standart,
   },
   selectedDateTitle: {
-    ...TEXT_SEMIBOLD_STYLE
+    ...TEXT_STYLES.standartSemibold,
   }
 });

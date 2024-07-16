@@ -7,7 +7,7 @@ import { SvgXml } from "react-native-svg";
 export const EmptyListImage = () => {
   const { accent } = useThemeColors();
   return (
-    <Animated.View entering={FadeIn.delay(300)} exiting={FadeOut.duration(200)} style={styles.container}>
+    <Animated.View entering={FadeIn.delay(200)} exiting={FadeOut.duration(200)} style={styles.container}>
       <SvgXml xml={emptyTaskListSvg(accent)} width={250} height={250} />
     </Animated.View>
   );

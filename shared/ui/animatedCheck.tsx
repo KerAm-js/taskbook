@@ -16,7 +16,6 @@ export const AnimatedCheck: FC<{
   isChecked: boolean;
   borderRadius?: number;
 }> = ({ defaultTheme, width = 20, height = 20, isChecked, borderRadius }) => {
-
   const theme = useTheme();
 
   const containerStyleAnim = useAnimatedStyle(() => {
@@ -28,30 +27,22 @@ export const AnimatedCheck: FC<{
   const borderColor = THEME_COLORS[defaultTheme || theme].accent_opacity;
   const iconColor = THEME_COLORS[defaultTheme || theme].accent;
 
+  const containerStyle = {
+    width: width,
+    height: height,
+    borderColor: borderColor,
+    borderRadius: borderRadius || width / 2,
+    borderWidth: isChecked ? 0 : 2,
+  };
+
+  const backgroundStyle = {
+    borderRadius: borderRadius || width / 2,
+    backgroundColor: isChecked ? borderColor : "rgba(0, 0, 0, 0)",
+  };
+
   return (
-    <View
-      style={[
-        {
-          width: width,
-          height: height,
-          borderColor: borderColor,
-          borderRadius: borderRadius || width / 2,
-          borderWidth: isChecked ? 0 : 2
-        },
-        styles.container,
-      ]}
-    >
-      <View
-        style={[
-          {
-            borderRadius: borderRadius || width / 2,
-            backgroundColor: isChecked
-              ? borderColor
-              : "rgba(0, 0, 0, 0)",
-          },
-          styles.background,
-        ]}
-      >
+    <View style={[containerStyle, styles.container]}>
+      <View style={[backgroundStyle, styles.background]}>
         <View style={{ width: 14, height: 14 }}>
           <Animated.View style={[{ overflow: "hidden" }, containerStyleAnim]}>
             <SvgXml xml={checkSvg(iconColor)} width={14} height={14} />
@@ -64,12 +55,12 @@ export const AnimatedCheck: FC<{
 
 const styles = StyleSheet.create({
   container: {
-    borderCurve: 'continuous'
+    borderCurve: "continuous",
   },
   background: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    borderCurve: 'continuous'
+    borderCurve: "continuous",
   },
 });

@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Text, TextStyle } from "react-native";
 import { i18n } from "../config/i18n/i18n";
-import { IThemeTextProps, ThemedText } from "./themeText";
+import { IThemeTextProps, ThemedText } from "./ThemedText";
 import { THEME_COLORS } from "../config/style/colors";
 
 export const CustomText: FC<

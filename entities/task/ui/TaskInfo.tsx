@@ -1,4 +1,4 @@
-import { CustomText, TEXT_SMALL_STYLE, useThemeColors } from "@/shared";
+import { CustomText, TEXT_STYLES, useThemeColors } from "@/shared";
 import { FC } from "react";
 import { StyleSheet, View } from "react-native";
 import { SvgXml } from "react-native-svg";
@@ -52,6 +52,6 @@ const styles = StyleSheet.create({
   title: {
     marginLeft: 3,
     paddingTop: 2,
-    ...TEXT_SMALL_STYLE,
+    ...TEXT_STYLES.ultraSmall,
   },
 });

@@ -40,24 +40,26 @@ export const OpenTaskFormBtn = () => {
   };
 
   return (
-      <Animated.View
-        style={[
-          styles.buttonContainer,
-          { shadowColor: colors.accent, bottom: paddingBottom, right: SCREEN_PADDING },
-          buttonStyleAnim,
-        ]}
-      >
-        <Pressable onPress={onPress} style={styles.button}>
-          <SvgXml xml={plusSvg(colors.background)} />
-        </Pressable>
-      </Animated.View>
+    <Animated.View
+      style={[
+        styles.buttonContainer,
+        {
+          shadowColor: colors.accent,
+          bottom: paddingBottom,
+          right: SCREEN_PADDING,
+        },
+        buttonStyleAnim,
+      ]}
+    >
+      <Pressable onPress={onPress} style={styles.button}>
+        <SvgXml xml={plusSvg(colors.background)} />
+      </Pressable>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    
-  },
+  container: {},
   buttonContainer: {
     width: 54,
     height: 54,

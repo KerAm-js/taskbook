@@ -1,7 +1,7 @@
 import Animated from "react-native-reanimated";
 import { useAnimatedThemeStyle, useTheme } from "../hooks/useTheme";
 import { useSafeAreaPadding } from "../hooks/useSafeAreaPadding";
-import { CustomText } from "./customText";
+import { CustomText } from "./CustomText";
 import { FC } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { arrowLeftSvg } from "@/assets/svg/arrowLeft";
@@ -10,7 +10,7 @@ import { SvgXml } from "react-native-svg";
 import { SCREEN_PADDING } from "../config/style/views";
 import { useNavigation } from "expo-router";
 import { HEADER_SHADOW } from "../config/style/shadows";
-import { TEXT_STYLE } from "../config/style/texts";
+import { TEXT_STYLES } from "../config/style/texts";
 
 export const Header: FC<{ title: string; rotateLeftIcon?: boolean }> = ({
   title,
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     width: 80,
   },
   title: {
-    ...TEXT_STYLE,
+    ...TEXT_STYLES.standartSemibold,
   },
   right: {
     height: 40,

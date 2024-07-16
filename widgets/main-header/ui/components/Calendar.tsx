@@ -4,9 +4,8 @@ import {
   getCalendarWeeks,
   i18n,
   TCalendarWeek,
-  TEXT_MIDDLE_STYLE,
   THEME_COLORS,
-  TITLE_BIG_STYLE,
+  TEXT_STYLES,
 } from "@/shared";
 import { SCREEN_PADDING } from "@/shared/config/style/views";
 import { MONTHS, WEEK_DAYS } from "@/shared/consts/datetime";
@@ -160,7 +159,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: THEME_COLORS.night.text,
-    ...TITLE_BIG_STYLE
+    ...TEXT_STYLES.titleBig
   },
   weekContainer: {
     paddingTop: 17,
@@ -179,7 +178,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 2,
     lineHeight: 18,
-    ...TEXT_MIDDLE_STYLE,
+    ...TEXT_STYLES.small
   },
   monthContainer: {
     flexDirection: "row",
