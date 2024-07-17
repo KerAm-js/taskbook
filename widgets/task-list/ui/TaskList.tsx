@@ -35,11 +35,12 @@ export const TaskList: FC<{ scrollClamp: SharedValue<number> }> = ({
 
   return (
     <KeyboardAvoidingView
-      style={{flex: 1}}
+      style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={40}
     >
       <Animated.FlatList
+        keyboardShouldPersistTaps="always"
         scrollEventThrottle={16}
         style={styles.scroll}
         contentContainerStyle={styles.contentContainer}

@@ -44,6 +44,7 @@ export const TRANSLATIONS = {
     weekly: 'Еженедельно',
     monthly: 'Ежемесячно',
     note: 'Заметка',
+    newTask: 'Новая задача',
   },
   en: {
     today: "Today",
@@ -88,5 +89,6 @@ export const TRANSLATIONS = {
     weekly: 'Weekly',
     monthly: 'Monthly',
     note: 'Note',
+    newTask: 'New task',
   },
 };

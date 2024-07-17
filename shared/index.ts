@@ -5,7 +5,6 @@ export { Header } from "./ui/Header";
 export { ThemedText } from "./ui/ThemedText";
 export { ThemedInput } from "./ui/ThemedInput";
 export { ThemedView } from "./ui/ThemedView";
-export { ThemedIcon } from "./ui/ThemedIcon";
 export { AnimatedCheck } from "./ui/AnimatedCheck";
 export { IconButton } from "./ui/IconButton";
 export { CustomText } from "./ui/CustomText";

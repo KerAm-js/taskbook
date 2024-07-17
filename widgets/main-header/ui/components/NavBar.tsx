@@ -16,15 +16,11 @@ const NavBar: FC<{
       <IconButton
         xml={settingsSvg(THEME_COLORS.night.accent)}
         onPress={() => router.navigate("/settings")}
-        iconWidth={26}
-        iconHeight={26}
       />
       <View style={styles.navBarRight}>
         <IconButton
           xml={taskHistorySvg(THEME_COLORS.night.accent)}
           onPress={() => router.navigate("/history")}
-          iconWidth={26}
-          iconHeight={26}
         />
         <IconButton
           xml={
@@ -32,8 +28,6 @@ const NavBar: FC<{
               ? closeCalendarSvg(THEME_COLORS.night.accent)
               : openCalendarSvg(THEME_COLORS.night.accent)
           }
-          iconWidth={26}
-          iconHeight={26}
           onPress={toggleCalendarOpened}
         />
       </View>

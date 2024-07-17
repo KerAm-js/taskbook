@@ -1,33 +1,33 @@
 import { FC } from "react";
-import { Pressable } from "react-native";
-import { SvgXml } from "react-native-svg";
+import { Pressable, StyleSheet } from "react-native";
+import { SvgXml, SvgProps } from "react-native-svg";
 
-export const IconButton: FC<{
-  width?: number;
-  height?: number;
-  iconWidth?: number;
-  iconHeight?: number;
-  onPress?: () => void;
-  xml: string;
-}> = ({
-  width = 40,
-  height = 40,
-  iconWidth = 24,
-  iconHeight = 24,
-  xml,
-  onPress,
-}) => {
+export const IconButton: FC<
+  SvgProps & {
+    xml: string;
+    buttonSize?: number;
+    onPress?: () => void;
+  }
+> = ({ buttonSize = 40, width = 26, height = 26, xml, onPress, ...props }) => {
   return (
     <Pressable
-      style={{
-        justifyContent: "center",
-        alignItems: "center",
-        width,
-        height,
-      }}
+      style={[
+        styles.container,
+        {
+          width: buttonSize,
+          height: buttonSize,
+        },
+      ]}
       onPress={onPress ? onPress : () => {}}
     >
-      <SvgXml width={iconWidth} height={iconHeight} xml={xml} />
+      <SvgXml width={width} height={height} xml={xml} {...props} />
     </Pressable>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

@@ -1,6 +1,6 @@
 import { ITask, TaskRow, useTaskActions } from "@/entities/task";
 import { ToggleTask } from "@/features/tasks/toggle-task";
-import { ThemedView } from "@/shared";
+import { COLORS, ThemedView } from "@/shared";
 import React, { FC } from "react";
 import { Dimensions, Pressable, StyleSheet } from "react-native";
 import * as Haptics from "expo-haptics";
@@ -21,7 +21,6 @@ const TRANSLATE_THRESHOLD = 100;
 const { width: WIDTH } = Dimensions.get("screen");
 
 export const Card: FC<ITask> = React.memo((task) => {
-  console.log(task.id)
   const { deleteTask, toggleTask, toggleIsEditing } = useTaskActions();
   const translationX = useSharedValue(0);
   const opacity = useSharedValue(1);
@@ -156,7 +155,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.55,
     shadowRadius: 14,
-    shadowColor: "#DAE0EB",
+    shadowColor: COLORS.shadow,
   },
   taskNight: {
     shadowOpacity: 0,

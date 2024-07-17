@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ITask } from "../model/type";
-import { ThemedInput } from "@/shared";
+import { i18n, ThemedInput } from "@/shared";
 import { TaskInfo } from "./TaskInfo";
 import { bellOutlineSvg } from "@/assets/svg/bellOutline";
 import { repeatSvg } from "@/assets/svg/repeat";
@@ -63,8 +63,8 @@ export const TaskRow: FC<ITask> = ({
 
   const onBlur = () => {
     if (isEditing) {
-      toggleIsEditing({ id, title: text.trim() || "Новая задача" });
-      if (!text.trim()) setText("Новая задача");
+      toggleIsEditing({ id, title: text.trim() || i18n.t("newTask") });
+      if (!text.trim()) setText(i18n.t("newTask"));
     }
   };
 
