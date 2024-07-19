@@ -13,11 +13,12 @@ type TColorSet = {
 
 const textOpacity = 0.45;
 const opacity = 0.2;
-const ultraOpacity = 0.07;
+const ultraOpacity = 0.08;
 
 export type TTheme = "branded" | "night" | "purple" | "darkBlue";
 
 export const COLORS = {
+  black: '#000',
   blue: `rgba(0, 104, 217, 1)`,
   blueOpacity: `rgba(0, 104, 217, ${opacity})`,
   darkBlue: `rgba(64, 72, 101, 1)`,
@@ -39,14 +40,16 @@ export const COLORS = {
 
 export const THEME_GRADIENTS: { [key in TTheme]: Array<string> } = {
   branded: [`#004FA6`, `#007AFF`],
-  night: [`#5F6B95`, `#363C55`],
+  night: [`#535D82`, `#363C55`],
   darkBlue: [`#363C55`, `#5F6B95`],
   purple: [`#464490`, `#7C78FF`],
 };
 
+export type TColorName = keyof typeof THEME_COLORS.branded;
+
 export const THEME_COLORS: { [key in TTheme]: TColorSet } = {
   branded: {
-    text: `#000`,
+    text: COLORS.black,
     accent: COLORS.blue,
     accent_opacity: COLORS.blueOpacity,
     background: COLORS.white,
@@ -70,7 +73,7 @@ export const THEME_COLORS: { [key in TTheme]: TColorSet } = {
     header: "#363C55",
   },
   darkBlue: {
-    text: `#000`,
+    text: COLORS.black,
     accent: COLORS.darkBlue,
     accent_opacity: COLORS.darkBlueOpacity,
     background: COLORS.white,
@@ -82,7 +85,7 @@ export const THEME_COLORS: { [key in TTheme]: TColorSet } = {
     header: COLORS.darkBlue,
   },
   purple: {
-    text: `#000`,
+    text: COLORS.black,
     accent: COLORS.purple,
     accent_opacity: COLORS.purpleOpacity,
     background: COLORS.white,

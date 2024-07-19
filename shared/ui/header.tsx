@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   nightShadow: {
     shadowOpacity: 0,
     borderBottomWidth: 1,
-    borderBottomColor: THEME_COLORS.night.lineGrey,
+    borderColor: THEME_COLORS.night.lineGrey,
   },
   left: {
     justifyContent: "center",

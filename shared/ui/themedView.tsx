@@ -1,11 +1,11 @@
 import { FC, PropsWithChildren } from "react";
-import { THEME_COLORS } from "../config/style/colors";
+import { TColorName, THEME_COLORS } from "../config/style/colors";
 import { View, ViewStyle } from "react-native";
 import { useTheme } from "../hooks/useTheme";
 
 interface IProps extends PropsWithChildren {
-  colorName: keyof typeof THEME_COLORS.branded;
-  nightColorName?: keyof typeof THEME_COLORS.branded;
+  colorName: TColorName;
+  nightColorName?: TColorName;
   style?: Array<ViewStyle | false> | ViewStyle;
   nightStyle?: Array<ViewStyle | false> | ViewStyle;
 }

@@ -1,4 +1,4 @@
 export { useTaskActions, useTasks } from "./model/hooks";
 export { tasksSlice } from "./model/tasksSlice";
-export { ITask, TAddNextTaskPayload } from "./model/type";
+export { ITask } from "./model/types";
 export { TaskRow } from "./ui/TaskRow";

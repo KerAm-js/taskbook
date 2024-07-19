@@ -2,7 +2,6 @@ import { ScrollToStartButton, WeekDays } from "@/features/tasks/change-date";
 import {
   CustomText,
   getCalendarWeeks,
-  i18n,
   TCalendarWeek,
   THEME_COLORS,
   TEXT_STYLES,
@@ -10,6 +9,7 @@ import {
 import { SCREEN_PADDING } from "@/shared/config/style/views";
 import { MONTHS, WEEK_DAYS } from "@/shared/consts/datetime";
 import { FC, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Dimensions, StyleSheet, View } from "react-native";
 import Animated, {
   runOnJS,
@@ -26,6 +26,7 @@ const keyExtractor = (item: TCalendarWeek) => item.days[0].valueOf().toString();
 const Calendar: FC<{ isCalendarOpened: boolean }> = () => {
   const index = useSharedValue(0);
   const listRef = useRef<Animated.FlatList<TCalendarWeek> | null>(null);
+  const { t } = useTranslation();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [weeks, setWeeks] = useState(getCalendarWeeks());
   const [titleData, setTitleData] = useState({
@@ -59,9 +60,9 @@ const Calendar: FC<{ isCalendarOpened: boolean }> = () => {
   });
 
   const monthString =
-    i18n.t(MONTHS[titleData.months[0]]) +
+    t(MONTHS[titleData.months[0]]) +
     (typeof titleData.months[1] === "number"
-      ? " / " + i18n.t(MONTHS[titleData.months[1]])
+      ? " / " + t(MONTHS[titleData.months[1]])
       : "") +
     (titleData.year != new Date().getFullYear() ? " " + titleData.year : "");
 

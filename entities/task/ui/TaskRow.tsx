@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { ITask } from "../model/type";
-import { i18n, ThemedInput } from "@/shared";
+import { ITask } from "../model/types";
+import { ThemedInput } from "@/shared";
 import { TaskInfo } from "./TaskInfo";
 import { bellOutlineSvg } from "@/assets/svg/bellOutline";
 import { repeatSvg } from "@/assets/svg/repeat";
@@ -17,6 +17,7 @@ import Animated, {
 import { TEXT_STYLES } from "@/shared/config/style/texts";
 import { useTaskActions } from "../model/hooks";
 import { findAndDeleteTime } from "../lib/findAndDeleteTime";
+import { useTranslation } from "react-i18next";
 
 export const TaskRow: FC<ITask> = ({
   id,
@@ -28,6 +29,7 @@ export const TaskRow: FC<ITask> = ({
   description,
 }) => {
   const [text, setText] = useState(title);
+  const { t } = useTranslation();
   const { toggleIsEditing, setReminder, deleteTask } = useTaskActions();
   const remindDate = remindTime ? new Date(remindTime) : null;
   const remindString = remindDate
@@ -63,8 +65,8 @@ export const TaskRow: FC<ITask> = ({
 
   const onBlur = () => {
     if (isEditing) {
-      toggleIsEditing({ id, title: text.trim() || i18n.t("newTask") });
-      if (!text.trim()) setText(i18n.t("newTask"));
+      toggleIsEditing({ id, title: text.trim() || t("newTask") });
+      if (!text.trim()) setText(t("newTask"));
     }
   };
 

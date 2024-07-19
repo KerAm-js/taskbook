@@ -12,17 +12,15 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
-import { useDispatch } from "react-redux";
-import { themeSlice } from "../model/themeSlice";
 import { TTheme } from "@/shared/config/style/colors";
+import { useSettingsActions } from "@/entities/settings";
 
 export const ThemeCard: FC<{ theme: TTheme }> = ({ theme }) => {
-  const dispatch = useDispatch();
-  const setTheme = () => dispatch(themeSlice.actions.setTheme(theme));
+  const { setTheme } = useSettingsActions();
   const currentTheme = useTheme();
 
   const onPress = () => {
-    setTheme();
+    setTheme(theme);
   };
 
   const containerStyleAnim = useAnimatedStyle(() => {
@@ -33,7 +31,12 @@ export const ThemeCard: FC<{ theme: TTheme }> = ({ theme }) => {
 
   return (
     <Animated.View style={containerStyleAnim}>
-      <View style={[styles.shadowContainer, currentTheme === 'night' && styles.shadowNight ]}>
+      <View
+        style={[
+          styles.shadowContainer,
+          currentTheme === "night" && styles.shadowNight,
+        ]}
+      >
         <Pressable
           style={[
             styles.container,
@@ -47,13 +50,10 @@ export const ThemeCard: FC<{ theme: TTheme }> = ({ theme }) => {
               { backgroundColor: THEME_COLORS[theme].header },
             ]}
           >
-            <CustomText style={styles.title}>
-              {theme}
-            </CustomText>
+            <CustomText style={styles.title}>{theme}</CustomText>
             <AnimatedCheck
               defaultTheme="night"
-              width={22}
-              height={22}
+              size={22}
               isChecked={currentTheme === theme}
             />
           </View>
@@ -63,8 +63,7 @@ export const ThemeCard: FC<{ theme: TTheme }> = ({ theme }) => {
                 defaultTheme={theme}
                 isChecked={false}
                 borderRadius={5}
-                width={18}
-                height={18}
+                size={18}
               />
               <View
                 style={[
@@ -81,8 +80,7 @@ export const ThemeCard: FC<{ theme: TTheme }> = ({ theme }) => {
                 defaultTheme={theme}
                 isChecked={false}
                 borderRadius={5}
-                width={18}
-                height={18}
+                size={18}
               />
               <View
                 style={[
@@ -120,7 +118,7 @@ const styles = StyleSheet.create({
   shadowNight: {
     shadowOpacity: 0.25,
     shadowRadius: 10,
-    shadowColor: 'rgba(0, 0, 0, 1)',
+    shadowColor: "rgba(0, 0, 0, 1)",
     shadowOffset: {
       height: 4,
       width: 0,

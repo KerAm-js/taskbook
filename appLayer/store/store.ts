@@ -1,10 +1,10 @@
+import { settingsSlice } from "@/entities/settings";
 import { tasksSlice } from "@/entities/task";
-import { themeSlice } from "@/features/settings/set-theme";
 import { configureStore } from "@reduxjs/toolkit";
 
 export const store = configureStore({
   reducer: {
-    theme: themeSlice.reducer,
+    settings: settingsSlice.reducer,
     tasks: tasksSlice.reducer,
   },
 });

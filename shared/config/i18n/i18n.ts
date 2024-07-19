@@ -1,9 +1,16 @@
 import { getLocales } from "expo-localization";
-import { I18n } from "i18n-js";
 import { TRANSLATIONS } from "./translations";
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
 
-export const i18n = new I18n(TRANSLATIONS);
+i18n.use(initReactI18next).init({
+  compatibilityJSON: "v3",
+  resources: TRANSLATIONS,
+  lng: getLocales()[0].languageCode || "en",
+  fallbackLng: "en",
+  interpolation: {
+    escapeValue: false,
+  },
+});
 
-i18n.locale = getLocales()[0].languageCode ?? "en";
-
-i18n.enableFallback = true;
+export const  I18n = i18n;

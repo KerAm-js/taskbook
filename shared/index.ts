@@ -10,12 +10,12 @@ export { IconButton } from "./ui/IconButton";
 export { CustomText } from "./ui/CustomText";
 
 //config
+export { I18n } from "./config/i18n/i18n";
+export { LANGUAGES } from "./config/i18n/translations";
 export { THEME_COLORS, COLORS } from "./config/style/colors";
 export { SCREEN_PADDING, PADDING_TOP } from "./config/style/views";
-export { i18n } from "./config/i18n/i18n";
 export { HEADER_SHADOW, HEADER_SHADOW_NIGHT } from "./config/style/shadows";
 export { TEXT_STYLES } from "./config/style/texts";
-
 //hooks
 export { useSafeAreaPadding } from "./hooks/useSafeAreaPadding";
 export {
@@ -31,3 +31,7 @@ export {
   getCalendarWeeks,
   isToday,
 } from "./lib/dates";
+
+//types
+export { TLanguage } from "./config/i18n/translations";
+export { TColorName } from "@/shared/config/style/colors";

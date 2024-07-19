@@ -8,8 +8,3 @@ export interface ITask {
   isCompleted: boolean;
   isEditing?: boolean;
 }
-
-export type TAddNextTaskPayload = {
-  prevTaskId: ITask["id"];
-  prevTaskTitle?: ITask["title"];
-};

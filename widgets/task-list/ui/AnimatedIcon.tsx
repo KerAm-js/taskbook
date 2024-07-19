@@ -1,4 +1,4 @@
-import { COLORS, THEME_COLORS, useThemeColors } from "@/shared";
+import { COLORS, TColorName, useThemeColors } from "@/shared";
 import React, { FC } from "react";
 import { StyleSheet } from "react-native";
 import Animated, {
@@ -14,7 +14,7 @@ export const AnimatedIcon: FC<{
   isOverDragged: SharedValue<boolean>;
   isOppositeOverDragged: SharedValue<boolean>;
   xmlGetter: (color: string) => string;
-  colorName?: keyof typeof THEME_COLORS.branded;
+  colorName?: TColorName;
   color?: keyof typeof COLORS;
   side?: "left" | "right";
 }> = ({

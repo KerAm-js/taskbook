@@ -1,6 +1,6 @@
 import { RootState } from "@/appLayer/store";
 import { useSelector } from "react-redux";
-import { THEME_COLORS, TTheme } from "../config/style/colors";
+import { TColorName, THEME_COLORS, TTheme } from "../config/style/colors";
 import { useState, useEffect } from "react";
 import {
   useSharedValue,
@@ -10,7 +10,7 @@ import {
 } from "react-native-reanimated";
 
 export const useTheme = () => {
-  const theme = useSelector((state: RootState) => state.theme.theme);
+  const theme = useSelector((state: RootState) => state.settings.theme);
   return theme;
 };
 
@@ -20,7 +20,7 @@ export function useThemeColors(defaultTheme?: TTheme) {
 }
 
 export const useAnimatedThemeStyle = (
-  colorName: keyof typeof THEME_COLORS.branded
+  colorName: TColorName
 ): ReturnType<typeof useAnimatedStyle> => {
   const { colors } = useThemeColors();
   const colorProgress = useSharedValue(0);

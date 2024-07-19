@@ -11,16 +11,15 @@ import { useTheme } from "../hooks/useTheme";
 
 export const AnimatedCheck: FC<{
   defaultTheme?: TTheme;
-  width?: number;
-  height?: number;
+  size?: number;
   isChecked: boolean;
   borderRadius?: number;
-}> = ({ defaultTheme, width = 20, height = 20, isChecked, borderRadius }) => {
+}> = ({ defaultTheme, size = 20, isChecked, borderRadius }) => {
   const theme = useTheme();
 
   const containerStyleAnim = useAnimatedStyle(() => {
     return {
-      width: isChecked ? withTiming(width, { duration: 500 }) : 0,
+      width: isChecked ? withTiming(size, { duration: 500 }) : 0,
     };
   }, [isChecked]);
 
@@ -28,15 +27,15 @@ export const AnimatedCheck: FC<{
   const iconColor = THEME_COLORS[defaultTheme || theme].accent;
 
   const containerStyle = {
-    width: width,
-    height: height,
+    width: size,
+    height: size,
     borderColor: borderColor,
-    borderRadius: borderRadius || width / 2,
+    borderRadius: borderRadius || size / 2,
     borderWidth: isChecked ? 0 : 1.5,
   };
 
   const backgroundStyle = {
-    borderRadius: borderRadius || width / 2,
+    borderRadius: borderRadius || size / 2,
     backgroundColor: isChecked ? borderColor : "rgba(0, 0, 0, 0)",
   };
 

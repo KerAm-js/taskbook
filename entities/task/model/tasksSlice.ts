@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ITask, TAddNextTaskPayload } from "./type";
-import { i18n } from "@/shared";
+import { ITask } from "./types";
 
 const initialState: ITask[] = [];
 
@@ -17,26 +16,6 @@ export const tasksSlice = createSlice({
         date: new Date().setHours(0, 0, 0, 0),
       };
       return [newTask, ...state];
-    },
-
-    addNextTask: (
-      state,
-      action: PayloadAction<TAddNextTaskPayload>
-    ) => {
-      const { prevTaskId, prevTaskTitle } = action.payload;
-      const nextTask = {
-        id: new Date().valueOf(),
-        title: "",
-        isEditing: true,
-        isCompleted: false,
-        date: new Date().setHours(0, 0, 0, 0),
-      };
-      const prevTask = state.find((task) => task.id === prevTaskId);
-      if (prevTask) {
-        prevTask.isEditing = false;
-        prevTask.title = prevTaskTitle || i18n.t("newTask");
-      }
-      return [nextTask, ...state];
     },
 
     deleteTask: (state, action: PayloadAction<ITask["id"]>) => {
