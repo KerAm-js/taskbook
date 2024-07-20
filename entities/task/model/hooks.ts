@@ -13,12 +13,12 @@ export const useTaskActions = () => {
 };
 
 export const useTasks = () => {
-  const tasks = useSelector((state: RootState) => state.tasks.data);
-  return tasks;
+  const data = useSelector((state: RootState) => state.tasks.data);
+  const ids = useSelector((state: RootState) => state.tasks.ids);
+  return { data, ids };
 };
 
 export const useTaskToEdit = () => {
-  const {data, taskToEditId} = useSelector((state: RootState) => state.tasks);
-  const task = data.find(task => task.id === taskToEditId);
-  return task;
+  const id = useSelector((state: RootState) => state.tasks.taskToEditId);
+  return id;
 };

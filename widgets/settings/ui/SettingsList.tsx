@@ -83,10 +83,10 @@ export const SettingsList = () => {
         colorName="background"
         borderColorName="lineGrey"
       >
-        <ThemedText isTextGrey={true} style={styles.appName}>
+        <ThemedText colorName="textGrey" style={styles.appName}>
           Taskbook {appJson.expo.version}
         </ThemedText>
-        <ThemedText isTextGrey={true} style={styles.authorName}>
+        <ThemedText colorName="textGrey" style={styles.authorName}>
           Developed by Amir Shishany
         </ThemedText>
       </ThemedView>
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   },
   copyRightContainer: {
     alignItems: "center",
-    borderTopWidth: 1,
+    borderTopWidth: 0.5,
     paddingTop: 10,
   },
   appName: {

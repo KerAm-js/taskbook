@@ -19,10 +19,11 @@ import { trashSvg } from "@/assets/svg/trash";
 import { useFastInputMode } from "@/entities/settings";
 import { router } from "expo-router";
 
-const TRANSLATE_THRESHOLD = 100;
+const DELETE_THRESHOLD = 180;
+const SELECT_THRESHOLD = 80;
 const { width: WIDTH } = Dimensions.get("screen");
 
-export const Card: FC<ITask> = React.memo((task) => {
+export const Card: FC<ITask> = (task) => {
   const { deleteTask, toggleTask, setIsEditing, setTaskToEdit } =
     useTaskActions();
   const fastInputMode = useFastInputMode();
@@ -35,35 +36,23 @@ export const Card: FC<ITask> = React.memo((task) => {
     .minDistance(30)
     .onUpdate((event) => {
       translationX.value = event.translationX;
-      if (
-        event.translationX < TRANSLATE_THRESHOLD &&
-        isOverdraggedRight.value
-      ) {
+      if (event.translationX < SELECT_THRESHOLD && isOverdraggedRight.value) {
         isOverdraggedRight.value = false;
       }
-      if (
-        event.translationX >= TRANSLATE_THRESHOLD &&
-        !isOverdraggedRight.value
-      ) {
+      if (event.translationX >= SELECT_THRESHOLD && !isOverdraggedRight.value) {
         isOverdraggedRight.value = true;
         runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
       }
-      if (
-        event.translationX > -TRANSLATE_THRESHOLD &&
-        isOverdraggedLeft.value
-      ) {
+      if (event.translationX > -DELETE_THRESHOLD && isOverdraggedLeft.value) {
         isOverdraggedLeft.value = false;
       }
-      if (
-        event.translationX <= -TRANSLATE_THRESHOLD &&
-        !isOverdraggedLeft.value
-      ) {
+      if (event.translationX <= -DELETE_THRESHOLD && !isOverdraggedLeft.value) {
         isOverdraggedLeft.value = true;
         runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
       }
     })
     .onEnd((event) => {
-      if (event.translationX > -TRANSLATE_THRESHOLD) {
+      if (event.translationX > -DELETE_THRESHOLD) {
         translationX.value = withSpring(0);
       } else {
         translationX.value = withTiming(-WIDTH);
@@ -105,6 +94,8 @@ export const Card: FC<ITask> = React.memo((task) => {
       router.navigate("taskForm");
     }
   };
+
+  console.log(task.title);
 
   return (
     <Animated.View
@@ -150,7 +141,7 @@ export const Card: FC<ITask> = React.memo((task) => {
       </Pressable>
     </Animated.View>
   );
-});
+};
 
 const styles = StyleSheet.create({
   container: {

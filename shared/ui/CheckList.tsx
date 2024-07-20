@@ -5,6 +5,7 @@ import { FC } from "react";
 import { AnimatedCheck } from "./AnimatedCheck";
 import { useThemeColors } from "../hooks/useTheme";
 import { SCREEN_PADDING } from "../config/style/views";
+import { CustomText } from "./CustomText";
 
 export const CheckList: FC<{
   data: Array<{ title: string; value: any }>;
@@ -28,15 +29,17 @@ export const CheckList: FC<{
               },
             ]}
           >
-            <Text
+            <CustomText
               style={[
                 item.value === selected
                   ? TEXT_STYLES.standartBold
                   : TEXT_STYLES.standart,
               ]}
+              colorName="text"
+              themed
             >
               {item.title}
-            </Text>
+            </CustomText>
             <AnimatedCheck isChecked={item.value === selected} />
           </Pressable>
         ))}

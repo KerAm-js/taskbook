@@ -22,6 +22,7 @@ export const ThemedInput: FC<IThemedInputProps> = ({
       style={[{ color: text }, style]}
       placeholderTextColor={textGrey}
       selectionColor={accent}
+      cursorColor={accent}
       keyboardAppearance={theme === "night" ? "dark" : "light"}
       {...props}
     />

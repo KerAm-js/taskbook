@@ -53,6 +53,7 @@ export const TRANSLATIONS = {
       monthly: "Ежемесячно",
       note: "Заметка",
       newTask: "Новая задача",
+      enterText: 'Введите текст'
     },
   },
   en: {
@@ -100,6 +101,7 @@ export const TRANSLATIONS = {
       monthly: "Monthly",
       note: "Note",
       newTask: "New task",
+      enterText: 'Enter text'
     },
   },
 };

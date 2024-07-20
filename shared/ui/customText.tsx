@@ -1,14 +1,13 @@
 import { FC } from "react";
 import { Text } from "react-native";
 import { IThemeTextProps, ThemedText } from "./ThemedText";
-import { TColorName, THEME_COLORS } from "../config/style/colors";
+import { THEME_COLORS } from "../config/style/colors";
 import { useTranslation } from "react-i18next";
 
 export const CustomText: FC<
   {
     themed?: boolean;
     translate?: boolean;
-    colorName?: TColorName;
   } & IThemeTextProps
 > = ({
   translate = true,
@@ -23,7 +22,7 @@ export const CustomText: FC<
 
   if (themed) {
     return (
-      <ThemedText {...props} defaultTheme={defaultTheme}>
+      <ThemedText {...props} colorName={colorName} defaultTheme={defaultTheme}>
         {string}
       </ThemedText>
     );
