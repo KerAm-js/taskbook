@@ -1,12 +1,9 @@
 import { StatusBar } from "expo-status-bar";
-import React, { FC, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import Animated, {
-  SharedValue,
-  useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
@@ -17,7 +14,6 @@ import { SCREEN_PADDING } from "@/shared/config/style/views";
 import {
   CustomText,
   HEADER_SHADOW,
-  HEADER_SHADOW_NIGHT,
   THEME_COLORS,
   ThemedGradient,
   ThemedView,
@@ -25,69 +21,24 @@ import {
   useSafeAreaPadding,
 } from "@/shared";
 import Calendar from "./components/Calendar";
-import { CONTENT_HEIGHTS } from "../config";
+import { MAX_H, MIN_H } from "../config/headerHeight";
 
-export const MainHeader: FC<{
-  scrollClamp: SharedValue<number>;
-}> = ({ scrollClamp }) => {
+export const MainHeader = () => {
   const [isCalendarOpened, setCalendarOpened] = useState<boolean>(false);
   const { paddingTop } = useSafeAreaPadding();
 
-  const MIN_H = CONTENT_HEIGHTS.min;
-  const MAX_H = isCalendarOpened ? CONTENT_HEIGHTS.max : CONTENT_HEIGHTS.mid;
-  const TRANSLATE = CONTENT_HEIGHTS.max - CONTENT_HEIGHTS.mid;
+  const TRANSLATE = MAX_H - MIN_H;
 
-  const height = useSharedValue(MAX_H);
-  const opacity = useSharedValue(1);
   const calendarTranslate = useSharedValue(isCalendarOpened ? 0 : -TRANSLATE);
-
-  const openCalendarAnim = (isOpened: boolean) => {
-    height.value = withSpring(
-      isOpened ? CONTENT_HEIGHTS.max : CONTENT_HEIGHTS.mid,
-      {
-        duration: 1500,
-        dampingRatio: 0.42,
-      }
-    );
-    calendarTranslate.value = withSpring(isOpened ? 0 : -TRANSLATE, {
-      duration: 1500,
-      dampingRatio: 0.42,
-    });
-  };
-
-  const toggleHeaderVisibleAnim = (clamp: number) => {
-    "worklet";
-    opacity.value =
-      clamp > 0
-        ? withTiming(0, { duration: 100 })
-        : withDelay(150, withTiming(1, { duration: 150 }));
-    height.value = withTiming(clamp > 0 ? MIN_H : MAX_H);
-  };
 
   const toggleCalendarOpened = () => {
     setCalendarOpened(!isCalendarOpened);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
-    openCalendarAnim(!isCalendarOpened);
+    calendarTranslate.value = withSpring(!isCalendarOpened ? 0 : -TRANSLATE, {
+      duration: 1500,
+      dampingRatio: 0.42,
+    });
   };
-
-  const contentStyleAnim = useAnimatedStyle(() => {
-    return {
-      height: height.value,
-      opacity: opacity.value,
-      display: height.value === MIN_H ? "none" : "flex",
-    };
-  }, [height.value, opacity.value, isCalendarOpened]);
-
-  const titleStyleAnim = useAnimatedStyle(() => {
-    return {
-      opacity: isCalendarOpened
-        ? withTiming(0, { duration: 80 })
-        : withTiming(1, { duration: 80 }),
-      position: "absolute",
-      bottom: 10,
-      zIndex: -2
-    };
-  });
 
   const calendarStyleAnim = useAnimatedStyle(() => {
     return {
@@ -100,19 +51,29 @@ export const MainHeader: FC<{
     };
   }, [isCalendarOpened]);
 
-  useAnimatedReaction(
-    () => scrollClamp.value,
-    (curr, prev) => {
-      if (prev === curr || (curr < 1 && curr > -1)) return;
-      toggleHeaderVisibleAnim(scrollClamp.value);
-    },
-    [scrollClamp.value, isCalendarOpened]
-  );
+  const contentStyleAnim = useAnimatedStyle(() => {
+    return {
+      height: withSpring(isCalendarOpened ? MAX_H : MIN_H, {
+        duration: 1500,
+        dampingRatio: 0.42,
+      }),
+    };
+  }, [isCalendarOpened]);
+
+  const titleStyleAnim = useAnimatedStyle(() => {
+    return {
+      opacity: isCalendarOpened
+        ? withTiming(0, { duration: 80 })
+        : withTiming(1, { duration: 80 }),
+      position: "absolute",
+      bottom: 10,
+      zIndex: -2,
+    };
+  });
 
   return (
     <ThemedView
       colorName="background"
-      nightStyle={styles.shadowNight}
       style={[styles.container, { paddingTop }]}
     >
       <ThemedGradient />
@@ -123,15 +84,12 @@ export const MainHeader: FC<{
           toggleCalendarOpened={toggleCalendarOpened}
         />
         <Animated.View style={titleStyleAnim}>
-          <CustomText
-            style={styles.title}
-            defaultTheme="night"
-          >
+          <CustomText style={styles.title} defaultTheme="night">
             today
           </CustomText>
         </Animated.View>
         <Animated.View style={calendarStyleAnim}>
-          <Calendar isCalendarOpened={isCalendarOpened} />
+          <Calendar />
         </Animated.View>
       </Animated.View>
       <ProgressBar progress={50} />
@@ -142,14 +100,11 @@ export const MainHeader: FC<{
 const styles = StyleSheet.create({
   container: {
     ...HEADER_SHADOW,
-    zIndex: 1
-  },
-  shadowNight: {
-    ...HEADER_SHADOW_NIGHT,
+    zIndex: 1,
   },
   title: {
     marginLeft: SCREEN_PADDING,
     color: THEME_COLORS.night.text,
-    ...TEXT_STYLES.titleBig
+    ...TEXT_STYLES.titleBig,
   },
 });

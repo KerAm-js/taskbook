@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ITask } from "../model/types";
-import { ThemedInput } from "@/shared";
+import { ThemedInput, ThemedText } from "@/shared";
 import { TaskInfo } from "./TaskInfo";
 import { bellOutlineSvg } from "@/assets/svg/bellOutline";
 import { repeatSvg } from "@/assets/svg/repeat";
@@ -18,6 +18,7 @@ import { TEXT_STYLES } from "@/shared/config/style/texts";
 import { useTaskActions } from "../model/hooks";
 import { findAndDeleteTime } from "../lib/findAndDeleteTime";
 import { useTranslation } from "react-i18next";
+import { useFastInputMode } from "@/entities/settings";
 
 export const TaskRow: FC<ITask> = ({
   id,
@@ -30,7 +31,8 @@ export const TaskRow: FC<ITask> = ({
 }) => {
   const [text, setText] = useState(title);
   const { t } = useTranslation();
-  const { toggleIsEditing, setReminder, deleteTask } = useTaskActions();
+  const { setIsEditing, setReminder } = useTaskActions();
+  const fastInputMode = useFastInputMode();
   const remindDate = remindTime ? new Date(remindTime) : null;
   const remindString = remindDate
     ? remindDate.toTimeString().slice(0, 5)
@@ -40,32 +42,9 @@ export const TaskRow: FC<ITask> = ({
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(1);
 
-  const easing = Easing.out(Easing.quad);
-
-  const styleAnim = useAnimatedStyle(() => {
-    return {
-      opacity: opacity.value,
-      transform: [{ translateX: translateX.value }],
-    };
-  }, [isCompleted]);
-
-  useEffect(() => {
-    colorProgress.value = withTiming(isCompleted ? 1 : 0);
-    if (isCompleted) {
-      translateX.value = withSequence(
-        withTiming(7, { duration: 200, easing }),
-        withTiming(0, { duration: 200, easing })
-      );
-    }
-    opacity.value = withDelay(
-      isCompleted ? 700 : 0,
-      withTiming(isCompleted ? 0.4 : 1)
-    );
-  }, [isCompleted]);
-
   const onBlur = () => {
     if (isEditing) {
-      toggleIsEditing({ id, title: text.trim() || t("newTask") });
+      setIsEditing({ id, title: text.trim() || t("newTask"), value: false });
       if (!text.trim()) setText(t("newTask"));
     }
   };
@@ -83,20 +62,52 @@ export const TaskRow: FC<ITask> = ({
     }
   };
 
+  const styleAnim = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      transform: [{ translateX: translateX.value }],
+    };
+  }, [isCompleted]);
+
+  useEffect(() => {
+    const easing = Easing.out(Easing.quad);
+    colorProgress.value = withTiming(isCompleted ? 1 : 0);
+    if (isCompleted) {
+      translateX.value = withSequence(
+        withTiming(7, { duration: 200, easing }),
+        withTiming(0, { duration: 200, easing })
+      );
+    }
+    opacity.value = withDelay(
+      isCompleted ? 700 : 0,
+      withTiming(isCompleted ? 0.4 : 1)
+    );
+  }, [isCompleted]);
+
+  useEffect(() => {
+    if (fastInputMode && text !== title) {
+      setText(title);
+    }
+  }, [fastInputMode]);
+
   return (
     <Animated.View style={[styles.container, styleAnim]}>
       <View style={styles.titleContainer}>
-        <ThemedInput
-          style={[styles.input]}
-          placeholder="Введите текст"
-          onBlur={onBlur}
-          autoFocus={!title && isEditing}
-          multiline
-          value={text}
-          onChangeText={onChangeText}
-          maxLength={100}
-          scrollEnabled={false}
-        />
+        {fastInputMode ? (
+          <ThemedInput
+            style={styles.input}
+            placeholder="Введите текст"
+            onBlur={onBlur}
+            autoFocus={isEditing}
+            multiline
+            value={text}
+            onChangeText={onChangeText}
+            maxLength={100}
+            scrollEnabled={false}
+          />
+        ) : (
+          <ThemedText style={styles.title}>{title}</ThemedText>
+        )}
       </View>
       <View style={styles.infoContainer}>
         {remindString && (
@@ -125,6 +136,7 @@ const styles = StyleSheet.create({
   title: {
     ...TEXT_STYLES.standart,
     lineHeight: 23,
+    paddingVertical: 3,
   },
   input: {
     ...TEXT_STYLES.standart,

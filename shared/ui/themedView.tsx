@@ -5,6 +5,7 @@ import { useTheme } from "../hooks/useTheme";
 
 interface IProps extends PropsWithChildren {
   colorName: TColorName;
+  borderColorName?: TColorName;
   nightColorName?: TColorName;
   style?: Array<ViewStyle | false> | ViewStyle;
   nightStyle?: Array<ViewStyle | false> | ViewStyle;
@@ -12,6 +13,7 @@ interface IProps extends PropsWithChildren {
 
 export const ThemedView: FC<IProps> = ({
   colorName,
+  borderColorName,
   nightColorName,
   style,
   nightStyle,
@@ -23,7 +25,12 @@ export const ThemedView: FC<IProps> = ({
   return (
     <View
       style={[
-        { backgroundColor: THEME_COLORS[theme][color] },
+        {
+          backgroundColor: THEME_COLORS[theme][color],
+        },
+        borderColorName && {
+          borderColor: THEME_COLORS[theme][borderColorName],
+        },
         style,
         theme === "night" && nightStyle,
       ]}

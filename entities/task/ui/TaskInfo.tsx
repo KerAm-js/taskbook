@@ -1,6 +1,6 @@
 import { CustomText, TEXT_STYLES, useThemeColors } from "@/shared";
 import { FC } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { SvgXml } from "react-native-svg";
 
@@ -30,7 +30,7 @@ export const TaskInfo: FC<IProps> = ({
         { backgroundColor: backgroundColor || lineGrey },
       ]}
     >
-      <SvgXml xml={xmlGetter(contentColor || text)} width={14} height={14} />
+      <SvgXml xml={xmlGetter(contentColor || text)} width={13} height={13} />
       {title && (
         <CustomText
           style={[styles.title, { color: contentColor || text }]}

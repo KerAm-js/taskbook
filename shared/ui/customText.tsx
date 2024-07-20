@@ -19,9 +19,7 @@ export const CustomText: FC<
   ...props
 }) => {
   const { t } = useTranslation();
-  const string = translate
-    ? t(children.toString())
-    : children;
+  const string = translate ? t(children?.toString() || "") : children;
 
   if (themed) {
     return (

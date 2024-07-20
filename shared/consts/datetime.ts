@@ -44,7 +44,7 @@ export const WEEK_DAYS: {
 export const MONTHS = [
   "january",
   "february",
-  "marh",
+  "march",
   "april",
   "may",
   "june",

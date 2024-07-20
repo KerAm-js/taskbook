@@ -1,4 +1,4 @@
-import { ScrollToStartButton, WeekDays } from "@/features/tasks/change-date";
+import { ScrollToStartButton, WeekDays } from "@/features/tasks/select-date";
 import {
   CustomText,
   getCalendarWeeks,
@@ -23,7 +23,7 @@ const WIDTH = Dimensions.get("screen").width;
 
 const keyExtractor = (item: TCalendarWeek) => item.days[0].valueOf().toString();
 
-const Calendar: FC<{ isCalendarOpened: boolean }> = () => {
+const Calendar = () => {
   const index = useSharedValue(0);
   const listRef = useRef<Animated.FlatList<TCalendarWeek> | null>(null);
   const { t } = useTranslation();

@@ -1,2 +1,6 @@
-export const SCREEN_PADDING = 17;
+import { Dimensions } from "react-native";
+
+const { width } = Dimensions.get("screen");
+
+export const SCREEN_PADDING = width < 390 ? 15 : 18;
 export const PADDING_TOP = 25;

@@ -11,3 +11,13 @@ export const useSettingsActions = () => {
     [dispatch]
   );
 };
+
+export const useSettings = () => {
+  const settings = useSelector((state: RootState) => state.settings);
+  return settings;
+};
+
+export const useFastInputMode = () => {
+  const mode = useSelector((state: RootState) => state.settings.fastInputMode);
+  return mode;
+};

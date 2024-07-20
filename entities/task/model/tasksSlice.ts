@@ -1,7 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ITask } from "./types";
 
-const initialState: ITask[] = [];
+const initialState: {
+  data: ITask[];
+  taskToEditId?: ITask["id"];
+} = {
+  data: [],
+  taskToEditId: undefined,
+};
 
 export const tasksSlice = createSlice({
   name: "tasks",
@@ -15,15 +21,15 @@ export const tasksSlice = createSlice({
         isCompleted: false,
         date: new Date().setHours(0, 0, 0, 0),
       };
-      return [newTask, ...state];
+      state.data = [newTask, ...state.data];
     },
 
     deleteTask: (state, action: PayloadAction<ITask["id"]>) => {
-      return state.filter((task) => task.id !== action.payload);
+      state.data = state.data.filter((task) => task.id !== action.payload);
     },
 
     toggleTask: (state, action: PayloadAction<ITask["id"]>) => {
-      const task = state.find((task) => task.id === action.payload);
+      const task = state.data.find((task) => task.id === action.payload);
       if (task) task.isCompleted = !task.isCompleted;
     },
 
@@ -32,24 +38,28 @@ export const tasksSlice = createSlice({
       action: PayloadAction<{ id: ITask["id"]; hours: number; minutes: number }>
     ) => {
       const { id, hours, minutes } = action.payload;
-      const task = state.find((task) => task.id === id);
+      const task = state.data.find((task) => task.id === id);
       if (task) task.remindTime = new Date().setHours(hours, minutes, 0, 0);
     },
 
-    toggleIsEditing: (
+    setIsEditing: (
       state,
-      action: PayloadAction<{ id: ITask["id"]; title?: ITask["title"] }>
+      action: PayloadAction<{
+        value: boolean;
+        id: ITask["id"];
+        title?: ITask["title"];
+      }>
     ) => {
-      const { id, title } = action.payload;
-      const task = state.find((task) => task.id === id);
+      const { id, title, value } = action.payload;
+      const task = state.data.find((task) => task.id === id);
       if (task) {
-        if (title) {
-          task.title = title;
-          task.isEditing = false;
-        } else {
-          task.isEditing = true;
-        }
+        task.isEditing = value;
+        task.title = title || task.title;
       }
+    },
+
+    setTaskToEdit: (state, action: PayloadAction<ITask["id"]>) => {
+      state.taskToEditId = action.payload;
     },
   },
 });

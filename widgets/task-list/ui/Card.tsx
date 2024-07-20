@@ -16,12 +16,16 @@ import Animated, {
 import { AnimatedIcon } from "./AnimatedIcon";
 import { layersSvg } from "@/assets/svg/layers";
 import { trashSvg } from "@/assets/svg/trash";
+import { useFastInputMode } from "@/entities/settings";
+import { router } from "expo-router";
 
 const TRANSLATE_THRESHOLD = 100;
 const { width: WIDTH } = Dimensions.get("screen");
 
 export const Card: FC<ITask> = React.memo((task) => {
-  const { deleteTask, toggleTask, toggleIsEditing } = useTaskActions();
+  const { deleteTask, toggleTask, setIsEditing, setTaskToEdit } =
+    useTaskActions();
+  const fastInputMode = useFastInputMode();
   const translationX = useSharedValue(0);
   const opacity = useSharedValue(1);
   const isOverdraggedRight = useSharedValue(false);
@@ -86,10 +90,21 @@ export const Card: FC<ITask> = React.memo((task) => {
 
   const taskRowStyleAnim = useAnimatedStyle(
     () => ({
-      transform: [{ translateX: withTiming(task.isEditing && !task.title ? -28 : 0) }],
+      transform: [
+        { translateX: withTiming(task.isEditing && !task.title ? -28 : 0) },
+      ],
     }),
     [task.isEditing]
   );
+
+  const onPressTask = () => {
+    if (fastInputMode) {
+      setIsEditing({ id: task.id, value: true });
+    } else {
+      setTaskToEdit(task.id);
+      router.navigate("taskForm");
+    }
+  };
 
   return (
     <Animated.View
@@ -97,10 +112,7 @@ export const Card: FC<ITask> = React.memo((task) => {
         transform: [{ translateX: 80 }],
       })}
     >
-      <Pressable
-        onPress={() => toggleIsEditing({ id: task.id })}
-        style={styles.container}
-      >
+      <Pressable onPress={onPressTask} style={styles.container}>
         <AnimatedIcon
           xmlGetter={layersSvg}
           opacity={opacity}

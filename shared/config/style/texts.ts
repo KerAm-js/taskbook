@@ -11,7 +11,7 @@ type TKey =
   | "smallBold"
   | "ultraSmall";
 
-const letterSpacing = 0.2
+const letterSpacing = 0.15
 
 export const TEXT_STYLES: { [key in TKey]: TextStyle } = {
   titleBig: {

@@ -1,5 +1,5 @@
 import Animated from "react-native-reanimated";
-import { useAnimatedThemeStyle, useTheme } from "../hooks/useTheme";
+import { useAnimatedThemeStyle } from "../hooks/useTheme";
 import { useSafeAreaPadding } from "../hooks/useSafeAreaPadding";
 import { CustomText } from "./CustomText";
 import { FC } from "react";
@@ -12,12 +12,11 @@ import { useNavigation } from "expo-router";
 import { HEADER_SHADOW } from "../config/style/shadows";
 import { TEXT_STYLES } from "../config/style/texts";
 
-export const Header: FC<{ title: string; rotateLeftIcon?: boolean }> = ({
-  title,
-  rotateLeftIcon,
-}) => {
+export const Header: FC<{
+  title: string;
+  rotateLeftIcon?: boolean;
+}> = ({ title, rotateLeftIcon }) => {
   const styleAnim = useAnimatedThemeStyle("header");
-  const theme = useTheme();
   const { paddingTop: top } = useSafeAreaPadding();
 
   const navigation = useNavigation();
@@ -28,7 +27,6 @@ export const Header: FC<{ title: string; rotateLeftIcon?: boolean }> = ({
     <Animated.View
       style={[
         styles.container,
-        theme === "night" && styles.nightShadow,
         {
           paddingTop: top,
         },
@@ -60,11 +58,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     ...HEADER_SHADOW,
   },
-  nightShadow: {
-    shadowOpacity: 0,
-    borderBottomWidth: 1,
-    borderColor: THEME_COLORS.night.lineGrey,
-  },
   left: {
     justifyContent: "center",
     paddingHorizontal: SCREEN_PADDING,
@@ -73,7 +66,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...TEXT_STYLES.standartSemibold,
-    letterSpacing: 0.5
+    letterSpacing: 0.5,
   },
   right: {
     height: 40,

@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   todayTitleWrapper: {
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderColor: THEME_COLORS.night.accent_opacity,
   },
   selected: {

@@ -1,15 +1,11 @@
 import {
-  GestureResponderEvent,
   KeyboardAvoidingView,
   ListRenderItemInfo,
   Platform,
   StyleSheet,
 } from "react-native";
-import Animated, {
-  LinearTransition,
-  SharedValue,
-} from "react-native-reanimated";
-import React, { FC, useRef, useState } from "react";
+import Animated, { LinearTransition } from "react-native-reanimated";
+import React from "react";
 import { PADDING_TOP, SCREEN_PADDING } from "@/shared";
 import { EmptyListImage } from "./EmptyListImage";
 import { ITask, useTasks } from "@/entities/task";
@@ -19,19 +15,8 @@ const renderItem = ({ item }: ListRenderItemInfo<ITask>) => <Card {...item} />;
 
 const keyExtractor = (item: ITask) => item.id.toString();
 
-export const TaskList: FC<{ scrollClamp: SharedValue<number> }> = ({
-  scrollClamp,
-}) => {
+export const TaskList = () => {
   const tasks = useTasks();
-  const touchStartY = useRef(0);
-
-  const onTouchStart = (e: GestureResponderEvent) => {
-    touchStartY.current = e.nativeEvent.locationY;
-  };
-
-  const onTouchEnd = (e: GestureResponderEvent) => {
-    scrollClamp.value = touchStartY.current - e.nativeEvent.locationY;
-  };
 
   return (
     <KeyboardAvoidingView
@@ -49,8 +34,6 @@ export const TaskList: FC<{ scrollClamp: SharedValue<number> }> = ({
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         itemLayoutAnimation={LinearTransition.duration(300)}
-        // onTouchStart={onTouchStart}
-        // onTouchEnd={onTouchEnd}
         ListEmptyComponent={EmptyListImage}
       />
     </KeyboardAvoidingView>

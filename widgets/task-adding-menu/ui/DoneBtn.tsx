@@ -4,7 +4,7 @@ import { Keyboard, Pressable, StyleSheet, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 
 export const DoneBtn = () => {
-  const { colors } = useThemeColors();
+  const { colors, theme } = useThemeColors();
 
   const onPress = () => {
     Keyboard.dismiss();
@@ -12,7 +12,11 @@ export const DoneBtn = () => {
   return (
     <Pressable onPress={onPress} style={styles.container}>
       <View style={[styles.circle, { backgroundColor: colors.accent }]}>
-        <SvgXml width={14} height={14} xml={checkSvg(COLORS.white)} />
+        <SvgXml
+          width={14}
+          height={14}
+          xml={checkSvg(colors.background)}
+        />
       </View>
     </Pressable>
   );

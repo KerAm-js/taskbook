@@ -26,9 +26,16 @@ export default function RootLayout() {
       <Provider store={store}>
         <SafeAreaProvider>
           <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" />
+            <Stack.Screen name="index" options={{ title: "Главная" }} />
             <Stack.Screen name="history" options={{ title: "Дневник задач" }} />
-            <Stack.Screen name="taskForm" options={{ title: "Новая задача" }} />
+            <Stack.Screen
+              name="taskForm"
+              options={{
+                title: "Новая задача",
+                headerShown: true,
+                presentation: "modal",
+              }}
+            />
             <Stack.Screen
               name="settings/index"
               options={{ title: "Настройки" }}
@@ -43,7 +50,7 @@ export default function RootLayout() {
             />
             <Stack.Screen
               name="settings/reminders/index"
-              options={{ title: "Напоминания" }}
+              options={{ title: "Напоминания", headerShown: true }}
             />
             <Stack.Screen
               name="settings/reminders/count"

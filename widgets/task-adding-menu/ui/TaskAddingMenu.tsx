@@ -6,7 +6,7 @@ import { DoneBtn } from "./DoneBtn";
 import { OpenTaskForm } from "@/features/tasks/open-task-form";
 
 export const TaskAddingMenu = () => {
-  const { colors } = useThemeColors();
+  const { colors, theme } = useThemeColors();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -24,8 +24,10 @@ export const TaskAddingMenu = () => {
         <View
           style={[
             styles.container,
+            theme === "night" && styles.containerNight,
             {
               backgroundColor: colors.background,
+              borderTopColor: colors.lineGrey,
             },
           ]}
         >
@@ -57,7 +59,11 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     shadowColor: COLORS.shadow,
   },
+  containerNight: {
+    shadowOpacity: 0,
+    borderTopWidth: 1,
+  },
   leftSide: {
-    flexDirection: 'row'
-  }
+    flexDirection: "row",
+  },
 });

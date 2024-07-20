@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ISettingsState {
   theme: TTheme;
+  fastInputMode: boolean;
   reminders: {
     count: number;
     interval: number;
@@ -13,6 +14,7 @@ interface ISettingsState {
 
 const initialState: ISettingsState = {
   theme: "branded",
+  fastInputMode: true,
   reminders: {
     count: 1,
     interval: 0,
@@ -27,6 +29,9 @@ export const settingsSlice = createSlice({
   reducers: {
     setTheme: (state, action: PayloadAction<TTheme>) => {
       state.theme = action.payload;
+    },
+    toggleFastInputMode: (state) => {
+      state.fastInputMode = !state.fastInputMode;
     },
     setRemindersCount: (state, action: PayloadAction<number>) => {
       state.reminders.count = action.payload;
