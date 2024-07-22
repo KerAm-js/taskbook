@@ -18,12 +18,12 @@ export const CustomText: FC<
   ...props
 }) => {
   const { t } = useTranslation();
-  const string = translate ? t(children?.toString() || "") : children;
+  const translation = t(children?.toString() || "");
 
   if (themed) {
     return (
       <ThemedText {...props} colorName={colorName} defaultTheme={defaultTheme}>
-        {string}
+        {translate ? translation : children}
       </ThemedText>
     );
   }
@@ -42,7 +42,7 @@ export const CustomText: FC<
         props.style,
       ]}
     >
-      {string}
+      {translate ? translation : children}
     </Text>
   );
 };

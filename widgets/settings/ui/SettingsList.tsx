@@ -27,7 +27,10 @@ export const SettingsList = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scroll}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContentContainer}
+      >
         <Setting
           type="toggle"
           title="fastInputMode"
@@ -102,6 +105,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: PADDING_TOP,
     paddingHorizontal: SCREEN_PADDING,
+  },
+  scrollContentContainer: {
+    paddingBottom: 200,
   },
   copyRightContainer: {
     alignItems: "center",

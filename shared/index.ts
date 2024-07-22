@@ -8,6 +8,7 @@ export { ThemedView } from "./ui/ThemedView";
 export { AnimatedCheck } from "./ui/AnimatedCheck";
 export { IconButton } from "./ui/IconButton";
 export { CustomText } from "./ui/CustomText";
+export { CheckList } from "./ui/CheckList";
 
 //config
 export { I18n } from "./config/i18n/i18n";
@@ -31,6 +32,7 @@ export {
   getCalendarWeeks,
   isToday,
 } from "./lib/dates";
+export { getTimeString } from "./lib/time";
 
 //types
 export { TLanguage } from "./config/i18n/translations";

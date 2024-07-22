@@ -33,7 +33,7 @@ export const TaskList = () => {
           <Card {...data[item]} />
         )}
         keyExtractor={keyExtractor}
-        itemLayoutAnimation={LinearTransition.duration(300)}
+        itemLayoutAnimation={LinearTransition.duration(350)}
         ListEmptyComponent={EmptyListImage}
       />
     </KeyboardAvoidingView>

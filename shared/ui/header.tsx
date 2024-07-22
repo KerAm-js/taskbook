@@ -3,7 +3,7 @@ import { useAnimatedThemeStyle } from "../hooks/useTheme";
 import { useSafeAreaPadding } from "../hooks/useSafeAreaPadding";
 import { CustomText } from "./CustomText";
 import { FC } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Platform, Pressable, StyleSheet, View } from "react-native";
 import { arrowLeftSvg } from "@/assets/svg/arrowLeft";
 import { THEME_COLORS } from "../config/style/colors";
 import { SvgXml } from "react-native-svg";
@@ -14,8 +14,8 @@ import { TEXT_STYLES } from "../config/style/texts";
 
 export const Header: FC<{
   title: string;
-  rotateLeftIcon?: boolean;
-}> = ({ title, rotateLeftIcon }) => {
+  modalHeader?: boolean;
+}> = ({ title, modalHeader }) => {
   const styleAnim = useAnimatedThemeStyle("header");
   const { paddingTop: top } = useSafeAreaPadding();
 
@@ -28,7 +28,7 @@ export const Header: FC<{
       style={[
         styles.container,
         {
-          paddingTop: top,
+          paddingTop: Platform.OS === "ios" && modalHeader ? 10 : top,
         },
         styleAnim,
       ]}
@@ -38,7 +38,7 @@ export const Header: FC<{
           xml={arrowLeftSvg(THEME_COLORS.night.accent)}
           width={18}
           height={18}
-          style={rotateLeftIcon && { transform: [{ rotate: "-90deg" }] }}
+          style={{ transform: [{ rotate: modalHeader ? "-90deg" : '0deg' }] }}
         />
       </Pressable>
       <CustomText style={styles.title} defaultTheme="night" colorName="accent">
@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     zIndex: 1,
     flexDirection: "row",
+    minHeight: 60,
     ...HEADER_SHADOW,
   },
   left: {

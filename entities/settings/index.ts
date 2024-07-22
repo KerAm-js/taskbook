@@ -1,2 +1,7 @@
-export { useSettingsActions, useSettings, useFastInputMode } from "./model/hooks";
-export { settingsSlice } from "./model/settingsSlice";
+export {
+  useSettingsActions,
+  useSettings,
+  useFastInputMode,
+  useReminderSettings,
+} from "./model/hooks";
+export { settingsSlice, ISettingsState } from "./model/settingsSlice";

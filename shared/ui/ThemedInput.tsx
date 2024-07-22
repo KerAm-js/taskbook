@@ -1,9 +1,9 @@
-import React, { ComponentPropsWithRef, FC } from "react";
+import React, { FC } from "react";
 import { TTheme } from "../config/style/colors";
-import { TextInput } from "react-native-gesture-handler";
 import { useThemeColors } from "../hooks/useTheme";
+import { TextInput, TextInputProps } from "react-native";
 
-export interface IThemedInputProps extends ComponentPropsWithRef<TextInput> {
+export interface IThemedInputProps extends TextInputProps {
   defaultTheme?: TTheme;
 }
 

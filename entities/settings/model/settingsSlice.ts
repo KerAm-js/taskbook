@@ -1,14 +1,14 @@
 import { TTheme } from "@/shared/config/style/colors";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface ISettingsState {
+export interface ISettingsState {
   theme: TTheme;
   fastInputMode: boolean;
   reminders: {
     count: number;
     interval: number;
-    beginningOfDay: number;
-    endOfDay: number;
+    beginningOfDay?: { hours: number; minutes: number };
+    endOfDay?: { hours: number; minutes: number };
   };
 }
 
@@ -16,10 +16,10 @@ const initialState: ISettingsState = {
   theme: "branded",
   fastInputMode: true,
   reminders: {
-    count: 1,
-    interval: 0,
-    beginningOfDay: 0,
-    endOfDay: 0,
+    count: 3,
+    interval: 15,
+    beginningOfDay: {hours: 9, minutes: 0},
+    endOfDay: undefined,
   },
 };
 
@@ -39,10 +39,16 @@ export const settingsSlice = createSlice({
     setRemindersInterval: (state, action: PayloadAction<number>) => {
       state.reminders.interval = action.payload;
     },
-    setBeginningOfDay: (state, action: PayloadAction<number>) => {
+    setBeginningOfDay: (
+      state,
+      action: PayloadAction<ISettingsState["reminders"]["beginningOfDay"]>
+    ) => {
       state.reminders.beginningOfDay = action.payload;
     },
-    setEndOfDat: (state, action: PayloadAction<number>) => {
+    setEndOfDay: (
+      state,
+      action: PayloadAction<ISettingsState["reminders"]["endOfDay"]>
+    ) => {
       state.reminders.endOfDay = action.payload;
     },
   },

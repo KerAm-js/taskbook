@@ -26,47 +26,33 @@ export default function RootLayout() {
       <Provider store={store}>
         <SafeAreaProvider>
           <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" options={{ title: "Главная" }} />
-            <Stack.Screen name="history" options={{ title: "Дневник задач" }} />
+            <Stack.Screen name="index" />
+            <Stack.Screen name="history" />
             <Stack.Screen
               name="taskForm"
               options={{
-                title: "Новая задача",
-                headerShown: true,
                 presentation: "modal",
               }}
             />
-            <Stack.Screen
-              name="settings/index"
-              options={{ title: "Настройки" }}
-            />
-            <Stack.Screen
-              name="settings/language"
-              options={{ title: "Язык" }}
-            />
-            <Stack.Screen
-              name="settings/theme"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="settings/reminders/index"
-              options={{ title: "Напоминания", headerShown: true }}
-            />
+            <Stack.Screen name="settings/index" />
+            <Stack.Screen name="settings/language" />
+            <Stack.Screen name="settings/theme" />
+            <Stack.Screen name="settings/reminders/index" />
             <Stack.Screen
               name="settings/reminders/count"
-              options={{ title: "Количество", presentation: "modal" }}
+              options={{ presentation: "modal" }}
             />
             <Stack.Screen
               name="settings/reminders/interval"
-              options={{ title: "Интервал", presentation: "modal" }}
+              options={{ presentation: "modal" }}
             />
             <Stack.Screen
-              name="settings/reminders/morningTime"
-              options={{ title: "Начало дня", presentation: "modal" }}
+              name="settings/reminders/beginningOfDay"
+              options={{ presentation: "modal" }}
             />
             <Stack.Screen
-              name="settings/reminders/eveningTime"
-              options={{ title: "Конец дня", presentation: "modal" }}
+              name="settings/reminders/endOfDay"
+              options={{ presentation: "modal" }}
             />
           </Stack>
         </SafeAreaProvider>

@@ -21,3 +21,8 @@ export const useFastInputMode = () => {
   const mode = useSelector((state: RootState) => state.settings.fastInputMode);
   return mode;
 };
+
+export const useReminderSettings = () => {
+  const reminders = useSelector((state: RootState) => state.settings.reminders);
+  return reminders;
+};

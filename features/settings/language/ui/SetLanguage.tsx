@@ -1,5 +1,4 @@
-import { LANGUAGES, TLanguage } from "@/shared";
-import { CheckList } from "@/shared/ui/CheckList";
+import { CheckList, LANGUAGES, TLanguage } from "@/shared";
 import { useTranslation } from "react-i18next";
 
 export const SetLanguage = () => {

@@ -1,4 +1,5 @@
 import { useTaskToEdit } from "@/entities/task";
+import { Header } from "@/shared";
 import { Text, View } from "react-native";
 
 export default function TaskForm() {
@@ -8,10 +9,9 @@ export default function TaskForm() {
     <View
       style={{
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
       }}
     >
+      <Header modalHeader title="newTask" />
       <Text>Task Form</Text>
     </View>
   )

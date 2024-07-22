@@ -1,4 +1,4 @@
-import { ThemeCard } from "@/features/settings/set-theme";
+import { ThemeCard } from "@/features/settings/theme";
 import {
   Header,
   PADDING_TOP,
@@ -34,5 +34,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: PADDING_TOP,
     paddingHorizontal: SCREEN_PADDING,
+    paddingBottom: 200,
   },
 });

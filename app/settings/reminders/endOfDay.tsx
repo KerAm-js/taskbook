@@ -1,16 +1,16 @@
-import { SetReminderInterval } from "@/features/settings/reminder-interval";
+import { SetEndOfDay } from "@/features/settings/end-of-day";
 import { Header, PADDING_TOP, ThemedView } from "@/shared";
 import { ScrollView, StyleSheet } from "react-native";
 
 export default function Count() {
   return (
     <ThemedView colorName="background" style={styles.container}>
-      <Header modalHeader title="interval" />
+      <Header modalHeader title="endOfDay" />
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.contentContainer}
       >
-        <SetReminderInterval />
+        <SetEndOfDay />
       </ScrollView>
     </ThemedView>
   );

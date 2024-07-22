@@ -1,4 +1,4 @@
-import { SetLanguage } from "@/features/settings/set-language";
+import { SetLanguage } from "@/features/settings/language";
 import { Header, PADDING_TOP, ThemedView } from "@/shared";
 import { ScrollView, StyleSheet, View } from "react-native";
 

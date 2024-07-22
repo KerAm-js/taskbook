@@ -8,8 +8,8 @@ export const EmptyListImage = () => {
   const { colors } = useThemeColors();
   return (
     <Animated.View
-      entering={FadeIn.delay(200)}
-      exiting={FadeOut.duration(200)}
+      entering={FadeIn}
+      exiting={FadeOut}
       style={styles.container}
     >
       <SvgXml xml={emptyTaskListSvg(colors.accent)} width={250} height={250} />

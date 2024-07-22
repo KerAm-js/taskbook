@@ -8,21 +8,53 @@ import { arrowLeftSvg } from "@/assets/svg/arrowLeft";
 import { useThemeColors } from "../hooks/useTheme";
 import { TEXT_STYLES } from "../config/style/texts";
 
-export const Setting: FC<{
-  onPress: () => void;
-  xmlGetter?: (color: string) => string;
-  type: "toggle" | "navigate" | "value";
-  title: string;
-  value?: string;
-  toggleValue?: boolean;
-}> = ({ onPress, xmlGetter, type, title, value, toggleValue }) => {
-  const {
-    colors,
-  } = useThemeColors();
+type TPropTypes =
+  | {
+      onPress: () => void;
+      xmlGetter?: (color: string) => string;
+      type: "toggle";
+      title: string;
+      toggleValue?: boolean;
+      value?: undefined;
+      disabled?: boolean;
+    }
+  | {
+      onPress: () => void;
+      xmlGetter?: (color: string) => string;
+      type: "navigate" | "value";
+      title: string;
+      toggleValue?: undefined;
+      value?: undefined;
+      disabled?: boolean;
+    }
+  | {
+      onPress: () => void;
+      xmlGetter?: (color: string) => string;
+      type: "value";
+      title: string;
+      toggleValue?: undefined;
+      value?: string | number;
+      disabled?: boolean;
+    };
+
+export const Setting: FC<TPropTypes> = ({
+  onPress,
+  xmlGetter,
+  type,
+  title,
+  value,
+  toggleValue,
+  disabled,
+}) => {
+  const { colors } = useThemeColors();
 
   return (
-    <Pressable onPress={onPress} style={styles.container}>
-      <ThemedView style={styles.themedView} colorName="backgroundSecond">
+    <Pressable
+      disabled={disabled}
+      onPress={onPress}
+      style={[styles.container, disabled && styles.containerDisabled]}
+    >
+      <ThemedView style={styles.card} colorName="backgroundSecond">
         {xmlGetter && (
           <ThemedView colorName="accent" style={styles.iconContainer}>
             <SvgXml xml={xmlGetter(colors.background)} width={20} height={20} />
@@ -31,9 +63,17 @@ export const Setting: FC<{
         <CustomText themed style={styles.title}>
           {title}
         </CustomText>
-        <View style={styles.leftContainer}>
+        <View style={styles.rightContainer}>
           {type === "value" && (
-            <CustomText themed colorName="textGrey" style={styles.title}>
+            <CustomText
+              themed
+              colorName="textGrey"
+              translate={false}
+              style={[
+                styles.value,
+                typeof value === "number" && { marginTop: 2 },
+              ]}
+            >
               {value || ""}
             </CustomText>
           )}
@@ -57,7 +97,10 @@ const styles = StyleSheet.create({
     minHeight: 46,
     marginBottom: 10,
   },
-  themedView: {
+  containerDisabled: {
+    opacity: 0.5,
+  },
+  card: {
     flex: 1,
     padding: 10,
     flexDirection: "row",
@@ -70,14 +113,18 @@ const styles = StyleSheet.create({
     height: 26,
     padding: 3,
     borderRadius: 7,
-    marginRight: 10,
+    marginRight: 5,
     borderCurve: "continuous",
   },
-  leftContainer: {
+  rightContainer: {
     marginLeft: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
   },
   title: {
     flex: 1,
+    marginLeft: 5,
     ...TEXT_STYLES.standart,
   },
   value: {

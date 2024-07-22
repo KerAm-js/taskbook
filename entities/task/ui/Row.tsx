@@ -14,13 +14,13 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { TaskTitle } from "./Title";
+import { getTimeString } from "@/shared";
 
 export const TaskRow: FC<ITask> = (task) => {
   const { remindTime, isRegular, isCompleted, description } = task;
-  
-  const remindDate = remindTime ? new Date(remindTime) : null;
-  const remindString = remindDate
-    ? remindDate.toTimeString().slice(0, 5)
+
+  const remindString = remindTime
+    ? getTimeString({ dateNumber: remindTime })
     : null;
 
   const translateX = useSharedValue(0);
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 10,
-    paddingBottom: 8
+    paddingBottom: 8,
   },
   containerNight: {
     shadowOpacity: 0,
