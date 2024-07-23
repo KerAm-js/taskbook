@@ -19,7 +19,7 @@ import { trashSvg } from "@/assets/svg/trash";
 import { useFastInputMode } from "@/entities/settings";
 import { router } from "expo-router";
 
-const DELETE_THRESHOLD = 180;
+const DELETE_THRESHOLD = 150;
 const SELECT_THRESHOLD = 80;
 const { width: WIDTH } = Dimensions.get("screen");
 
@@ -94,8 +94,6 @@ export const Card: FC<ITask> = (task) => {
       router.navigate("taskForm");
     }
   };
-
-  console.log(task.title);
 
   return (
     <Animated.View

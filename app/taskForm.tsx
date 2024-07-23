@@ -4,7 +4,6 @@ import { Text, View } from "react-native";
 
 export default function TaskForm() {
   const data = useTaskToEdit();
-  console.log(data);
   return (
     <View
       style={{
