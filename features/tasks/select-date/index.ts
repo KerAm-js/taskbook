@@ -1,2 +1,2 @@
+export { SelectDay } from './ui/SelectDay';
 export { ScrollToStartButton } from "./ui/ScrollToStart";
-export { WeekDays } from "./ui/WeekDays";

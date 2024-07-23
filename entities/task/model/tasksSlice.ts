@@ -1,14 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ITask } from "./types";
+import { endOfDay } from "@/shared";
 
-const initialState: {
+interface ITasksState {
   ids: Array<ITask["id"]>;
   data: { [key: ITask["id"]]: ITask };
   taskToEditId?: ITask["id"];
-} = {
+  selectedDate: number;
+}
+
+const initialState: ITasksState = {
   ids: [],
   data: {},
   taskToEditId: undefined,
+  selectedDate: endOfDay(),
 };
 
 export const tasksSlice = createSlice({
@@ -21,7 +26,7 @@ export const tasksSlice = createSlice({
         title: "",
         isEditing: true,
         isCompleted: false,
-        date: new Date().setHours(0, 0, 0, 0),
+        date: state.selectedDate,
       };
       state.data[newTask.id] = newTask;
       state.ids = [newTask.id, ...state.ids];
@@ -64,6 +69,10 @@ export const tasksSlice = createSlice({
 
     setTaskToEdit: (state, action: PayloadAction<ITask["id"]>) => {
       state.taskToEditId = action.payload;
+    },
+
+    selectDate: (state, action: PayloadAction<ITasksState["selectedDate"]>) => {
+      state.selectedDate = action.payload;
     },
   },
 });

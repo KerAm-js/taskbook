@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export const useSafeAreaPadding = () => {
   const { top, bottom } = useSafeAreaInsets();
 
-  const paddingTop = top < 10 ? 15 : top + 5;
+  const paddingTop = top < 10 ? 15 : top;
   const paddingBottom = bottom < 40 ? 50 : bottom + 10;
 
   return {

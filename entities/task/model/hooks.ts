@@ -15,10 +15,21 @@ export const useTaskActions = () => {
 export const useTasks = () => {
   const data = useSelector((state: RootState) => state.tasks.data);
   const ids = useSelector((state: RootState) => state.tasks.ids);
-  return { data, ids };
+  const selectedDate = useSelector(
+    (state: RootState) => state.tasks.selectedDate
+  );
+
+  const filteredIds = ids.filter((id) => data[id].date === selectedDate);
+
+  return { data, ids: filteredIds };
 };
 
 export const useTaskToEdit = () => {
   const id = useSelector((state: RootState) => state.tasks.taskToEditId);
   return id;
+};
+
+export const useSelectedDate = () => {
+  const date = useSelector((state: RootState) => state.tasks.selectedDate);
+  return date;
 };

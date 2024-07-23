@@ -17,13 +17,61 @@ import {
   useSafeAreaPadding,
 } from "@/shared";
 import { router } from "expo-router";
-import { ScrollView, StyleSheet, View } from "react-native";
+import {
+  Alert,
+  Linking,
+  Platform,
+  ScrollView,
+  Share,
+  StyleSheet,
+  View,
+} from "react-native";
 import { useFastInputMode, useSettingsActions } from "@/entities/settings";
 
 export const SettingsList = () => {
   const { toggleFastInputMode } = useSettingsActions();
   const fastInputMode = useFastInputMode();
   const { paddingBottom } = useSafeAreaPadding();
+
+  const itunesItemId = 1604538068;
+  const url = `itms-apps://itunes.apple.com/app/${itunesItemId}`;
+
+  const shareApp = async () => {
+    try {
+      const result = await Share.share(
+        Platform.OS === "ios"
+          ? {
+              url,
+            }
+          : {
+              message: url,
+            }
+      );
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error: any) {
+      Alert.alert(error.message);
+    }
+  };
+
+  const rateApp = () => {
+    const itunesItemId = 1604538068;
+    Linking.openURL(
+      `itms-apps://itunes.apple.com/app/viewContentsUserReviews/id${itunesItemId}?action=write-review`
+    );
+  };
+
+  const contactDeveloper = () => {
+    const url = "https://t.me/Amir_Kerimov";
+    Linking.openURL(url);
+  };
 
   return (
     <View style={styles.container}>
@@ -59,19 +107,19 @@ export const SettingsList = () => {
         <Setting
           type="navigate"
           title="shareWithFriend"
-          onPress={() => {}}
+          onPress={shareApp}
           xmlGetter={forwardLeftSvg}
         />
         <Setting
           type="navigate"
           title="leaveReview"
-          onPress={() => {}}
+          onPress={rateApp}
           xmlGetter={medalSvg}
         />
         <Setting
           type="navigate"
           title="contactDeveloper"
-          onPress={() => {}}
+          onPress={contactDeveloper}
           xmlGetter={dialogSvg}
         />
         <Setting

@@ -12,13 +12,17 @@ import { Caret } from "./Caret";
 export const TaskTitle: FC<ITask> = ({ id, title, isEditing }) => {
   const [text, setText] = useState(title);
   const { t } = useTranslation();
-  const { setIsEditing, setReminder } = useTaskActions();
+  const { setIsEditing, setReminder, deleteTask } = useTaskActions();
   const fastInputMode = useFastInputMode();
 
   const onBlur = () => {
     if (isEditing) {
-      setIsEditing({ id, title: text.trim() || t("newTask"), value: false });
-      if (!text.trim()) setText(t("newTask"));
+      if (!text.trim()) {
+        deleteTask(id);
+      } else {
+        setIsEditing({ id, title: text.trim() || t("newTask"), value: false });
+      }
+      // if (!text.trim()) setText(t("newTask"));
     }
   };
 
@@ -91,8 +95,10 @@ const styles = StyleSheet.create({
     paddingTop: 3,
   },
   input: {
-    display: "none",
-    width: 0,
-    height: 0,
+    position: 'absolute',
+    opacity: 0,
+    bottom: 0,
+    width: 1,
+    height: 1,
   },
 });

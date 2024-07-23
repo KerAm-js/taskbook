@@ -1,15 +1,16 @@
-import { Text, View } from "react-native";
+import { Header, ThemedView } from "@/shared";
+import { StyleSheet, View } from "react-native";
 
-export default function History() {
+export default function Main() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>History</Text>
-    </View>
-  )
+    <ThemedView colorName="background" style={styles.container}>
+      <Header title="history" />
+    </ThemedView>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

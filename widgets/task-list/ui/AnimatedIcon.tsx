@@ -9,18 +9,20 @@ import Animated, {
 } from "react-native-reanimated";
 import { SvgXml } from "react-native-svg";
 
-export const AnimatedIcon: FC<{
+type TPropTypes = {
   opacity: SharedValue<number>;
+  translationX: SharedValue<number>;
   isOverDragged: SharedValue<boolean>;
-  isOppositeOverDragged: SharedValue<boolean>;
   xmlGetter: (color: string) => string;
   colorName?: TColorName;
   color?: keyof typeof COLORS;
   side?: "left" | "right";
-}> = ({
+};
+
+export const AnimatedIcon: FC<TPropTypes> = ({
   opacity,
+  translationX,
   isOverDragged,
-  isOppositeOverDragged,
   xmlGetter,
   colorName,
   color = "red",
@@ -29,40 +31,38 @@ export const AnimatedIcon: FC<{
   const easing = Easing.out(Easing.quad);
   const { colors } = useThemeColors();
 
-  const redIconStyleAnim = useAnimatedStyle(
-    () => ({
+  const mainIconStyleAnim = useAnimatedStyle(() => {
+    return {
       opacity: withTiming(isOverDragged.value ? 1 : 0, {
         duration: 150,
         easing,
       }),
-    }),
-    [isOverDragged.value]
-  );
+    };
+  }, [translationX.value, isOverDragged.value]);
 
-  const greyIconStyleAnim = useAnimatedStyle(
-    () => ({
+  const greyIconStyleAnim = useAnimatedStyle(() => {
+    return {
       opacity: withTiming(isOverDragged.value ? 0 : 1, {
         duration: 150,
         easing,
       }),
-    }),
-    [isOverDragged.value]
-  );
+    };
+  }, [translationX.value, isOverDragged.value]);
 
-  const containerStyleAnim = useAnimatedStyle(
-    () => ({
-      opacity: opacity.value,
-      display: isOppositeOverDragged.value ? "none" : "flex",
-    }),
-    [opacity.value]
-  );
+  const containerStyleAnim = useAnimatedStyle(() => {
+    const visible =
+      side === "left" ? translationX.value > 0 : translationX.value < 0;
+    return {
+      opacity: visible ? opacity.value : 0,
+    };
+  }, [opacity.value, translationX.value]);
 
   return (
     <Animated.View
       style={[styles.container, { [side]: 0 }, containerStyleAnim]}
     >
       <Animated.View
-        style={[styles.iconContainer, { [side]: 20 }, redIconStyleAnim]}
+        style={[styles.iconContainer, { [side]: 20 }, mainIconStyleAnim]}
       >
         <SvgXml
           width={26}

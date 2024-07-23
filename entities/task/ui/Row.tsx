@@ -24,7 +24,7 @@ export const TaskRow: FC<ITask> = (task) => {
     : null;
 
   const translateX = useSharedValue(0);
-  const opacity = useSharedValue(1);
+  const opacity = useSharedValue(isCompleted ? 0.4 : 1);
 
   const containerStyleAnim = useAnimatedStyle(() => {
     return {
@@ -35,7 +35,7 @@ export const TaskRow: FC<ITask> = (task) => {
 
   useEffect(() => {
     const easing = Easing.out(Easing.quad);
-    if (isCompleted) {
+    if (isCompleted && opacity.value === 1) {
       translateX.value = withSequence(
         withTiming(7, { duration: 200, easing }),
         withTiming(0, { duration: 200, easing })

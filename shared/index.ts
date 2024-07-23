@@ -17,8 +17,10 @@ export { THEME_COLORS, COLORS } from "./config/style/colors";
 export { SCREEN_PADDING, PADDING_TOP } from "./config/style/views";
 export { HEADER_SHADOW, HEADER_SHADOW_NIGHT } from "./config/style/shadows";
 export { TEXT_STYLES } from "./config/style/texts";
+
 //hooks
 export { useSafeAreaPadding } from "./hooks/useSafeAreaPadding";
+export { useKeyboard } from "./hooks/useKeyboard";
 export {
   useThemeColors,
   useAnimatedThemeStyle,
@@ -31,6 +33,12 @@ export {
   isDatesEqual,
   getCalendarWeeks,
   isToday,
+  endOfDay,
+  getNextDate,
+  getDate,
+  getMonth,
+  getYear,
+  getDateTitle,
 } from "./lib/dates";
 export { getTimeString } from "./lib/time";
 

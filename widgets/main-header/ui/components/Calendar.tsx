@@ -1,14 +1,16 @@
-import { ScrollToStartButton, WeekDays } from "@/features/tasks/select-date";
+import { ScrollToStartButton } from "@/features/tasks/select-date";
 import {
   CustomText,
   getCalendarWeeks,
   TCalendarWeek,
   THEME_COLORS,
   TEXT_STYLES,
+  getNextDate,
 } from "@/shared";
 import { SCREEN_PADDING } from "@/shared/config/style/views";
 import { MONTHS, WEEK_DAYS } from "@/shared/consts/datetime";
-import { FC, useRef, useState } from "react";
+import { getDateLater } from "@/shared/lib/dates";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dimensions, StyleSheet, View } from "react-native";
 import Animated, {
@@ -18,6 +20,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { WeekDays } from "./WeekDays";
 
 const WIDTH = Dimensions.get("screen").width;
 
@@ -27,7 +30,6 @@ const Calendar = () => {
   const index = useSharedValue(0);
   const listRef = useRef<Animated.FlatList<TCalendarWeek> | null>(null);
   const { t } = useTranslation();
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [weeks, setWeeks] = useState(getCalendarWeeks());
   const [titleData, setTitleData] = useState({
     months: weeks[0].months,
@@ -59,34 +61,17 @@ const Calendar = () => {
     onEndDrag: () => {},
   });
 
-  const monthString =
-    t(MONTHS[titleData.months[0]]) +
-    (typeof titleData.months[1] === "number"
-      ? " / " + t(MONTHS[titleData.months[1]])
-      : "") +
-    (titleData.year != new Date().getFullYear() ? " " + titleData.year : "");
-
   const updateCalendar = () => {
     const lastDate = weeks[weeks.length - 1].days[6];
-    const fDate = new Date(
-      lastDate.getFullYear(),
-      lastDate.getMonth(),
-      lastDate.getDate() + 1
-    );
-    setWeeks([
-      ...weeks,
-      ...getCalendarWeeks(
-        fDate,
-        new Date(fDate.getFullYear(), fDate.getMonth(), fDate.getDate() + 42)
-      ),
-    ]);
+    const fDate = new Date(getNextDate(lastDate));
+    const sDate = getDateLater(42, fDate.valueOf());
+    setWeeks([...weeks, ...getCalendarWeeks(fDate, sDate)]);
   };
 
   const scrollToStart = () => {
     if (listRef.current) {
       preventHandler.value = true;
       listRef.current.scrollToIndex({ animated: true, index: 0 });
-      setSelectedDate(new Date());
     }
   };
 
@@ -97,9 +82,12 @@ const Calendar = () => {
     };
   }, [scrollToStartBtnOpacity.value]);
 
-  const onPress = (date: Date) => {
-    setSelectedDate(date);
-  };
+  const monthString =
+    t(MONTHS[titleData.months[0]]) +
+    (typeof titleData.months[1] === "number"
+      ? " / " + t(MONTHS[titleData.months[1]])
+      : "") +
+    (titleData.year != new Date().getFullYear() ? " " + titleData.year : "");
 
   return (
     <View style={styles.container}>
@@ -114,10 +102,7 @@ const Calendar = () => {
       <View style={styles.weekContainer}>
         <View style={styles.weekDaysList}>
           {WEEK_DAYS.map((item) => (
-            <CustomText
-              key={item.full}
-              style={styles.weekDay}
-            >
+            <CustomText key={item.full} style={styles.weekDay}>
               {item.short}
             </CustomText>
           ))}
@@ -126,13 +111,7 @@ const Calendar = () => {
           ref={listRef}
           data={weeks}
           renderItem={({ item }) => {
-            return (
-              <WeekDays
-                onPress={onPress}
-                selectedDate={selectedDate}
-                data={item}
-              />
-            );
+            return <WeekDays data={item} />;
           }}
           onScroll={handler}
           horizontal
@@ -156,11 +135,10 @@ const Calendar = () => {
 export default Calendar;
 
 const styles = StyleSheet.create({
-  container: {
-  },
+  container: {},
   title: {
     color: THEME_COLORS.night.text,
-    ...TEXT_STYLES.titleBig
+    ...TEXT_STYLES.titleBig,
   },
   weekContainer: {
     paddingTop: 17,
@@ -179,7 +157,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 2,
     lineHeight: 18,
-    ...TEXT_STYLES.small
+    ...TEXT_STYLES.small,
   },
   monthContainer: {
     flexDirection: "row",

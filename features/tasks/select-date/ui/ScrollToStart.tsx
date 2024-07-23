@@ -1,12 +1,20 @@
 import { arrowLeftSvg } from "@/assets/svg/arrowLeft";
-import { THEME_COLORS } from "@/shared";
+import { useTaskActions } from "@/entities/task";
+import { endOfDay, THEME_COLORS } from "@/shared";
 import { FC } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 
-export const ScrollToStartButton: FC<{ onPress: () => void }> = ({ onPress }) => {
+export const ScrollToStartButton: FC<{ onPress: () => void }> = ({
+  onPress,
+}) => {
+  const { selectDate } = useTaskActions();
+  const onPressHandler = () => {
+    selectDate(endOfDay());
+    onPress();
+  };
   return (
-    <Pressable onPress={onPress} style={styles.container}>
+    <Pressable onPress={onPressHandler} style={styles.container}>
       <View style={styles.circle}>
         <SvgXml
           xml={arrowLeftSvg(THEME_COLORS.night.accent)}

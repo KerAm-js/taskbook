@@ -1,22 +1,16 @@
 import { checkSvg } from "@/assets/svg/check";
-import { COLORS, useThemeColors } from "@/shared";
-import { Keyboard, Pressable, StyleSheet, View } from "react-native";
+import { useThemeColors } from "@/shared";
+import { FC } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 
-export const DoneBtn = () => {
-  const { colors, theme } = useThemeColors();
+export const DoneBtn: FC<{ onPress: () => void }> = ({ onPress }) => {
+  const { colors } = useThemeColors();
 
-  const onPress = () => {
-    Keyboard.dismiss();
-  };
   return (
     <Pressable onPress={onPress} style={styles.container}>
       <View style={[styles.circle, { backgroundColor: colors.accent }]}>
-        <SvgXml
-          width={14}
-          height={14}
-          xml={checkSvg(colors.background)}
-        />
+        <SvgXml width={14} height={14} xml={checkSvg(colors.background)} />
       </View>
     </Pressable>
   );

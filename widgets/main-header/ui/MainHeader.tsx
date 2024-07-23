@@ -10,18 +10,15 @@ import Animated, {
 import ProgressBar from "./components/ProgressBar";
 import * as Haptics from "expo-haptics";
 import NavBar from "./components/NavBar";
-import { SCREEN_PADDING } from "@/shared/config/style/views";
 import {
-  CustomText,
   HEADER_SHADOW,
-  THEME_COLORS,
   ThemedGradient,
   ThemedView,
-  TEXT_STYLES,
   useSafeAreaPadding,
 } from "@/shared";
 import Calendar from "./components/Calendar";
 import { MAX_H, MIN_H } from "../config/headerHeight";
+import { Title } from "./components/Title";
 
 export const MainHeader = () => {
   const [isCalendarOpened, setCalendarOpened] = useState<boolean>(false);
@@ -83,11 +80,7 @@ export const MainHeader = () => {
           isCalendarOpened={isCalendarOpened}
           toggleCalendarOpened={toggleCalendarOpened}
         />
-        <Animated.View style={titleStyleAnim}>
-          <CustomText style={styles.title} defaultTheme="night">
-            today
-          </CustomText>
-        </Animated.View>
+        <Title isCalendarOpened={isCalendarOpened} />
         <Animated.View style={calendarStyleAnim}>
           <Calendar />
         </Animated.View>
@@ -101,10 +94,5 @@ const styles = StyleSheet.create({
   container: {
     ...HEADER_SHADOW,
     zIndex: 1,
-  },
-  title: {
-    marginLeft: SCREEN_PADDING,
-    color: THEME_COLORS.night.text,
-    ...TEXT_STYLES.titleBig,
   },
 });
