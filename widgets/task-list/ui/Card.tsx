@@ -1,4 +1,4 @@
-import { ITask, TaskRow, useTaskActions } from "@/entities/task";
+import { ITask, TaskRow, useTaskActions, useTaskData } from "@/entities/task";
 import { ToggleTask } from "@/features/tasks/toggle-task";
 import { COLORS, ThemedView, useKeyboard } from "@/shared";
 import React, { FC, useEffect } from "react";
@@ -16,9 +16,9 @@ import Animated, {
   FadeInRight,
   FadeOut,
   runOnJS,
+  useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
   withTiming,
 } from "react-native-reanimated";
 import { AnimatedIcon } from "./AnimatedIcon";
@@ -32,160 +32,169 @@ const DELETE_THRESHOLD = -150;
 const SELECT_THRESHOLD = 60;
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("screen");
 
-export const Card: FC<ITask & { scroll: (value: number) => void }> = React.memo(
-  ({ scroll, ...task }) => {
-    const { deleteTask, toggleTask, setIsEditing, setTaskToEdit } =
-      useTaskActions();
-    const keyboardHeight = useKeyboard();
-    const fastInputMode = useFastInputMode();
+export const Card: FC<Pick<ITask, "id"> & { index: { value: number } }> =
+  React.memo(
+    ({ id, index }) => {
+      const task = useTaskData(id);
+      const { deleteTask, toggleTask, setIsEditing, setTaskToEdit } =
+        useTaskActions();
+      const keyboardHeight = useKeyboard();
+      const fastInputMode = useFastInputMode();
 
-    const translationX = useSharedValue(0);
-    const translationY = useSharedValue(0);
-    const opacity = useSharedValue(1);
-    const isOverdraggedRight = useSharedValue(false);
-    const isOverdraggedLeft = useSharedValue(false);
-    const viewPageY = useSharedValue(0);
-    const viewHeight = useSharedValue(styles.card.minHeight);
+      const translationX = useSharedValue(0);
+      const translationY = useSharedValue(0);
+      const opacity = useSharedValue(1);
+      const isOverdraggedRight = useSharedValue(false);
+      const isOverdraggedLeft = useSharedValue(false);
+      const viewPageY = useSharedValue(0);
+      const viewHeight = useSharedValue(styles.card.minHeight);
 
-    const panGesture = Gesture.Pan().enabled(translationY.value !== 0)
-      .minDistance(35)
-      .onUpdate((event) => {
-        translationX.value = event.translationX;
-        if (event.translationX < SELECT_THRESHOLD && isOverdraggedRight.value) {
-          isOverdraggedRight.value = false;
-        }
-        if (
-          event.translationX >= SELECT_THRESHOLD &&
-          !isOverdraggedRight.value
-        ) {
-          isOverdraggedRight.value = true;
-          runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
-        }
-        if (event.translationX > DELETE_THRESHOLD && isOverdraggedLeft.value) {
-          isOverdraggedLeft.value = false;
-        }
-        if (
-          event.translationX <= DELETE_THRESHOLD &&
-          !isOverdraggedLeft.value
-        ) {
-          isOverdraggedLeft.value = true;
-          runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
-        }
-      })
-      .onEnd((event) => {
-        if (event.translationX > DELETE_THRESHOLD) {
-          translationX.value = withSpring(0);
-        } else {
-          translationX.value = withTiming(-WIDTH);
-          opacity.value = withTiming(0, undefined, (isFinished) => {
-            if (isFinished) runOnJS(deleteTask)(task.id);
-          });
-        }
-      });
-
-    const cardStyleAnim = useAnimatedStyle(() => {
-      return {
-        transform: [
-          { translateX: translationX.value },
-          { translateY: translationY.value },
-        ],
-        zIndex: translationY.value < 0 ? 100 : 1,
-        opacity: opacity.value,
-        shadowOpacity: withTiming(task.isEditing ? 1 : 0.55),
-        shadowRadius: withTiming(task.isEditing ? 10 : 14),
-      };
-    }, [translationX.value, translationY.value, task.isEditing, opacity.value]);
-
-    const toggleButtonStyleAnim = useAnimatedStyle(
-      () => ({
-        opacity: withTiming(task.isEditing && !task.title ? 0 : 1),
-      }),
-      [task.isEditing]
-    );
-
-    const taskRowStyleAnim = useAnimatedStyle(
-      () => ({
-        transform: [
-          { translateX: withTiming(task.isEditing && !task.title ? -28 : 0) },
-        ],
-      }),
-      [task.isEditing]
-    );
-
-    const onPress = (event: GestureResponderEvent) => {
-      if (fastInputMode) {
-        event.currentTarget.measure((x, y, w, h, px, py) => {
-          viewPageY.value = py;
-          viewHeight.value = h;
-          setIsEditing({ id: task.id, value: true });
+      const panGesture = Gesture.Pan()
+        .enabled(!task.isEditing)
+        .minDistance(35)
+        .onUpdate((event) => {
+          translationX.value = event.translationX;
+          if (
+            event.translationX < SELECT_THRESHOLD &&
+            isOverdraggedRight.value
+          ) {
+            isOverdraggedRight.value = false;
+          }
+          if (
+            event.translationX >= SELECT_THRESHOLD &&
+            !isOverdraggedRight.value
+          ) {
+            isOverdraggedRight.value = true;
+            runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
+          }
+          if (
+            event.translationX > DELETE_THRESHOLD &&
+            isOverdraggedLeft.value
+          ) {
+            isOverdraggedLeft.value = false;
+          }
+          if (
+            event.translationX <= DELETE_THRESHOLD &&
+            !isOverdraggedLeft.value
+          ) {
+            isOverdraggedLeft.value = true;
+            runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Light);
+          }
+        })
+        .onEnd((event) => {
+          if (event.translationX > DELETE_THRESHOLD) {
+            translationX.value = withTiming(0);
+          } else {
+            opacity.value = withTiming(0);
+            translationX.value = withTiming(-WIDTH, undefined, (isFinished) => {
+              if (isFinished) runOnJS(deleteTask)(task.id);
+            });
+          }
         });
-      } else {
-        setTaskToEdit(task.id);
-        router.navigate("taskForm");
-      }
-    };
 
-    const onLayout = (event: LayoutChangeEvent) => {
-      const newHeight = event.nativeEvent.layout.height;
-      if (
-        task.isEditing &&
-        translationY.value < 0 &&
-        newHeight !== viewHeight.value
-      ) {
-        translationY.value =
-          translationY.value - (newHeight - viewHeight.value);
-        viewHeight.value = newHeight;
-      }
-    };
+      const cardStyleAnim = useAnimatedStyle(() => {
+        return {
+          transform: [
+            { translateX: translationX.value },
+            { translateY: translationY.value },
+          ],
+          zIndex: translationY.value < 0 ? 100 : 1,
+          opacity: opacity.value,
+          shadowOpacity: withTiming(task.isEditing ? 1 : 0.7),
+        };
+      }, [
+        translationX.value,
+        translationY.value,
+        task.isEditing,
+        opacity.value,
+      ]);
 
-    useEffect(() => {
-      if (
-        keyboardHeight &&
-        task.isEditing &&
-        viewPageY.value &&
-        viewHeight.value
-      ) {
-        const absoluteTranslateY =
-          keyboardHeight + viewHeight.value + TASK_ADDING_MENU_HEIGHT + 20;
-        const result = absoluteTranslateY - (HEIGHT - viewPageY.value);
-        translationY.value = withTiming(result > 0 ? -result : 0);
-      } else if (keyboardHeight && !task.isEditing) {
-        opacity.value = withTiming(0.3);
-        translationY.value = withTiming(0);
-      } else {
-        translationY.value = withTiming(0);
-        opacity.value = withTiming(1);
-      }
-    }, [keyboardHeight, task.isEditing]);
+      const toggleButtonStyleAnim = useAnimatedStyle(
+        () => ({
+          opacity: withTiming(task.isEditing && !task.title ? 0 : 1),
+        }),
+        [task.isEditing]
+      );
 
-    return (
-      <Animated.View
-        exiting={FadeOut.duration(150)}
-        entering={
-          task.title
-            ? FadeInDown
-            : FadeInRight.withInitialValues({
-                transform: [{ translateX: 80 }],
-              })
+      const taskRowStyleAnim = useAnimatedStyle(
+        () => ({
+          transform: [
+            { translateX: withTiming(task.isEditing && !task.title ? -28 : 0) },
+          ],
+        }),
+        [task.isEditing]
+      );
+
+      const onPress = (event: GestureResponderEvent) => {
+        if (translationX.value !== 0) return;
+        if (fastInputMode) {
+          event.currentTarget.measure((x, y, w, h, px, py) => {
+            viewPageY.value = py;
+            viewHeight.value = h;
+            setIsEditing({ id: task.id, value: true });
+          });
+        } else {
+          setTaskToEdit(task.id);
+          router.navigate("taskForm");
         }
-      >
-        <Pressable
-          onLayout={onLayout}
-          onPress={onPress}
+      };
+
+      const onLayout = (event: LayoutChangeEvent) => {
+        const newHeight = event.nativeEvent.layout.height;
+        if (
+          task.isEditing &&
+          translationY.value < 0 &&
+          newHeight !== viewHeight.value
+        ) {
+          translationY.value =
+            translationY.value - (newHeight - viewHeight.value);
+          viewHeight.value = newHeight;
+        }
+      };
+
+      useAnimatedReaction(
+        () => keyboardHeight.value,
+        (curr) => {
+          if (curr && task.isEditing && viewPageY.value && viewHeight.value) {
+            const absoluteTranslateY =
+              curr + viewHeight.value + TASK_ADDING_MENU_HEIGHT + 20;
+            const result = absoluteTranslateY - (HEIGHT - viewPageY.value);
+            translationY.value = withTiming(result > 0 ? -result : 0);
+          } else if (curr && !task.isEditing) {
+            opacity.value = withTiming(0.3);
+            translationY.value = withTiming(0);
+          } else {
+            translationY.value = withTiming(0);
+            opacity.value = withTiming(1);
+          }
+        }
+      );
+
+      return (
+        <Animated.View
+          exiting={FadeOut.duration(150)}
           style={styles.container}
+          entering={
+            task.title
+              ? FadeInDown.delay(75 * index.value)
+              : FadeInRight.withInitialValues({
+                  transform: [{ translateX: 80 }],
+                })
+          }
         >
-          <AnimatedIcon
-            xmlGetter={layersSvg}
-            opacity={opacity}
-            isOverDragged={isOverdraggedRight}
-            translationX={translationX}
-            colorName="accent"
-            side="left"
-          />
-          <GestureDetector gesture={panGesture}>
-            <Animated.View style={[styles.shadow, cardStyleAnim]}>
+          <Pressable onLayout={onLayout} onPress={onPress}>
+            <AnimatedIcon
+              xmlGetter={layersSvg}
+              opacity={opacity}
+              isOverDragged={isOverdraggedRight}
+              translationX={translationX}
+              colorName="accent"
+              side="left"
+            />
+            <GestureDetector gesture={panGesture}>
               <ThemedView
-                style={styles.card}
+                animated
+                style={[styles.card, cardStyleAnim]}
                 nightStyle={styles.taskNight}
                 colorName="background"
                 nightColorName="backgroundSecond"
@@ -200,38 +209,37 @@ export const Card: FC<ITask & { scroll: (value: number) => void }> = React.memo(
                   <TaskRow {...task} />
                 </Animated.View>
               </ThemedView>
-            </Animated.View>
-          </GestureDetector>
-          <AnimatedIcon
-            xmlGetter={trashSvg}
-            opacity={opacity}
-            isOverDragged={isOverdraggedLeft}
-            translationX={translationX}
-          />
-        </Pressable>
-      </Animated.View>
-    );
-  }
-);
+            </GestureDetector>
+            <AnimatedIcon
+              xmlGetter={trashSvg}
+              opacity={opacity}
+              isOverDragged={isOverdraggedLeft}
+              translationX={translationX}
+            />
+          </Pressable>
+        </Animated.View>
+      );
+    },
+    () => true
+  );
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 10,
+    marginBottom: 12,
   },
   card: {
     flexDirection: "row",
     minHeight: 50,
-    borderRadius: 12,
+    borderRadius: 10,
     borderCurve: "continuous",
-  },
-  shadow: {
+    shadowRadius: 10,
     shadowOffset: {
-      height: 6,
+      height: 5,
       width: 0,
     },
     shadowColor: COLORS.shadow,
   },
   taskNight: {
-    shadowOpacity: 0,
+    shadowColor: "rgba(0, 0, 0, 0)",
   },
 });

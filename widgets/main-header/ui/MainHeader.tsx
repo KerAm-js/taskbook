@@ -32,8 +32,8 @@ export const MainHeader = () => {
     setCalendarOpened(!isCalendarOpened);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
     calendarTranslate.value = withSpring(!isCalendarOpened ? 0 : -TRANSLATE, {
-      duration: 1500,
-      dampingRatio: 0.42,
+      duration: 1100,
+      dampingRatio: 0.48,
     });
   };
 
@@ -51,8 +51,8 @@ export const MainHeader = () => {
   const contentStyleAnim = useAnimatedStyle(() => {
     return {
       height: withSpring(isCalendarOpened ? MAX_H : MIN_H, {
-        duration: 1500,
-        dampingRatio: 0.42,
+        duration: 1100,
+        dampingRatio: 0.48,
       }),
     };
   }, [isCalendarOpened]);

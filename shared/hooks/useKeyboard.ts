@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { Keyboard, KeyboardEvent } from "react-native";
+import { useSharedValue } from "react-native-reanimated";
 
 export const useKeyboard = () => {
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const keyboardHeight = useSharedValue(0);
 
   function onKeyboardWillShow(e: KeyboardEvent) {
-    setKeyboardHeight(e.endCoordinates.height);
+    keyboardHeight.value = e.endCoordinates.height;
   }
 
   function onKeyboardWillHide() {
-    setKeyboardHeight(0);
+    keyboardHeight.value = 0;
   }
 
   useEffect(() => {

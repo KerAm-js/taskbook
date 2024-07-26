@@ -5,13 +5,11 @@ import { DoneBtn } from "./DoneBtn";
 import { OpenTaskForm } from "@/features/tasks/open-task-form";
 import Animated, {
   Easing,
-  useAnimatedKeyboard,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { useEffect } from "react";
 
 export const TaskAddingMenu = () => {
   const { colors, theme } = useThemeColors();
@@ -28,6 +26,7 @@ export const TaskAddingMenu = () => {
   }, [translationY.value, opacity.value]);
 
   const toggleMenu = (mode: "up" | "down") => {
+    'worklet';
     const easing = Easing.out(Easing.quad);
     const animationConfig = {
       duration: 350,
@@ -35,7 +34,7 @@ export const TaskAddingMenu = () => {
     };
     if (mode === "up") {
       opacity.value = withTiming(1, animationConfig);
-      translationY.value = withTiming(-keyboardHeight, animationConfig);
+      translationY.value = withTiming(-keyboardHeight.value, animationConfig);
     } else {
       animationConfig.duration = 200;
       opacity.value = withTiming(0, animationConfig);
@@ -48,13 +47,16 @@ export const TaskAddingMenu = () => {
     Keyboard.dismiss();
   };
 
-  useEffect(() => {
-    if (keyboardHeight) {
-      toggleMenu("up");
-    } else if (opacity.value === 1) {
-      toggleMenu("down");
+  useAnimatedReaction(
+    () => keyboardHeight.value,
+    (curr) => {
+      if (curr) {
+        toggleMenu("up");
+      } else if (opacity.value === 1) {
+        toggleMenu("down");
+      }
     }
-  }, [keyboardHeight]);
+  );
 
   return (
     <Animated.View

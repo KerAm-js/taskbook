@@ -3,15 +3,17 @@ import { ITask } from "./types";
 import { endOfDay } from "@/shared";
 
 interface ITasksState {
-  ids: Array<ITask["id"]>;
-  data: { [key: ITask["id"]]: ITask };
   taskToEditId?: ITask["id"];
   selectedDate: number;
+  filteredIds: Array<ITask["id"]>;
+  ids: Array<ITask["id"]>;
+  entities: { [key: ITask["id"]]: ITask };
 }
 
 const initialState: ITasksState = {
   ids: [],
-  data: {},
+  filteredIds: [],
+  entities: {},
   taskToEditId: undefined,
   selectedDate: endOfDay(),
 };
@@ -28,17 +30,21 @@ export const tasksSlice = createSlice({
         isCompleted: false,
         date: state.selectedDate,
       };
-      state.data[newTask.id] = newTask;
+      state.entities[newTask.id] = newTask;
       state.ids = [newTask.id, ...state.ids];
+      state.filteredIds = [newTask.id, ...state.filteredIds];
     },
 
     deleteTask: (state, action: PayloadAction<ITask["id"]>) => {
       state.ids = state.ids.filter((id) => id !== action.payload);
-      delete state.data[action.payload];
+      state.filteredIds = state.filteredIds.filter(
+        (id) => id !== action.payload
+      );
+      delete state.entities[action.payload];
     },
 
     toggleTask: (state, action: PayloadAction<ITask["id"]>) => {
-      const task = state.data[action.payload];
+      const task = state.entities[action.payload];
       if (task) task.isCompleted = !task.isCompleted;
     },
 
@@ -47,7 +53,7 @@ export const tasksSlice = createSlice({
       action: PayloadAction<{ id: ITask["id"]; hours: number; minutes: number }>
     ) => {
       const { id, hours, minutes } = action.payload;
-      const task = state.data[id];
+      const task = state.entities[id];
       if (task) task.remindTime = new Date().setHours(hours, minutes, 0, 0);
     },
 
@@ -60,7 +66,7 @@ export const tasksSlice = createSlice({
       }>
     ) => {
       const { id, title, value } = action.payload;
-      const task = state.data[id];
+      const task = state.entities[id];
       if (task) {
         task.isEditing = value;
         task.title = title || task.title;
@@ -71,8 +77,15 @@ export const tasksSlice = createSlice({
       state.taskToEditId = action.payload;
     },
 
-    selectDate: (state, action: PayloadAction<ITasksState["selectedDate"]>) => {
-      state.selectedDate = action.payload;
+    selectDate: (
+      state,
+      action: PayloadAction<ITasksState["selectedDate"] | undefined>
+    ) => {
+      const selectedDate = action.payload || endOfDay();
+      state.filteredIds = state.ids.filter(
+        (id) => state.entities[id].date === selectedDate
+      );
+      state.selectedDate = selectedDate;
     },
   },
 });
