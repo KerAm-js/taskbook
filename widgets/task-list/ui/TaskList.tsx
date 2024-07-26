@@ -6,14 +6,14 @@ import {
 } from "react-native";
 import React, { useEffect } from "react";
 import { PADDING_TOP, SCREEN_PADDING } from "@/shared";
-import { useTasksForSelectedDate } from "@/entities/task";
 import { Card } from "./Card";
 import { EmptyListImage } from "./EmptyListImage";
+import { useTaskIds } from "@/entities/task";
 
 const keyExtractor = (item: number) => item.toString();
 
 export const TaskList = () => {
-  const taskIds = useTasksForSelectedDate();
+  const taskIds = useTaskIds();
 
   useEffect(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);

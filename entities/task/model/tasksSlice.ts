@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, Update } from "@reduxjs/toolkit";
 import { ITask } from "./types";
 import { endOfDay } from "@/shared";
 
@@ -23,16 +23,18 @@ export const tasksSlice = createSlice({
   initialState,
   reducers: {
     addTask: (state) => {
-      const newTask = {
-        id: new Date().valueOf(),
+      const id = new Date().valueOf();
+      const newTask: ITask = {
+        id,
         title: "",
-        isEditing: true,
         isCompleted: false,
         date: state.selectedDate,
+        isEditing: true,
       };
-      state.entities[newTask.id] = newTask;
-      state.ids = [newTask.id, ...state.ids];
-      state.filteredIds = [newTask.id, ...state.filteredIds];
+      state.entities[id] = newTask;
+      state.ids = [id, ...state.ids];
+      state.filteredIds = [id, ...state.filteredIds];
+      state.taskToEditId = id;
     },
 
     deleteTask: (state, action: PayloadAction<ITask["id"]>) => {
@@ -57,24 +59,37 @@ export const tasksSlice = createSlice({
       if (task) task.remindTime = new Date().setHours(hours, minutes, 0, 0);
     },
 
-    setIsEditing: (
+    setTaskTitle: (
       state,
-      action: PayloadAction<{
-        value: boolean;
-        id: ITask["id"];
-        title?: ITask["title"];
-      }>
+      action: PayloadAction<Pick<ITask, "id" | "title">>
     ) => {
-      const { id, title, value } = action.payload;
-      const task = state.entities[id];
-      if (task) {
-        task.isEditing = value;
-        task.title = title || task.title;
-      }
+      const { id, title } = action.payload;
+      state.entities[id].title = title;
     },
 
-    setTaskToEdit: (state, action: PayloadAction<ITask["id"]>) => {
-      state.taskToEditId = action.payload;
+    startTaskEdition: (state, action: PayloadAction<ITask["id"]>) => {
+      const id = action.payload;
+      const { taskToEditId } = state;
+      state.entities[id].isEditing = true;
+      if (taskToEditId) {
+        state.entities[taskToEditId].isEditing = false;
+      }
+      state.taskToEditId = id;
+    },
+
+    endTaskEdition: (
+      state,
+      action: PayloadAction<Pick<ITask, "id"> & Partial<ITask>>
+    ) => {
+      const { id, ...newData } = action.payload;
+      const task = state.entities[id];
+      state.entities[id] = { ...task, ...newData };
+
+      const { taskToEditId } = state;
+      if (taskToEditId) {
+        state.entities[taskToEditId].isEditing = false;
+      }
+      state.taskToEditId = undefined;
     },
 
     selectDate: (

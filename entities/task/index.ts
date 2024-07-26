@@ -1,10 +1,9 @@
 export {
   useTaskActions,
-  useTasks,
   useTaskToEdit,
   useSelectedDate,
   useTaskData,
-  useTasksForSelectedDate,
+  useTaskIds
 } from "./model/hooks";
 export { tasksSlice } from "./model/tasksSlice";
 export { ITask } from "./model/types";

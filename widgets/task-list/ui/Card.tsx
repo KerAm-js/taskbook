@@ -1,7 +1,13 @@
-import { ITask, TaskRow, useTaskActions, useTaskData } from "@/entities/task";
+import {
+  ITask,
+  TaskRow,
+  useTaskActions,
+  useTaskData,
+  useTaskToEdit,
+} from "@/entities/task";
 import { ToggleTask } from "@/features/tasks/toggle-task";
 import { COLORS, ThemedView, useKeyboard } from "@/shared";
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import {
   Dimensions,
   GestureResponderEvent,
@@ -36,8 +42,7 @@ export const Card: FC<Pick<ITask, "id"> & { index: { value: number } }> =
   React.memo(
     ({ id, index }) => {
       const task = useTaskData(id);
-      const { deleteTask, toggleTask, setIsEditing, setTaskToEdit } =
-        useTaskActions();
+      const { deleteTask, toggleTask, startTaskEdition } = useTaskActions();
       const keyboardHeight = useKeyboard();
       const fastInputMode = useFastInputMode();
 
@@ -49,8 +54,11 @@ export const Card: FC<Pick<ITask, "id"> & { index: { value: number } }> =
       const viewPageY = useSharedValue(0);
       const viewHeight = useSharedValue(styles.card.minHeight);
 
+      const isSwiping = translationX.value !== 0;
+      const { isEditing } = task;
+
       const panGesture = Gesture.Pan()
-        .enabled(!task.isEditing)
+        .enabled(!isEditing)
         .minDistance(35)
         .onUpdate((event) => {
           translationX.value = event.translationX;
@@ -100,41 +108,34 @@ export const Card: FC<Pick<ITask, "id"> & { index: { value: number } }> =
           ],
           zIndex: translationY.value < 0 ? 100 : 1,
           opacity: opacity.value,
-          shadowOpacity: withTiming(task.isEditing ? 1 : 0.7),
+          shadowOpacity: withTiming(isEditing ? 1 : 0.7),
         };
-      }, [
-        translationX.value,
-        translationY.value,
-        task.isEditing,
-        opacity.value,
-      ]);
+      }, [translationX.value, translationY.value, isEditing, opacity.value]);
 
       const toggleButtonStyleAnim = useAnimatedStyle(
         () => ({
-          opacity: withTiming(task.isEditing && !task.title ? 0 : 1),
+          opacity: withTiming(isEditing && !task.title ? 0 : 1),
         }),
-        [task.isEditing]
+        [isEditing]
       );
 
       const taskRowStyleAnim = useAnimatedStyle(
         () => ({
           transform: [
-            { translateX: withTiming(task.isEditing && !task.title ? -28 : 0) },
+            { translateX: withTiming(isEditing && !task.title ? -28 : 0) },
           ],
         }),
-        [task.isEditing]
+        [isEditing]
       );
 
       const onPress = (event: GestureResponderEvent) => {
-        if (translationX.value !== 0) return;
+        if (isSwiping) return;
+        startTaskEdition(task.id);
         if (fastInputMode) {
-          event.currentTarget.measure((x, y, w, h, px, py) => {
+          event.target.measure((x, y, w, h, px, py) => {
             viewPageY.value = py;
-            viewHeight.value = h;
-            setIsEditing({ id: task.id, value: true });
           });
         } else {
-          setTaskToEdit(task.id);
           router.navigate("taskForm");
         }
       };
@@ -142,7 +143,7 @@ export const Card: FC<Pick<ITask, "id"> & { index: { value: number } }> =
       const onLayout = (event: LayoutChangeEvent) => {
         const newHeight = event.nativeEvent.layout.height;
         if (
-          task.isEditing &&
+          isEditing &&
           translationY.value < 0 &&
           newHeight !== viewHeight.value
         ) {
@@ -155,12 +156,12 @@ export const Card: FC<Pick<ITask, "id"> & { index: { value: number } }> =
       useAnimatedReaction(
         () => keyboardHeight.value,
         (curr) => {
-          if (curr && task.isEditing && viewPageY.value && viewHeight.value) {
+          if (curr && isEditing && viewPageY.value && viewHeight.value) {
             const absoluteTranslateY =
               curr + viewHeight.value + TASK_ADDING_MENU_HEIGHT + 20;
             const result = absoluteTranslateY - (HEIGHT - viewPageY.value);
             translationY.value = withTiming(result > 0 ? -result : 0);
-          } else if (curr && !task.isEditing) {
+          } else if (curr && !isEditing) {
             opacity.value = withTiming(0.3);
             translationY.value = withTiming(0);
           } else {
@@ -176,47 +177,50 @@ export const Card: FC<Pick<ITask, "id"> & { index: { value: number } }> =
           style={styles.container}
           entering={
             task.title
-              ? FadeInDown.delay(75 * index.value)
+              ? FadeInDown.delay(60 * index.value)
               : FadeInRight.withInitialValues({
                   transform: [{ translateX: 80 }],
                 })
           }
         >
-          <Pressable onLayout={onLayout} onPress={onPress}>
-            <AnimatedIcon
-              xmlGetter={layersSvg}
-              opacity={opacity}
-              isOverDragged={isOverdraggedRight}
-              translationX={translationX}
-              colorName="accent"
-              side="left"
-            />
-            <GestureDetector gesture={panGesture}>
-              <ThemedView
-                animated
-                style={[styles.card, cardStyleAnim]}
-                nightStyle={styles.taskNight}
-                colorName="background"
-                nightColorName="backgroundSecond"
-              >
-                <Animated.View style={toggleButtonStyleAnim}>
-                  <ToggleTask
-                    isCompleted={task.isCompleted}
-                    onPress={() => toggleTask(task.id)}
-                  />
-                </Animated.View>
-                <Animated.View style={[taskRowStyleAnim, { flex: 1 }]}>
-                  <TaskRow {...task} />
-                </Animated.View>
-              </ThemedView>
-            </GestureDetector>
-            <AnimatedIcon
-              xmlGetter={trashSvg}
-              opacity={opacity}
-              isOverDragged={isOverdraggedLeft}
-              translationX={translationX}
-            />
-          </Pressable>
+          <AnimatedIcon
+            xmlGetter={layersSvg}
+            opacity={opacity}
+            isOverDragged={isOverdraggedRight}
+            translationX={translationX}
+            colorName="accent"
+            side="left"
+          />
+          <GestureDetector gesture={panGesture}>
+            <ThemedView
+              animated
+              style={[styles.card, cardStyleAnim]}
+              nightStyle={styles.taskNight}
+              colorName="background"
+              nightColorName="backgroundSecond"
+            >
+              <Animated.View style={toggleButtonStyleAnim}>
+                <ToggleTask
+                  isCompleted={task.isCompleted}
+                  onPress={() => toggleTask(task.id)}
+                />
+              </Animated.View>
+              <Animated.View style={[taskRowStyleAnim, { flex: 1 }]}>
+                <TaskRow {...task} />
+                <Pressable
+                  style={[styles.pressable, { zIndex: isEditing ? 0 : 100 }]}
+                  onLayout={onLayout}
+                  onPress={onPress}
+                />
+              </Animated.View>
+            </ThemedView>
+          </GestureDetector>
+          <AnimatedIcon
+            xmlGetter={trashSvg}
+            opacity={opacity}
+            isOverDragged={isOverdraggedLeft}
+            translationX={translationX}
+          />
         </Animated.View>
       );
     },
@@ -241,5 +245,12 @@ const styles = StyleSheet.create({
   },
   taskNight: {
     shadowColor: "rgba(0, 0, 0, 0)",
+  },
+  pressable: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
 });

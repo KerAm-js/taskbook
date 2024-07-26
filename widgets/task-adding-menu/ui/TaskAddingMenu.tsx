@@ -8,6 +8,7 @@ import Animated, {
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withTiming,
 } from "react-native-reanimated";
 
@@ -33,8 +34,9 @@ export const TaskAddingMenu = () => {
       easing,
     };
     if (mode === "up") {
-      opacity.value = withTiming(1, animationConfig);
-      translationY.value = withTiming(-keyboardHeight.value, animationConfig);
+      const delay = 50
+      opacity.value = withDelay(delay, withTiming(1, animationConfig));
+      translationY.value = withDelay(delay,withTiming(-keyboardHeight.value, animationConfig));
     } else {
       animationConfig.duration = 200;
       opacity.value = withTiming(0, animationConfig);
@@ -43,7 +45,6 @@ export const TaskAddingMenu = () => {
   };
 
   const pressDone = () => {
-    toggleMenu("down");
     Keyboard.dismiss();
   };
 
@@ -52,7 +53,7 @@ export const TaskAddingMenu = () => {
     (curr) => {
       if (curr) {
         toggleMenu("up");
-      } else if (opacity.value === 1) {
+      } else {
         toggleMenu("down");
       }
     }

@@ -1,8 +1,9 @@
-import { bindActionCreators, createSelector } from "@reduxjs/toolkit";
-import { useCallback, useMemo } from "react";
+import { bindActionCreators } from "@reduxjs/toolkit";
+import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { tasksSlice } from "./tasksSlice";
 import { RootState } from "@/appLayer/store";
+import { selectTaskById } from "./selectors";
 
 export const useTaskActions = () => {
   const dispatch = useDispatch();
@@ -11,16 +12,6 @@ export const useTaskActions = () => {
     [dispatch]
   );
 };
-
-export const useTasks = () => {
-  const ids = useSelector((state: RootState) => state.tasks.ids);
-  return ids;
-};
-
-const selectTaskById = createSelector(
-  [(state: RootState) => state.tasks.entities, (_, taskId: number) => taskId],
-  (entities, taskId) => entities[taskId]
-);
 
 export const useTaskData = (id: number) => {
   const data = useSelector((state: RootState) => selectTaskById(state, id));
@@ -37,7 +28,7 @@ export const useSelectedDate = () => {
   return date;
 };
 
-export const useTasksForSelectedDate = () => {
+export const useTaskIds = () => {
   const tasks = useSelector((state: RootState) => state.tasks.filteredIds);
   return tasks;
 };

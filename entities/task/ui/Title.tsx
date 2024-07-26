@@ -1,28 +1,29 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ITask } from "../model/types";
 import { TextInput } from "react-native-gesture-handler";
-import { TEXT_STYLES, ThemedText } from "@/shared";
+import { TEXT_STYLES, ThemedInput } from "@/shared";
 import { useTranslation } from "react-i18next";
-import { useTaskActions } from "../model/hooks";
 import { findAndDeleteTime } from "../lib/findAndDeleteTime";
 import { useFastInputMode } from "@/entities/settings";
-import { Caret } from "./Caret";
+import { useTaskActions } from "../model/hooks";
 
-export const TaskTitle: FC<ITask> = ({ id, title, isEditing }) => {
+export const TaskTitle: FC<ITask> = (task) => {
+  const { id, title, isEditing } = task;
   const [text, setText] = useState(title);
+  const inputRef = useRef<TextInput | null>(null);
   const { t } = useTranslation();
-  const { setIsEditing, setReminder, deleteTask } = useTaskActions();
+  const { endTaskEdition, setReminder, deleteTask } = useTaskActions();
   const fastInputMode = useFastInputMode();
 
   const onBlur = () => {
     if (isEditing) {
-      if (!text.trim()) {
+      const newTitle = text.trim();
+      if (!newTitle) {
         deleteTask(id);
       } else {
-        setIsEditing({ id, title: text.trim() || t("newTask"), value: false });
+        endTaskEdition({ id, title: newTitle });
       }
-      // if (!text.trim()) setText(t("newTask"));
     }
   };
 
@@ -45,60 +46,46 @@ export const TaskTitle: FC<ITask> = ({ id, title, isEditing }) => {
     }
   }, [fastInputMode]);
 
+  useEffect(() => {
+    if (inputRef.current)
+      if (isEditing) {
+        inputRef.current.focus();
+      } else {
+        inputRef.current.blur();
+      }
+  }, [isEditing]);
+
   return (
     <View style={styles.container}>
-      {isEditing && fastInputMode && (
-        <TextInput
-          style={styles.input}
-          autoCorrect={false}
-          onBlur={onBlur}
-          selectTextOnFocus={false}
-          autoFocus={isEditing}
-          value={text}
-          onChangeText={onChangeText}
-          maxLength={100}
-          scrollEnabled={false}
-          caretHidden
-        />
-      )}
-      {text && (
-        <ThemedText colorName={text ? "text" : "textGrey"} style={styles.title}>
-          {text}
-          {isEditing && <Caret translateY={4} />}
-        </ThemedText>
-      )}
-      {!text && (
-        <>
-          {isEditing && <Caret />}
-          <ThemedText
-            colorName={text ? "text" : "textGrey"}
-            style={styles.title}
-          >
-            {!text && t("enterText")}
-          </ThemedText>
-        </>
-      )}
+      <ThemedInput
+        inputRef={inputRef}
+        style={styles.input}
+        autoCorrect={false}
+        multiline
+        placeholder={t("enterText")}
+        onEndEditing={onBlur}
+        selectTextOnFocus={false}
+        value={text}
+        onChangeText={onChangeText}
+        maxLength={100}
+        scrollEnabled={false}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
     paddingRight: 15,
     flex: 1,
-    marginBottom: 4,
-    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     ...TEXT_STYLES.standart,
-    paddingTop: 3,
   },
   input: {
-    position: 'absolute',
-    opacity: 0,
-    bottom: 0,
-    width: 1,
-    height: 1,
+    ...TEXT_STYLES.standart,
+    textAlignVertical: "center",
+    paddingVertical: 0,
   },
 });
