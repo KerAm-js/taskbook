@@ -14,20 +14,22 @@ const NavBar: FC<{
   return (
     <View style={[styles.navBar]}>
       <IconButton
-        xml={settingsSvg(THEME_COLORS.night.accent)}
+        xmlGetter={settingsSvg}
+        colorName="accent"
+        defaultTheme="night"
         onPress={() => router.navigate("/settings")}
       />
       <View style={styles.navBarRight}>
         <IconButton
-          xml={taskHistorySvg(THEME_COLORS.night.accent)}
+          xmlGetter={settingsSvg}
+          colorName="accent"
+          defaultTheme="night"
           onPress={() => router.navigate("/history")}
         />
         <IconButton
-          xml={
-            isCalendarOpened
-              ? closeCalendarSvg(THEME_COLORS.night.accent)
-              : openCalendarSvg(THEME_COLORS.night.accent)
-          }
+          xmlGetter={isCalendarOpened ? closeCalendarSvg : openCalendarSvg}
+          colorName="accent"
+          defaultTheme="night"
           onPress={toggleCalendarOpened}
         />
       </View>

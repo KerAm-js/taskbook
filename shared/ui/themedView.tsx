@@ -1,10 +1,10 @@
 import { FC, PropsWithChildren } from "react";
 import { TColorName, THEME_COLORS } from "../config/style/colors";
-import { View, ViewStyle } from "react-native";
+import { View, ViewProps, ViewStyle } from "react-native";
 import { useTheme } from "../hooks/useTheme";
 import Animated from "react-native-reanimated";
 
-interface IProps extends PropsWithChildren {
+interface IProps extends ViewProps {
   colorName: TColorName;
   borderColorName?: TColorName;
   nightColorName?: TColorName;
@@ -21,6 +21,7 @@ export const ThemedView: FC<IProps> = ({
   nightStyle,
   children,
   animated,
+  ...props
 }) => {
   const theme = useTheme();
   const color =
@@ -38,7 +39,15 @@ export const ThemedView: FC<IProps> = ({
   ];
 
   if (animated) {
-    return <Animated.View style={styles}>{children}</Animated.View>;
+    return (
+      <Animated.View style={styles} {...props}>
+        {children}
+      </Animated.View>
+    );
   }
-  return <View style={styles}>{children}</View>;
+  return (
+    <View style={styles} {...props}>
+      {children}
+    </View>
+  );
 };

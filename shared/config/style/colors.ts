@@ -2,6 +2,7 @@ type TColorSet = {
   text: string;
   accent: string;
   accent_opacity: string;
+  accent_ultra_opacity: string;
   background: string;
   backgroundSecond: string;
   input: string;
@@ -12,7 +13,7 @@ type TColorSet = {
 };
 
 const textOpacity = 0.45;
-const opacity = 0.2;
+const opacity = 0.22;
 const ultraOpacity = 0.08;
 
 export type TTheme = "branded" | "night" | "purple" | "darkBlue";
@@ -21,10 +22,13 @@ export const COLORS = {
   black: '#000',
   blue: `rgba(0, 104, 217, 1)`,
   blueOpacity: `rgba(0, 104, 217, ${opacity})`,
+  blueUltraOpacity: `rgba(0, 104, 217, ${ultraOpacity})`,
   darkBlue: `rgba(64, 72, 101, 1)`,
   darkBlueOpacity: `rgba(64, 72, 101, ${opacity})`,
+  darkBlueUltraOpacity: `rgba(64, 72, 101, ${ultraOpacity})`,
   purple: `rgba(112, 109, 229, 1)`,
   purpleOpacity: `rgba(112, 109, 229, ${opacity})`,
+  purpleUltraOpacity: `rgba(112, 109, 229, ${ultraOpacity})`,
   green: `rgba(52, 199, 89, 1)`,
   greenOpacity: `rgba(52, 199, 89, ${ultraOpacity})`,
   red: `rgba(255, 34, 22, 1)`,
@@ -33,6 +37,7 @@ export const COLORS = {
   textGrey: `rgba(0, 0, 0, ${textOpacity})`,
   lineGrey: `rgba(0, 0, 0, ${ultraOpacity})`,
   whiteOpacity: `rgba(250, 250, 250, ${opacity})`,
+  whiteUltraOpacity: `rgba(250, 250, 250, ${ultraOpacity})`,
   white: `#fff`,
   input: `#f2f3f4`,
   shadow: `#DAE0EB`,
@@ -52,6 +57,7 @@ export const THEME_COLORS: { [key in TTheme]: TColorSet } = {
     text: COLORS.black,
     accent: COLORS.blue,
     accent_opacity: COLORS.blueOpacity,
+    accent_ultra_opacity: COLORS.blueUltraOpacity,
     background: COLORS.white,
     backgroundSecond: COLORS.input,
     input: COLORS.input,
@@ -64,6 +70,7 @@ export const THEME_COLORS: { [key in TTheme]: TColorSet } = {
     text: COLORS.white,
     accent: COLORS.white,
     accent_opacity: COLORS.whiteOpacity,
+    accent_ultra_opacity: COLORS.whiteUltraOpacity,
     background: `#404865`,
     backgroundSecond: "#363C55",
     input: COLORS.lineGrey,
@@ -76,6 +83,7 @@ export const THEME_COLORS: { [key in TTheme]: TColorSet } = {
     text: COLORS.black,
     accent: COLORS.darkBlue,
     accent_opacity: COLORS.darkBlueOpacity,
+    accent_ultra_opacity: COLORS.darkBlueUltraOpacity,
     background: COLORS.white,
     backgroundSecond: COLORS.input,
     input: COLORS.input,
@@ -88,6 +96,7 @@ export const THEME_COLORS: { [key in TTheme]: TColorSet } = {
     text: COLORS.black,
     accent: COLORS.purple,
     accent_opacity: COLORS.purpleOpacity,
+    accent_ultra_opacity: COLORS.purpleUltraOpacity,
     background: COLORS.white,
     backgroundSecond: COLORS.input,
     input: COLORS.input,

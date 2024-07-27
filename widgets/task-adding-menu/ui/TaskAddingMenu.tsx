@@ -1,9 +1,9 @@
 import { AddNextTask } from "@/features/tasks/add-next-task";
-import { COLORS, useKeyboard, useThemeColors } from "@/shared";
+import { ThemedView, useKeyboard, VIEW_SHADOW_REVERSE } from "@/shared";
 import { Keyboard, StyleSheet, View } from "react-native";
 import { DoneBtn } from "./DoneBtn";
 import { OpenTaskForm } from "@/features/tasks/open-task-form";
-import Animated, {
+import {
   Easing,
   useAnimatedReaction,
   useAnimatedStyle,
@@ -13,7 +13,6 @@ import Animated, {
 } from "react-native-reanimated";
 
 export const TaskAddingMenu = () => {
-  const { colors, theme } = useThemeColors();
   const keyboardHeight = useKeyboard();
   const opacity = useSharedValue(0);
   const translationY = useSharedValue(0);
@@ -27,16 +26,19 @@ export const TaskAddingMenu = () => {
   }, [translationY.value, opacity.value]);
 
   const toggleMenu = (mode: "up" | "down") => {
-    'worklet';
+    "worklet";
     const easing = Easing.out(Easing.quad);
     const animationConfig = {
       duration: 350,
       easing,
     };
     if (mode === "up") {
-      const delay = 50
+      const delay = 50;
       opacity.value = withDelay(delay, withTiming(1, animationConfig));
-      translationY.value = withDelay(delay,withTiming(-keyboardHeight.value, animationConfig));
+      translationY.value = withDelay(
+        delay,
+        withTiming(-keyboardHeight.value, animationConfig)
+      );
     } else {
       animationConfig.duration = 200;
       opacity.value = withTiming(0, animationConfig);
@@ -60,23 +62,19 @@ export const TaskAddingMenu = () => {
   );
 
   return (
-    <Animated.View
-      style={[
-        styles.container,
-        theme === "night" && styles.containerNight,
-        {
-          backgroundColor: colors.background,
-          borderTopColor: colors.lineGrey,
-        },
-        containerStyleAnim,
-      ]}
+    <ThemedView
+      animated
+      colorName="background"
+      borderColorName="lineGrey"
+      style={[styles.container, containerStyleAnim]}
+      nightStyle={styles.containerNight}
     >
       <OpenTaskForm />
       <View style={styles.leftSide}>
         <AddNextTask />
         <DoneBtn onPress={pressDone} />
       </View>
-    </Animated.View>
+    </ThemedView>
   );
 };
 
@@ -89,13 +87,7 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: "space-between",
     paddingHorizontal: 9,
-    shadowOffset: {
-      height: -4,
-      width: 0,
-    },
-    shadowOpacity: 0.55,
-    shadowRadius: 10,
-    shadowColor: COLORS.shadow,
+    ...VIEW_SHADOW_REVERSE,
   },
   containerNight: {
     shadowOpacity: 0,

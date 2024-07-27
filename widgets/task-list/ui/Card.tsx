@@ -1,12 +1,12 @@
 import {
   ITask,
   TaskRow,
+  useIsSelection,
   useTaskActions,
   useTaskData,
-  useTaskToEdit,
 } from "@/entities/task";
 import { ToggleTask } from "@/features/tasks/toggle-task";
-import { COLORS, ThemedView, useKeyboard } from "@/shared";
+import { ThemedView, useKeyboard, VIEW_SHADOW } from "@/shared";
 import React, { FC } from "react";
 import {
   Dimensions,
@@ -18,6 +18,7 @@ import {
 import * as Haptics from "expo-haptics";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
+  FadeIn,
   FadeInDown,
   FadeInRight,
   FadeOut,
@@ -42,7 +43,10 @@ export const Card: FC<Pick<ITask, "id"> & { index: { value: number } }> =
   React.memo(
     ({ id, index }) => {
       const task = useTaskData(id);
-      const { deleteTask, toggleTask, startTaskEdition } = useTaskActions();
+      const isSelection = useIsSelection();
+      const { isEditing, isSelected, title, isCompleted } = task;
+      const { deleteTask, toggleTask, startTaskEdition, toggleTaskSelected } =
+        useTaskActions();
       const keyboardHeight = useKeyboard();
       const fastInputMode = useFastInputMode();
 
@@ -53,9 +57,6 @@ export const Card: FC<Pick<ITask, "id"> & { index: { value: number } }> =
       const isOverdraggedLeft = useSharedValue(false);
       const viewPageY = useSharedValue(0);
       const viewHeight = useSharedValue(styles.card.minHeight);
-
-      const isSwiping = translationX.value !== 0;
-      const { isEditing } = task;
 
       const panGesture = Gesture.Pan()
         .enabled(!isEditing)
@@ -90,13 +91,17 @@ export const Card: FC<Pick<ITask, "id"> & { index: { value: number } }> =
           }
         })
         .onEnd((event) => {
-          if (event.translationX > DELETE_THRESHOLD) {
-            translationX.value = withTiming(0);
-          } else {
+          const x = event.translationX;
+          if (x <= DELETE_THRESHOLD) {
             opacity.value = withTiming(0);
             translationX.value = withTiming(-WIDTH, undefined, (isFinished) => {
-              if (isFinished) runOnJS(deleteTask)(task.id);
+              if (isFinished) runOnJS(deleteTask)(id);
             });
+          } else if (x >= SELECT_THRESHOLD) {
+            translationX.value = withTiming(0);
+            runOnJS(toggleTaskSelected)(id);
+          } else {
+            translationX.value = withTiming(0);
           }
         });
 
@@ -114,7 +119,7 @@ export const Card: FC<Pick<ITask, "id"> & { index: { value: number } }> =
 
       const toggleButtonStyleAnim = useAnimatedStyle(
         () => ({
-          opacity: withTiming(isEditing && !task.title ? 0 : 1),
+          opacity: withTiming(isEditing && !title ? 0 : 1),
         }),
         [isEditing]
       );
@@ -122,15 +127,15 @@ export const Card: FC<Pick<ITask, "id"> & { index: { value: number } }> =
       const taskRowStyleAnim = useAnimatedStyle(
         () => ({
           transform: [
-            { translateX: withTiming(isEditing && !task.title ? -28 : 0) },
+            { translateX: withTiming(isEditing && !title ? -28 : 0) },
           ],
         }),
         [isEditing]
       );
 
       const onPress = (event: GestureResponderEvent) => {
-        if (isSwiping) return;
-        startTaskEdition(task.id);
+        if (translationX.value !== 0) return;
+        startTaskEdition(id);
         if (fastInputMode) {
           event.target.measure((x, y, w, h, px, py) => {
             viewPageY.value = py;
@@ -138,6 +143,10 @@ export const Card: FC<Pick<ITask, "id"> & { index: { value: number } }> =
         } else {
           router.navigate("taskForm");
         }
+      };
+
+      const onSelect = () => {
+        if (translationX.value === 0) toggleTaskSelected(id);
       };
 
       const onLayout = (event: LayoutChangeEvent) => {
@@ -176,7 +185,7 @@ export const Card: FC<Pick<ITask, "id"> & { index: { value: number } }> =
           exiting={FadeOut.duration(150)}
           style={styles.container}
           entering={
-            task.title
+            title
               ? FadeInDown.delay(60 * index.value)
               : FadeInRight.withInitialValues({
                   transform: [{ translateX: 80 }],
@@ -194,15 +203,31 @@ export const Card: FC<Pick<ITask, "id"> & { index: { value: number } }> =
           <GestureDetector gesture={panGesture}>
             <ThemedView
               animated
-              style={[styles.card, cardStyleAnim]}
+              style={[styles.card, VIEW_SHADOW, cardStyleAnim]}
               nightStyle={styles.taskNight}
               colorName="background"
               nightColorName="backgroundSecond"
             >
+              {isSelection && (
+                <Pressable onPress={onSelect} style={styles.selectionPressable}>
+                  {isSelected && (
+                    <Animated.View
+                      entering={FadeIn}
+                      exiting={FadeOut}
+                      style={styles.selectionBackdrop}
+                    >
+                      <ThemedView
+                        style={styles.selectionBackdrop}
+                        colorName="accent_opacity"
+                      />
+                    </Animated.View>
+                  )}
+                </Pressable>
+              )}
               <Animated.View style={toggleButtonStyleAnim}>
                 <ToggleTask
-                  isCompleted={task.isCompleted}
-                  onPress={() => toggleTask(task.id)}
+                  isCompleted={isCompleted}
+                  onPress={() => toggleTask(id)}
                 />
               </Animated.View>
               <Animated.View style={[taskRowStyleAnim, { flex: 1 }]}>
@@ -236,12 +261,6 @@ const styles = StyleSheet.create({
     minHeight: 50,
     borderRadius: 10,
     borderCurve: "continuous",
-    shadowRadius: 10,
-    shadowOffset: {
-      height: 5,
-      width: 0,
-    },
-    shadowColor: COLORS.shadow,
   },
   taskNight: {
     shadowColor: "rgba(0, 0, 0, 0)",
@@ -252,5 +271,18 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
+  },
+  selectionPressable: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    zIndex: 100,
+  },
+  selectionBackdrop: {
+    flex: 1,
+    borderRadius: 10,
+    borderCurve: "continuous",
   },
 });

@@ -1,14 +1,31 @@
 import { FC } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { SvgXml, SvgProps } from "react-native-svg";
+import { useThemeColors } from "../hooks/useTheme";
+import { TColorName, TTheme } from "../config/style/colors";
 
-export const IconButton: FC<
-  SvgProps & {
-    xml: string;
-    buttonSize?: number;
-    onPress?: () => void;
-  }
-> = ({ buttonSize = 40, width = 26, height = 26, xml, onPress, ...props }) => {
+type TPropTypes = SvgProps & {
+  xmlGetter: (color: string) => string;
+  defaultTheme?: TTheme;
+  buttonSize?: number;
+  onPress?: () => void;
+  disabled?: boolean;
+  colorName?: TColorName;
+  staticColor?: string;
+};
+
+export const IconButton: FC<TPropTypes> = ({
+  buttonSize = 40,
+  xmlGetter,
+  defaultTheme,
+  onPress,
+  colorName,
+  staticColor,
+  disabled,
+  ...props
+}) => {
+  const { colors } = useThemeColors(defaultTheme);
+  const finalColor = colorName ? colors[colorName] : staticColor;
   return (
     <Pressable
       style={[
@@ -19,8 +36,9 @@ export const IconButton: FC<
         },
       ]}
       onPress={onPress ? onPress : () => {}}
+      disabled={disabled}
     >
-      <SvgXml width={width} height={height} xml={xml} {...props} />
+      <SvgXml xml={xmlGetter(finalColor || "")} {...props} />
     </Pressable>
   );
 };

@@ -32,3 +32,10 @@ export const useTaskIds = () => {
   const tasks = useSelector((state: RootState) => state.tasks.filteredIds);
   return tasks;
 };
+
+export const useIsSelection = () => {
+  const value = useSelector(
+    (state: RootState) => state.tasks.isSelection
+  );
+  return value;
+}

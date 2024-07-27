@@ -4,7 +4,8 @@ export interface ITask {
   description?: string;
   remindTime?: number;
   date: number;
-  isRegular?: boolean;
   isCompleted: boolean;
+  isRegular?: boolean;
   isEditing?: boolean;
+  isSelected?: boolean;
 }

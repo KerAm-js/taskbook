@@ -50,8 +50,6 @@ export const TaskTitle: FC<ITask> = (task) => {
     if (inputRef.current)
       if (isEditing) {
         inputRef.current.focus();
-      } else {
-        inputRef.current.blur();
       }
   }, [isEditing]);
 

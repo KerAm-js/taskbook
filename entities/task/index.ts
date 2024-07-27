@@ -3,7 +3,8 @@ export {
   useTaskToEdit,
   useSelectedDate,
   useTaskData,
-  useTaskIds
+  useTaskIds,
+  useIsSelection,
 } from "./model/hooks";
 export { tasksSlice } from "./model/tasksSlice";
 export { ITask } from "./model/types";
