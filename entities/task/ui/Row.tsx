@@ -15,15 +15,18 @@ import Animated, {
 } from "react-native-reanimated";
 import { TaskTitle } from "./Title";
 import { getTimeString } from "@/shared";
+import { useTaskData } from "../model/hooks";
 
-export const TaskRow: FC<ITask> = (task) => {
-  const { remindTime, isRegular, isCompleted, description } = task;
+export const TaskRow: FC<Pick<ITask, "id">> = ({ id }) => {
+  const task = useTaskData(id);
+  const { remindTime, isRegular, isCompleted, description, isEditing, title } =
+    task;
 
   const remindString = remindTime
     ? getTimeString({ dateNumber: remindTime })
     : null;
 
-  const translateX = useSharedValue(0);
+  const translateX = useSharedValue(isEditing && !title ? -28 : 0);
   const opacity = useSharedValue(isCompleted ? 0.4 : 1);
 
   const containerStyleAnim = useAnimatedStyle(() => {
@@ -32,6 +35,10 @@ export const TaskRow: FC<ITask> = (task) => {
       transform: [{ translateX: translateX.value }],
     };
   }, [isCompleted]);
+
+  useEffect(() => {
+    translateX.value = withTiming(isEditing && !title ? -28 : 0);
+  }, [isEditing]);
 
   useEffect(() => {
     const easing = Easing.out(Easing.quad);

@@ -1,27 +1,36 @@
 import { AnimatedCheck } from "@/shared";
 import { FC } from "react";
 import { Pressable, StyleSheet } from "react-native";
-import Animated from "react-native-reanimated";
+import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
+import { ITask, useTaskActions, useTaskData } from "@/entities/task";
 
-export const ToggleTask: FC<{ isCompleted: boolean; onPress: () => void }> = ({
-  isCompleted,
-  onPress,
-}) => {
+export const ToggleTask: FC<Pick<ITask, "id">> = ({ id }) => {
+  const { isCompleted, title, isEditing } = useTaskData(id);
+  const { toggleTask } = useTaskActions();
+
   const onPressHanlder = () => {
-    onPress();
     if (!isCompleted) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } else {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
     }
+    toggleTask(id);
   };
+
+  const toggleButtonStyleAnim = useAnimatedStyle(
+    () => ({
+      opacity: withTiming(isEditing && !title ? 0 : 1),
+    }),
+    [isEditing]
+  );
+
   return (
-    <Pressable style={styles.container} onPress={onPressHanlder}>
-      <Animated.View>
+    <Animated.View style={toggleButtonStyleAnim}>
+      <Pressable style={styles.container} onPress={onPressHanlder}>
         <AnimatedCheck isChecked={isCompleted} borderRadius={6} />
-      </Animated.View>
-    </Pressable>
+      </Pressable>
+    </Animated.View>
   );
 };
 
@@ -30,6 +39,6 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingLeft: 15,
     height: 50,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
 });

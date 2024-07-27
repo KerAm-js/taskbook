@@ -2,10 +2,12 @@ import { closeCalendarSvg } from "@/assets/svg/closeCalendar";
 import { openCalendarSvg } from "@/assets/svg/openCalendar";
 import { settingsSvg } from "@/assets/svg/settings";
 import { taskHistorySvg } from "@/assets/svg/taskHistory";
-import { IconButton, THEME_COLORS, SCREEN_PADDING } from "@/shared";
+import { IconButton, SCREEN_PADDING } from "@/shared";
 import { router } from "expo-router";
 import { FC } from "react";
 import { StyleSheet, View } from "react-native";
+
+const iconSize = 26;
 
 const NavBar: FC<{
   isCalendarOpened: boolean;
@@ -18,19 +20,25 @@ const NavBar: FC<{
         colorName="accent"
         defaultTheme="night"
         onPress={() => router.navigate("/settings")}
+        width={iconSize}
+        height={iconSize}
       />
       <View style={styles.navBarRight}>
         <IconButton
-          xmlGetter={settingsSvg}
+          xmlGetter={taskHistorySvg}
           colorName="accent"
           defaultTheme="night"
           onPress={() => router.navigate("/history")}
+          width={iconSize}
+          height={iconSize}
         />
         <IconButton
           xmlGetter={isCalendarOpened ? closeCalendarSvg : openCalendarSvg}
           colorName="accent"
           defaultTheme="night"
           onPress={toggleCalendarOpened}
+          width={iconSize}
+          height={iconSize}
         />
       </View>
     </View>
@@ -50,6 +58,6 @@ const styles = StyleSheet.create({
   navBarRight: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 5,
+    gap: 10,
   },
 });

@@ -105,7 +105,7 @@ export const tasksSlice = createSlice({
       const { id, ...newData } = action.payload;
       const task = state.entities[id];
       state.entities[id] = { ...task, ...newData, isEditing: false };
-      if (state.taskToEditId !== id) return; //it may happen only during add next task action;
+      if (state.taskToEditId !== id) return; //it should happen only during add next task action;
       stopTaskEditing(state);
     },
 
@@ -135,6 +135,11 @@ export const tasksSlice = createSlice({
       task.isSelected = !task.isSelected;
       if (task.isSelected && !state.isSelection) {
         state.isSelection = true;
+      } else {
+        const noSelectedTasks = !state.filteredIds.find(
+          (id) => state.entities[id].isSelected
+        ); //selectedTasks should be only in filtered
+        if (noSelectedTasks) state.isSelection = false;
       }
     },
 
@@ -153,7 +158,8 @@ export const tasksSlice = createSlice({
     },
 
     copySelectedTasks: (state) => {
-      state.filteredIds.forEach((id, i) => {
+      state.filteredIds.reduceRight((_, id, i) => {
+        //use reduceRight to add tasks in the same order
         const task = state.entities[id];
         if (task.isSelected) {
           const newId = new Date().valueOf() + i * 10;
@@ -166,7 +172,8 @@ export const tasksSlice = createSlice({
           };
           onAddTasks(state, newTask);
         }
-      });
+        return 0;
+      }, 0);
       onEndSelection(state);
     },
   },
