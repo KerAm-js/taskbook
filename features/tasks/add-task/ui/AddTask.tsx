@@ -28,8 +28,6 @@ export const AddTask = () => {
         styles.buttonContainer,
         {
           backgroundColor: colors.accent,
-          bottom: paddingBottom,
-          right: SCREEN_PADDING,
         },
       ]}
     >
@@ -46,7 +44,6 @@ const styles = StyleSheet.create({
     width: 54,
     height: 54,
     borderRadius: 30,
-    position: "absolute",
   },
   button: {
     width: 54,

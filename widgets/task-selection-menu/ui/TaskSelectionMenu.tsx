@@ -60,18 +60,20 @@ export const TaskSelectionMenu = () => {
       animated
       onLayout={onLayout}
       colorName="background"
+      borderColorName="lineGrey"
       style={[styles.container, { paddingBottom }, containerStyleAnim]}
+      nightStyle={styles.containerNight}
     >
+      <DeleteTasks buttonSize={buttonSize} />
+      <CopyTasks buttonSize={buttonSize} />
+      <ChangeTasksDate buttonSize={buttonSize} />
       <IconButton
         xmlGetter={closeSvg}
-        colorName="grey"
+        colorName="accent"
         buttonSize={buttonSize}
         onPress={closeMenu}
         disabled={!isSelection}
       />
-      <CopyTasks buttonSize={buttonSize} />
-      <ChangeTasksDate buttonSize={buttonSize} />
-      <DeleteTasks buttonSize={buttonSize} />
     </ThemedView>
   );
 };
@@ -86,5 +88,9 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 5,
     ...VIEW_SHADOW_REVERSE,
+  },
+  containerNight: {
+    shadowOpacity: 0,
+    borderTopWidth: 1,
   },
 });

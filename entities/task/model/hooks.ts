@@ -39,3 +39,8 @@ export const useIsSelection = () => {
   );
   return value;
 }
+
+export const useCache = () => {
+  const value = useSelector((state: RootState) => state.tasks.cache);
+  return value;
+}

@@ -53,6 +53,10 @@ export const TaskTitle: FC<ITask> = (task) => {
       }
   }, [isEditing]);
 
+  useEffect(() => {
+    if (title && !text) setText(title);
+  }, [title]);
+
   return (
     <View style={styles.container}>
       <ThemedInput
@@ -67,6 +71,7 @@ export const TaskTitle: FC<ITask> = (task) => {
         onChangeText={onChangeText}
         maxLength={100}
         scrollEnabled={false}
+        blurOnSubmit
       />
     </View>
   );

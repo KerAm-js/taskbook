@@ -60,13 +60,14 @@ export const Card: FC<TPropTypes> = React.memo(
     const viewPageY = useSharedValue(0);
     const viewHeight = useSharedValue(styles.card.minHeight);
 
-    const getIsSwiped = () => translationX.value !== 0;
-
     const panGesture = Gesture.Pan()
       .enabled(!isEditing)
       .minDistance(35)
       .onUpdate((event) => {
-        if (!(event.translationX < 0 && isSelection)) {
+        if (
+          !(event.translationX < 0 && isSelection) && //can't swipe to delete during selection
+          opacity.value === 1 // can't swipe to select during editing this or other task
+        ) {
           translationX.value = event.translationX;
         }
         const x = translationX.value;
@@ -105,7 +106,7 @@ export const Card: FC<TPropTypes> = React.memo(
           { translateX: translationX.value },
           { translateY: translationY.value },
         ],
-        zIndex: translationY.value < 0 ? 100 : 1,
+        zIndex: isEditing ? 100 : 1,
         opacity: opacity.value,
         shadowOpacity: withTiming(isEditing ? 1 : 0.7),
       };
@@ -124,7 +125,6 @@ export const Card: FC<TPropTypes> = React.memo(
     };
 
     const onSelect = () => {
-      console.log(getIsSwiped());
       if (translationX.value === 0) toggleTaskSelected(id);
     };
 
@@ -144,7 +144,7 @@ export const Card: FC<TPropTypes> = React.memo(
     const moveOverKeyboard = (keyboardHeight: number) => {
       "worklet";
       const finalPosition =
-        keyboardHeight + viewHeight.value + TASK_ADDING_MENU_HEIGHT + 20;
+        keyboardHeight + viewHeight.value + TASK_ADDING_MENU_HEIGHT + 30;
       const translation = finalPosition - (HEIGHT - viewPageY.value);
       translationY.value = withTiming(translation > 0 ? -translation : 0);
     };

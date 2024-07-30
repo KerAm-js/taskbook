@@ -19,6 +19,7 @@ import {
 import Calendar from "./components/Calendar";
 import { MAX_H, MIN_H } from "../config/headerHeight";
 import { Title } from "./components/Title";
+import { KeyboardBackdrop } from "@/features/keyboard-backdrop";
 
 export const MainHeader = () => {
   const [isCalendarOpened, setCalendarOpened] = useState<boolean>(false);
@@ -86,6 +87,7 @@ export const MainHeader = () => {
         </Animated.View>
       </Animated.View>
       <ProgressBar progress={50} />
+      <KeyboardBackdrop />
     </ThemedView>
   );
 };
