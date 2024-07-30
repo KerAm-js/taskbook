@@ -73,7 +73,10 @@ const onUndoDelete = (state: ITasksState) => {
   state.filteredIds = [];
   state.cache.filteredIds.forEach((id) => {
     state.filteredIds.push(id);
-    if (!state.entities[id]) state.entities[id] = state.cache.entities[id];
+    if (!state.entities[id]) {
+      state.entities[id] = state.cache.entities[id];
+      state.entities[id].isSelected = false;
+    }
   });
   onClearCache(state);
 };
