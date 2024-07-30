@@ -1,16 +1,38 @@
 import { AnimatedCheck } from "@/shared";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Pressable, StyleSheet } from "react-native";
-import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
+import { Audio } from "expo-av";
 import { ITask, useTaskActions, useTaskData } from "@/entities/task";
+import { Sound } from "expo-av/build/Audio";
 
 export const ToggleTask: FC<Pick<ITask, "id">> = ({ id }) => {
+  const [sound, setSound] = useState<Sound | undefined>();
   const { isCompleted, title, isEditing } = useTaskData(id);
   const { toggleTask } = useTaskActions();
 
+  const loadSound = async () => {
+    const { sound } = await Audio.Sound.createAsync(
+      require('@/assets/audio/success.mp3')
+    );
+    setSound(sound);
+    await sound.playAsync();
+  };
+
+  const playSound = async () => {
+    loadSound();
+    // if (sound) {
+    //   await sound.playAsync();
+    // }
+  };
+
   const onPressHanlder = () => {
     if (!isCompleted) {
+      playSound();
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } else {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
@@ -24,6 +46,14 @@ export const ToggleTask: FC<Pick<ITask, "id">> = ({ id }) => {
     }),
     [isEditing]
   );
+
+  useEffect(() => {
+    return sound
+      ? () => {
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
 
   return (
     <Animated.View style={toggleButtonStyleAnim}>
