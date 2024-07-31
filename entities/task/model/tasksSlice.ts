@@ -131,11 +131,11 @@ export const tasksSlice = createSlice({
 
     setReminder: (
       state,
-      action: PayloadAction<{ id: ITask["id"]; hours: number; minutes: number }>
+      action: PayloadAction<{ id: ITask["id"]; hour: number; minute: number }>
     ) => {
-      const { id, hours, minutes } = action.payload;
+      const { id, hour, minute } = action.payload;
       const task = state.entities[id];
-      if (task) task.remindTime = new Date().setHours(hours, minutes, 0, 0);
+      if (task) task.remindTime = new Date().setHours(hour, minute, 0, 0);
     },
 
     setTaskTitle: (

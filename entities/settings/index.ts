@@ -4,4 +4,5 @@ export {
   useFastInputMode,
   useReminderSettings,
 } from "./model/hooks";
-export { settingsSlice, ISettingsState } from "./model/settingsSlice";
+export { settingsSlice } from "./model/settingsSlice";
+export { ISettingsState } from "./model/types";

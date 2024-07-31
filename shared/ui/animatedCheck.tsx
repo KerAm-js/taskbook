@@ -19,7 +19,7 @@ export const AnimatedCheck: FC<{
 
   const containerStyleAnim = useAnimatedStyle(() => {
     return {
-      width: isChecked ? withTiming(size, { duration: 500 }) : 0,
+      width: isChecked ? withTiming(size, { duration: 600 }) : 0,
     };
   }, [isChecked]);
 

@@ -1,16 +1,10 @@
-import { TTheme } from "@/shared/config/style/colors";
+import { logNextTriggerDate, TTheme } from "@/shared";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-export interface ISettingsState {
-  theme: TTheme;
-  fastInputMode: boolean;
-  reminders: {
-    count: number;
-    interval: number;
-    beginningOfDay?: { hours: number; minutes: number };
-    endOfDay?: { hours: number; minutes: number };
-  };
-}
+import { ISettingsState } from "./types";
+import {
+  setBeginningOfDayNotification,
+  setEndOfDayNotification,
+} from "./thunks";
 
 const initialState: ISettingsState = {
   theme: "branded",
@@ -18,8 +12,8 @@ const initialState: ISettingsState = {
   reminders: {
     count: 3,
     interval: 15,
-    beginningOfDay: {hours: 9, minutes: 0},
-    endOfDay: undefined,
+    beginningOfDay: { hour: 9, minute: 0 },
+    endOfDay: { turnedOff: true },
   },
 };
 
@@ -49,7 +43,19 @@ export const settingsSlice = createSlice({
       state,
       action: PayloadAction<ISettingsState["reminders"]["endOfDay"]>
     ) => {
+      logNextTriggerDate();
       state.reminders.endOfDay = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(setEndOfDayNotification.fulfilled, (state, action) => {
+      state.reminders.endOfDay = action.payload;
+    });
+    builder.addCase(
+      setBeginningOfDayNotification.fulfilled,
+      (state, action) => {
+        state.reminders.beginningOfDay = action.payload;
+      }
+    );
   },
 });

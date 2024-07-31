@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { TEXT_STYLES } from "../config/style/texts";
 import { ThemedView } from "./ThemedView";
 import { FC } from "react";
@@ -9,14 +9,14 @@ import { CustomText } from "./CustomText";
 
 type TPropTypes = {
   data: Array<{ title: string; value: any }>;
-  selected: any;
+  checkMethod: (value: any) => boolean;
   onPress: (value: any) => void;
   translateTitle?: boolean;
 };
 
 export const CheckList: FC<TPropTypes> = ({
   data,
-  selected,
+  checkMethod,
   onPress,
   translateTitle = false,
 }) => {
@@ -26,10 +26,7 @@ export const CheckList: FC<TPropTypes> = ({
     <View style={styles.container}>
       <ThemedView colorName="backgroundSecond" style={styles.listContainer}>
         {data.map((item, index) => {
-          const isChecked =
-            typeof selected === "object"
-              ? JSON.stringify(item.value) === JSON.stringify(selected)
-              : item.value === selected;
+          const isChecked = checkMethod(item.value);
 
           return (
             <Pressable

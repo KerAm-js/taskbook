@@ -34,5 +34,7 @@ export const SetReminderInterval = () => {
     setRemindersInterval(value);
   };
 
-  return <CheckList selected={interval} data={data} onPress={onPress} />;
+  const checkMethod = (value: number) => value === interval;
+
+  return <CheckList checkMethod={checkMethod} data={data} onPress={onPress} />;
 };

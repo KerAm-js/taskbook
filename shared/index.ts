@@ -15,7 +15,12 @@ export { I18n } from "./config/i18n/i18n";
 export { LANGUAGES } from "./config/i18n/translations";
 export { THEME_COLORS, COLORS } from "./config/style/colors";
 export { SCREEN_PADDING, PADDING_TOP } from "./config/style/views";
-export { HEADER_SHADOW, HEADER_SHADOW_NIGHT, VIEW_SHADOW, VIEW_SHADOW_REVERSE } from "./config/style/shadows";
+export {
+  HEADER_SHADOW,
+  HEADER_SHADOW_NIGHT,
+  VIEW_SHADOW,
+  VIEW_SHADOW_REVERSE,
+} from "./config/style/shadows";
 export { TEXT_STYLES } from "./config/style/texts";
 
 //hooks
@@ -41,7 +46,9 @@ export {
   getDateTitle,
 } from "./lib/dates";
 export { getTimeString } from "./lib/time";
+export { logNextTriggerDate, setNotification, deleteNotification } from "./lib/notifications";
 
 //types
 export { TLanguage } from "./config/i18n/translations";
-export { TColorName } from "@/shared/config/style/colors";
+export { TColorName, TTheme } from "@/shared/config/style/colors";
+export { TSetNotificationArg } from "./lib/notifications";

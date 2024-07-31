@@ -8,16 +8,24 @@ import React, { useEffect } from "react";
 import { PADDING_TOP, SCREEN_PADDING } from "@/shared";
 import { Card } from "./Card";
 import { EmptyListImage } from "./EmptyListImage";
-import { useTaskIds } from "@/entities/task";
+import { useSelectedDate, useTaskIds } from "@/entities/task";
+import { useSharedValue } from "react-native-reanimated";
 
 const keyExtractor = (item: number) => item.toString();
 
 export const TaskList = () => {
   const taskIds = useTaskIds();
+  const selectedDate = useSelectedDate();
+  const isInitialRender = useSharedValue(true);
 
   useEffect(() => {
+    isInitialRender.value = false;
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }, [taskIds]);
+
+  useEffect(() => {
+    isInitialRender.value = true;
+  }, [selectedDate]);
 
   return (
     <FlatList
@@ -27,8 +35,8 @@ export const TaskList = () => {
       showsVerticalScrollIndicator={false}
       data={taskIds}
       renderItem={({ item, index }: ListRenderItemInfo<number>) => {
-        const i = {value: index}
-        return <Card index={i} id={item} />;
+        const i = { value: index };
+        return <Card isInitialRender={isInitialRender} index={i} id={item} />;
       }}
       keyExtractor={keyExtractor}
       ListEmptyComponent={EmptyListImage}

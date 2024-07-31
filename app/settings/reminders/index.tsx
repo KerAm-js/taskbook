@@ -17,11 +17,11 @@ export default function Reminders() {
   const { t } = useTranslation();
   const { count, interval, beginningOfDay, endOfDay } = useReminderSettings();
 
-  const beginningOfDayStr = beginningOfDay
+  const beginningOfDayStr = beginningOfDay.turnedOff
     ? getTimeString(beginningOfDay)
     : t("off");
 
-  const endOfDayStr = endOfDay ? getTimeString(endOfDay) : t("off");
+  const endOfDayStr = endOfDay.turnedOff ? getTimeString(endOfDay) : t("off");
 
   const intervalStr = t(interval >= 60 ? "hour" : "min", {
     count: interval >= 60 ? interval / 60 : interval,

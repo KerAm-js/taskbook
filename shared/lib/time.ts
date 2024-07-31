@@ -1,22 +1,24 @@
 type TProps =
   | {
-      hours: number;
-      mins: number;
+      hour?: number;
+      minute?: number;
       dateNumber?: undefined;
     }
-  | { hours?: number; mins?: number; dateNumber?: number };
+  | { hour?: undefined; minute?: undefined; dateNumber?: number };
 
 export const getTimeString = ({
-  hours = 0,
-  mins = 0,
+  hour,
+  minute,
   dateNumber,
 }: TProps): string => {
   let date;
 
   if (dateNumber) {
     date = new Date(dateNumber);
+  } else if (hour !== undefined && minute !== undefined ) {
+    date = new Date(new Date().setHours(hour, minute));
   } else {
-    date = new Date(new Date().setHours(hours, mins));
+    return '';
   }
 
   return date.toTimeString().slice(0, 5);

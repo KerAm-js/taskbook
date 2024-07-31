@@ -1,5 +1,3 @@
-export const HOURS = Array(24);
-export const MINUTES = Array(13).map((_, i) => i * 5);
 export const WEEK_DAYS: {
   short: string;
   full: string;

@@ -4,12 +4,12 @@ export const findAndDeleteTime = (
   value: string
 ): {
   newText: string;
-  hours?: string;
-  minutes?: string;
+  hour?: string;
+  minute?: string;
 } => {
   let newText = value;
-  let hours;
-  let minutes;
+  let hour;
+  let minute;
 
   const shouldCheckAtTheStart = value.length === 5 || value.length === 6;
 
@@ -20,7 +20,7 @@ export const findAndDeleteTime = (
   const timeStr = TIME_REGEX.exec(strToCheck);
 
   if (timeStr) {
-    [hours, minutes] = timeStr[0].trim().split(":");
+    [hour, minute] = timeStr[0].trim().split(":");
     if (value.length === 5) {
       newText = value.slice(5);
     } else if (value.length === 6) {
@@ -32,7 +32,7 @@ export const findAndDeleteTime = (
 
   return {
     newText,
-    hours,
-    minutes,
+    hour,
+    minute,
   };
 };

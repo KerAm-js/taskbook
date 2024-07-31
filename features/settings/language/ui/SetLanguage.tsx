@@ -8,7 +8,9 @@ export const SetLanguage = () => {
     i18n.changeLanguage(value);
   };
 
+  const checkMethod = (value: TLanguage) => value === i18n.language;
+
   return (
-    <CheckList data={LANGUAGES} selected={i18n.language} onPress={onPress} />
+    <CheckList data={LANGUAGES} checkMethod={checkMethod} onPress={onPress} />
   );
 };

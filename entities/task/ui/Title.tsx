@@ -29,12 +29,12 @@ export const TaskTitle: FC<ITask> = (task) => {
 
   const onChangeText = (value: string) => {
     setText(value);
-    const { newText, minutes, hours } = findAndDeleteTime(value);
-    if (hours && minutes) {
+    const { newText, minute, hour } = findAndDeleteTime(value);
+    if (hour && minute) {
       setReminder({
         id,
-        hours: Number(hours),
-        minutes: Number(minutes),
+        hour: Number(hour),
+        minute: Number(minute),
       });
       setText(newText);
     }

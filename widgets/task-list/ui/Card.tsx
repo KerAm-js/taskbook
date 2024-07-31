@@ -24,6 +24,7 @@ import Animated, {
   FadeInRight,
   FadeOut,
   runOnJS,
+  SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
@@ -40,10 +41,13 @@ const DELETE_THRESHOLD = -150;
 const SELECT_THRESHOLD = 60;
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("screen");
 
-type TPropTypes = Pick<ITask, "id"> & { index: { value: number } };
+type TPropTypes = Pick<ITask, "id"> & {
+  index: { value: number };
+  isInitialRender: SharedValue;
+};
 
 export const Card: FC<TPropTypes> = React.memo(
-  ({ id, index }) => {
+  ({ id, index, isInitialRender }) => {
     const task = useTaskData(id);
     const isSelection = useIsSelection();
     const { isEditing, isSelected, title } = task;
@@ -51,7 +55,6 @@ export const Card: FC<TPropTypes> = React.memo(
       useTaskActions();
     const keyboardHeight = useKeyboard();
     const fastInputMode = useFastInputMode();
-
     const translationX = useSharedValue(0);
     const translationY = useSharedValue(0);
     const opacity = useSharedValue(1);
@@ -89,6 +92,7 @@ export const Card: FC<TPropTypes> = React.memo(
       .onEnd(() => {
         if (isOverdraggedLeft.value) {
           opacity.value = withTiming(0);
+          console.log(isInitialRender.value)
           translationX.value = withTiming(-WIDTH, undefined, (isFinished) => {
             if (isFinished) runOnJS(deleteTask)(id);
           });
@@ -176,7 +180,9 @@ export const Card: FC<TPropTypes> = React.memo(
     );
 
     const entering = title
-      ? FadeInDown.delay(60 * index.value)
+      ? isInitialRender.value
+        ? FadeInDown.delay(60 * index.value)
+        : FadeIn
       : FadeInRight.withInitialValues({
           transform: [{ translateX: 80 }],
         });

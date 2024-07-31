@@ -26,5 +26,7 @@ export const SetReminderCount = () => {
     setRemindersCount(value);
   };
 
-  return <CheckList selected={count} data={data} onPress={onPress} />;
+  const checkMethod = (value: number) => value === count;
+
+  return <CheckList checkMethod={checkMethod} data={data} onPress={onPress} />;
 };
