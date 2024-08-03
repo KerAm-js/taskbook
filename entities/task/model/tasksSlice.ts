@@ -1,46 +1,44 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ITask, ITasksState } from "./types";
+import { ITask, ITasksState, TTaskActionType } from "./types";
 import { endOfDay } from "@/shared";
 
 const initialState: ITasksState = {
-  ids: [],
+  idCounter: 0,
+  ids: {
+    [endOfDay()]: [],
+  },
   entities: {},
-  filteredIds: [],
   selectedDate: endOfDay(),
   isSelection: false,
   cache: {
     actionType: undefined,
     ids: [],
     entities: {},
-    filteredIds: [],
-    copiedIds: [],
   },
   taskToEditId: undefined,
 };
 
+const getTaskId = (state: ITasksState) => {
+  const result = state.idCounter;
+  state.idCounter++;
+  return result;
+};
+
 const onClearCache = (state: ITasksState) => {
-  if (state.cache.actionType) {
+  if (state.cache.ids.length) {
     state.cache = {
-      actionType: undefined,
       ids: [],
       entities: {},
-      filteredIds: [],
-      copiedIds: [],
+      actionType: undefined,
     };
   }
 };
 
-const updateCache = (
-  state: ITasksState,
-  actionType: ITasksState["cache"]["actionType"],
-  copyTaskIds?: boolean
-) => {
+const updateCache = (state: ITasksState, actionType: TTaskActionType) => {
   const cache: ITasksState["cache"] = {
-    actionType,
-    ids: copyTaskIds ? [...state.ids] : [],
-    filteredIds: copyTaskIds ? [...state.filteredIds] : [],
+    ids: [...state.ids[state.selectedDate]],
     entities: {},
-    copiedIds: [],
+    actionType,
   };
   state.cache = cache;
 };
@@ -56,35 +54,25 @@ const stopTaskEditing = (state: ITasksState) => {
 
 const onEndSelection = (state: ITasksState) => {
   state.isSelection = false;
-  state.filteredIds.forEach((id) => {
+  state.ids[state.selectedDate].forEach((id) => {
     state.entities[id].isSelected = false;
   });
 };
 
-const onAddTasks = (state: ITasksState, newTask: ITask) => {
+const onAddTask = (state: ITasksState, newTask: ITask) => {
   const { id } = newTask;
   state.entities[id] = newTask;
-  state.ids = [id, ...state.ids];
-  state.filteredIds = [id, ...state.filteredIds];
+  state.ids[state.selectedDate] = [id, ...state.ids[state.selectedDate]];
 };
 
 const onUndoDelete = (state: ITasksState) => {
-  state.ids = state.cache.ids;
-  state.filteredIds = [];
-  state.cache.filteredIds.forEach((id) => {
-    state.filteredIds.push(id);
+  state.ids[state.selectedDate] = state.cache.ids;
+  state.cache.ids.forEach((id) => {
     if (!state.entities[id]) {
       state.entities[id] = state.cache.entities[id];
       state.entities[id].isSelected = false;
     }
   });
-  onClearCache(state);
-};
-
-const onUndoCopy = (state: ITasksState) => {
-  state.ids = state.cache.ids;
-  state.filteredIds = state.cache.filteredIds;
-  state.cache.copiedIds.forEach((id) => delete state.entities[id]);
   onClearCache(state);
 };
 
@@ -95,7 +83,7 @@ export const tasksSlice = createSlice({
     onAppLoad: () => {},
     addTask: (state) => {
       onClearCache(state);
-      const id = new Date().valueOf();
+      const id = getTaskId(state);
       const newTask: ITask = {
         id,
         title: "",
@@ -103,24 +91,24 @@ export const tasksSlice = createSlice({
         date: state.selectedDate,
         isEditing: true,
       };
-      onAddTasks(state, newTask);
+      onAddTask(state, newTask);
       state.taskToEditId = id;
     },
 
     deleteTask: (state, action: PayloadAction<ITask["id"]>) => {
       const id = action.payload;
       if (!!state.entities[id].title) {
-        updateCache(state, "deleteOne", true);
+        updateCache(state, "deleteOne");
         state.cache.entities[id] = state.entities[id];
       }
-      state.ids = state.ids.filter((item) => item !== id);
-      state.filteredIds = state.filteredIds.filter((item) => {
-        if (item === id) {
-          delete state.entities[id];
-          return false;
+      state.ids[state.selectedDate] = state.ids[state.selectedDate].filter(
+        (item) => {
+          if (item === id) {
+            delete state.entities[id];
+          }
+          return item !== id;
         }
-        return true;
-      });
+      );
       if (state.taskToEditId === action.payload) state.taskToEditId = undefined;
     },
 
@@ -169,21 +157,14 @@ export const tasksSlice = createSlice({
       onEndSelection(state);
     },
 
-    selectDate: (
-      state,
-      action: PayloadAction<ITasksState["selectedDate"] | undefined>
-    ) => {
-      // state.ids = [];
-      // state.filteredIds = [];
-      // state.entities = {};
+    selectDate: (state, action: PayloadAction<number | undefined>) => {
       onClearCache(state);
-      const selectedDate = action.payload || endOfDay();
-      state.filteredIds = state.ids.filter((id) => {
-        state.entities[id].isSelected = false;
-        return state.entities[id].date === selectedDate;
-      });
+      const date = action.payload || endOfDay();
       state.isSelection = false;
-      state.selectedDate = selectedDate;
+      state.selectedDate = date;
+      if (!state.ids[date]) {
+        state.ids[date] = [];
+      }
     },
 
     toggleTaskSelected: (state, action: PayloadAction<ITask["id"]>) => {
@@ -193,9 +174,9 @@ export const tasksSlice = createSlice({
       if (task.isSelected && !state.isSelection) {
         state.isSelection = true;
       } else {
-        const noSelectedTasks = !state.filteredIds.find(
+        const noSelectedTasks = !state.ids[state.selectedDate].find(
           (id) => state.entities[id].isSelected
-        ); //selected tasks should be only in filteredIds
+        );
         if (noSelectedTasks) {
           state.isSelection = false;
           onClearCache(state);
@@ -204,34 +185,34 @@ export const tasksSlice = createSlice({
     },
 
     deleteSelectedTasks: (state) => {
-      updateCache(state, "deleteOne", true);
-      state.ids = state.ids.filter((id) => !state.entities[id].isSelected);
+      updateCache(state, "deleteOne");
       let count = 0;
-      state.filteredIds = state.filteredIds.filter((id) => {
-        const { isSelected } = state.entities[id];
-        if (isSelected) {
-          state.cache.entities[id] = state.entities[id];
-          delete state.entities[id];
-          count++;
-          return false;
+      state.ids[state.selectedDate] = state.ids[state.selectedDate].filter(
+        (id) => {
+          const { isSelected } = state.entities[id];
+          if (isSelected) {
+            state.cache.entities[id] = state.entities[id];
+            delete state.entities[id];
+            count++;
+          }
+          return !isSelected;
         }
-        return true;
-      });
+      );
       if (count > 1) state.cache.actionType = "deleteMany";
       onEndSelection(state);
     },
 
     changeSelectedTasksDate: (state, action: PayloadAction<ITask["date"]>) => {
-      updateCache(state, "changeDate", true);
+      updateCache(state, "changeDate");
       onEndSelection(state);
     },
 
     copySelectedTasks: (state) => {
-      state.filteredIds.reduceRight((_, id, i) => {
+      state.ids[state.selectedDate].reduceRight((_, id) => {
         //use reduceRight to add tasks in the same order
         const task = state.entities[id];
         if (task.isSelected) {
-          const newId = new Date().valueOf() + i * 10;
+          const newId = getTaskId(state);
           const newTask: ITask = {
             ...task,
             id: newId,
@@ -239,7 +220,7 @@ export const tasksSlice = createSlice({
             isEditing: false,
             isSelected: false,
           };
-          onAddTasks(state, newTask);
+          onAddTask(state, newTask);
         }
         return 0;
       }, 0);
@@ -250,8 +231,6 @@ export const tasksSlice = createSlice({
       const { actionType } = state.cache;
       if (actionType === "deleteOne" || actionType === "deleteMany") {
         onUndoDelete(state);
-      } else if (actionType === "copyOne" || actionType === "copyMany") {
-        onUndoCopy(state);
       }
     },
 

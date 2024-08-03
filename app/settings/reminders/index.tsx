@@ -15,13 +15,10 @@ import { ScrollView, StyleSheet } from "react-native";
 
 export default function Reminders() {
   const { t } = useTranslation();
-  const { count, interval, beginningOfDay, endOfDay } = useReminderSettings();
+  const { count, interval, dailyReminder } = useReminderSettings();
 
-  const beginningOfDayStr = beginningOfDay.turnedOff
-    ? getTimeString(beginningOfDay)
-    : t("off");
-
-  const endOfDayStr = endOfDay.turnedOff ? getTimeString(endOfDay) : t("off");
+  const beginningOfDayStr = getTimeString(dailyReminder.beginning) || t("off");
+  const endOfDayStr = getTimeString(dailyReminder.end) || t("off");
 
   const intervalStr = t(interval >= 60 ? "hour" : "min", {
     count: interval >= 60 ? interval / 60 : interval,

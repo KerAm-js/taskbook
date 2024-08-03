@@ -18,6 +18,11 @@ export const useTaskData = (id: number) => {
   return data || {};
 };
 
+export const useTaskEntities = () => {
+  const data = useSelector((state: RootState) => state.tasks.entities);
+  return data || {};
+}
+
 export const useTaskToEdit = () => {
   const id = useSelector((state: RootState) => state.tasks.taskToEditId);
   return id;
@@ -29,18 +34,16 @@ export const useSelectedDate = () => {
 };
 
 export const useTaskIds = () => {
-  const tasks = useSelector((state: RootState) => state.tasks.filteredIds);
+  const tasks = useSelector((state: RootState) => state.tasks.ids);
   return tasks;
 };
 
 export const useIsSelection = () => {
-  const value = useSelector(
-    (state: RootState) => state.tasks.isSelection
-  );
+  const value = useSelector((state: RootState) => state.tasks.isSelection);
   return value;
-}
+};
 
 export const useCache = () => {
   const value = useSelector((state: RootState) => state.tasks.cache);
   return value;
-}
+};

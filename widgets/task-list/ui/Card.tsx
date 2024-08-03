@@ -92,7 +92,6 @@ export const Card: FC<TPropTypes> = React.memo(
       .onEnd(() => {
         if (isOverdraggedLeft.value) {
           opacity.value = withTiming(0);
-          console.log(isInitialRender.value)
           translationX.value = withTiming(-WIDTH, undefined, (isFinished) => {
             if (isFinished) runOnJS(deleteTask)(id);
           });

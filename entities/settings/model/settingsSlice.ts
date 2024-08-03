@@ -1,10 +1,6 @@
-import { logNextTriggerDate, TTheme } from "@/shared";
+import { TTheme } from "@/shared";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ISettingsState } from "./types";
-import {
-  setBeginningOfDayNotification,
-  setEndOfDayNotification,
-} from "./thunks";
 
 const initialState: ISettingsState = {
   theme: "branded",
@@ -12,8 +8,10 @@ const initialState: ISettingsState = {
   reminders: {
     count: 3,
     interval: 15,
-    beginningOfDay: { hour: 9, minute: 0 },
-    endOfDay: { turnedOff: true },
+    dailyReminder: {
+      beginning: { hour: 9, minute: 0 },
+      end: { hour: 18, minute: 0 },
+    },
   },
 };
 
@@ -33,29 +31,16 @@ export const settingsSlice = createSlice({
     setRemindersInterval: (state, action: PayloadAction<number>) => {
       state.reminders.interval = action.payload;
     },
-    setBeginningOfDay: (
+    setDailyReminder: (
       state,
-      action: PayloadAction<ISettingsState["reminders"]["beginningOfDay"]>
+      action: PayloadAction<
+        Pick<
+          ISettingsState["reminders"]["dailyReminder"]["beginning"],
+          "hour" | "minute"
+        > & { type: keyof ISettingsState["reminders"]["dailyReminder"] }
+      >
     ) => {
-      state.reminders.beginningOfDay = action.payload;
+      state.reminders.dailyReminder[action.payload.type] = action.payload;
     },
-    setEndOfDay: (
-      state,
-      action: PayloadAction<ISettingsState["reminders"]["endOfDay"]>
-    ) => {
-      logNextTriggerDate();
-      state.reminders.endOfDay = action.payload;
-    },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(setEndOfDayNotification.fulfilled, (state, action) => {
-      state.reminders.endOfDay = action.payload;
-    });
-    builder.addCase(
-      setBeginningOfDayNotification.fulfilled,
-      (state, action) => {
-        state.reminders.beginningOfDay = action.payload;
-      }
-    );
   },
 });

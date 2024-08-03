@@ -1,6 +1,5 @@
 import { useTaskActions } from "@/entities/task";
-import { AddTask } from "@/features/tasks/add-task";
-import { logNextTriggerDate, ThemedView } from "@/shared";
+import { ThemedView } from "@/shared";
 import { MainFooter } from "@/widgets/main-footer";
 import { MainHeader } from "@/widgets/main-header";
 import { TaskAddingMenu } from "@/widgets/task-adding-menu";
@@ -14,7 +13,6 @@ export default function Main() {
 
   useLayoutEffect(() => {
     selectDate();
-    logNextTriggerDate();
   }, []);
 
   return (

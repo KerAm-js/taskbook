@@ -1,4 +1,4 @@
-import { SetBeginningOfDay } from "@/features/settings/beginning-of-day";
+import { SetDailyReminder } from "@/features/settings/daily-reminder";
 import { Header, PADDING_TOP, ThemedView } from "@/shared";
 import { ScrollView, StyleSheet } from "react-native";
 
@@ -10,7 +10,7 @@ export default function Count() {
         style={styles.scroll}
         contentContainerStyle={styles.contentContainer}
       >
-        <SetBeginningOfDay />
+        <SetDailyReminder type="beginning" />
       </ScrollView>
     </ThemedView>
   );

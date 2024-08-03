@@ -49,16 +49,16 @@ async function requestPermissionsAsync() {
 
 export type TSetNotificationArg = {
   title: string;
-  subtitle: string;
   body: string;
   trigger: Notifications.SchedulableNotificationTriggerInput;
+  id: string;
 };
 
 export const setNotification = async ({
   title,
-  subtitle,
   body,
   trigger,
+  id
 }: TSetNotificationArg) => {
   try {
     const isNotifictaionAvailable = await requestPermissionsAsync();
@@ -74,12 +74,12 @@ export const setNotification = async ({
       const identifier = await Notifications.scheduleNotificationAsync({
         content: {
           title,
-          subtitle,
           body,
           sound: "../../assets/notification-sound.wav",
           vibrate: [0, 250, 250, 250],
         },
         trigger,
+        identifier: id
       });
       return identifier;
     }

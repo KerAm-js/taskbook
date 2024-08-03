@@ -1,6 +1,5 @@
 import { useSelectedDate } from "@/entities/task";
 import {
-  CustomText,
   getDateTitle,
   SCREEN_PADDING,
   TEXT_STYLES,
@@ -8,7 +7,7 @@ import {
   ThemedText,
 } from "@/shared";
 import { FC } from "react";
-import { useTranslation, UseTranslationOptions } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 import Animated, {
   useAnimatedStyle,

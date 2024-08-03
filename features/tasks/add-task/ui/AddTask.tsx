@@ -1,5 +1,5 @@
 import { plusSvg } from "@/assets/svg/plus";
-import { SCREEN_PADDING, useSafeAreaPadding, useThemeColors } from "@/shared";
+import { useThemeColors } from "@/shared";
 import { Pressable, StyleSheet, View } from "react-native";
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
@@ -10,7 +10,6 @@ import { useFastInputMode } from "@/entities/settings";
 export const AddTask = () => {
   const { addTask } = useTaskActions();
   const fastInputMode = useFastInputMode();
-  const { paddingBottom } = useSafeAreaPadding();
   const { colors } = useThemeColors();
 
   const onPress = () => {

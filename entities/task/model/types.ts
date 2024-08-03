@@ -18,17 +18,15 @@ export type TTaskActionType =
   | "changeDate";
 
 export interface ITasksState {
-  ids: Array<ITask["id"]>;
+  idCounter: number;
+  ids: { [key: number]: Array<ITask["id"]> };
   entities: { [key: ITask["id"]]: ITask };
-  filteredIds: Array<ITask["id"]>;
   selectedDate: number;
   isSelection: boolean;
   cache: {
     actionType?: TTaskActionType;
     ids: Array<ITask["id"]>;
     entities: { [key: ITask["id"]]: ITask };
-    filteredIds: Array<ITask["id"]>;
-    copiedIds: Array<ITask["id"]>;
   };
   taskToEditId?: ITask["id"];
 }

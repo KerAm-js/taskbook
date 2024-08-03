@@ -1,4 +1,4 @@
-import { SetEndOfDay } from "@/features/settings/end-of-day";
+import { SetDailyReminder } from "@/features/settings/daily-reminder";
 import { Header, PADDING_TOP, ThemedView } from "@/shared";
 import { ScrollView, StyleSheet } from "react-native";
 
@@ -10,7 +10,7 @@ export default function Count() {
         style={styles.scroll}
         contentContainerStyle={styles.contentContainer}
       >
-        <SetEndOfDay />
+        <SetDailyReminder type="end" />
       </ScrollView>
     </ThemedView>
   );

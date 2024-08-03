@@ -6,6 +6,7 @@ export {
   useTaskIds,
   useIsSelection,
   useCache,
+  useTaskEntities
 } from "./model/hooks";
 export { tasksSlice } from "./model/tasksSlice";
 export { ITask, TTaskActionType } from "./model/types";

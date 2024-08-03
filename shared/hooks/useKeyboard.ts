@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Keyboard, KeyboardEvent } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 

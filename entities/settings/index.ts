@@ -1,3 +1,4 @@
+export { updateDailyNotification } from "./lib/updateDailyNotifications";
 export {
   useSettingsActions,
   useSettings,
