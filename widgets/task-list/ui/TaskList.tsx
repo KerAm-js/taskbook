@@ -6,7 +6,6 @@ import {
 } from "react-native";
 import React, { useEffect, useMemo } from "react";
 import { PADDING_TOP, SCREEN_PADDING } from "@/shared";
-import { Card } from "./Card";
 import { EmptyListImage } from "./EmptyListImage";
 import { useSelectedDate, useTaskEntities, useTaskIds } from "@/entities/task";
 import { useSharedValue } from "react-native-reanimated";

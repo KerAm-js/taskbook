@@ -14,31 +14,30 @@ import { AnimatedIcon } from "./AnimatedIcon";
 import { layersSvg } from "@/assets/svg/layers";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import * as Haptics from "expo-haptics";
-import { Dimensions, Pressable, StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import {
   ITask,
-  useIsSelection,
+  useIsTaskEditing,
   useTaskActions,
-  useTaskData,
+  useTaskTitle,
 } from "@/entities/task";
 import { trashSvg } from "@/assets/svg/trash";
 import { Card } from "./Card";
-import { ThemedView, useKeyboard } from "@/shared";
+import { useKeyboard } from "@/shared";
+import { DELETE_THRESHOLD, SELECT_THRESHOLD } from "../config/consts";
+import { SelectionBackdrop } from "./SelectionBackdrop";
 
 type TPropTypes = Pick<ITask, "id"> & {
   index: { value: number };
   isInitialRender: SharedValue;
 };
 
-const DELETE_THRESHOLD = -150;
-const SELECT_THRESHOLD = 60;
 const { width: WIDTH } = Dimensions.get("screen");
 
 export const ListItem: FC<TPropTypes> = React.memo(
   ({ id, index, isInitialRender }) => {
-    const task = useTaskData(id);
-    const { isEditing, isSelected, title } = task;
-    const isSelection = useIsSelection();
+    const isEditing = useIsTaskEditing(id);
+    const title = useTaskTitle(id);
     const isOverdraggedRight = useSharedValue(false);
     const isOverdraggedLeft = useSharedValue(false);
     const translationX = useSharedValue(0);
@@ -52,10 +51,8 @@ export const ListItem: FC<TPropTypes> = React.memo(
       .enabled(!isEditing)
       .minDistance(35)
       .onUpdate((event) => {
-        if (
-          !(event.translationX < 0 && isSelection) && //can't swipe to delete during selection
-          !keyboardHeight.value // can't swipe to select during editing this or other task
-        ) {
+        if (!keyboardHeight.value) { 
+          // can't swipe to select during this or other task edition
           translationX.value = event.translationX;
         }
         const x = translationX.value;
@@ -87,11 +84,6 @@ export const ListItem: FC<TPropTypes> = React.memo(
           translationX.value = withTiming(0);
         }
       });
-
-    const onSelect = () => {
-      if (translationX.value !== 0) return;
-      toggleTaskSelected(id);
-    };
 
     const getIsSwiped = () => {
       return translationX.value !== 0;
@@ -129,22 +121,7 @@ export const ListItem: FC<TPropTypes> = React.memo(
         <GestureDetector gesture={panGesture}>
           <Animated.View style={itemStyleAnim}>
             <Card id={id} getIsSwiped={getIsSwiped} />
-            {isSelection && (
-              <Pressable onPress={onSelect} style={styles.selectionPressable}>
-                {isSelected && (
-                  <Animated.View
-                    entering={FadeIn}
-                    exiting={FadeOut}
-                    style={styles.selectionBackdrop}
-                  >
-                    <ThemedView
-                      style={styles.selectionBackdrop}
-                      colorName="accent_opacity"
-                    />
-                  </Animated.View>
-                )}
-              </Pressable>
-            )}
+            <SelectionBackdrop id={id} getIsSwiped={getIsSwiped} />
           </Animated.View>
         </GestureDetector>
         <AnimatedIcon

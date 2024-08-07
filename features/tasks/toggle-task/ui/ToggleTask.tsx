@@ -7,17 +7,25 @@ import Animated, {
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import { Audio } from "expo-av";
-import { ITask, useTaskActions, useTaskData } from "@/entities/task";
+import {
+  ITask,
+  useIsTaskCompleted,
+  useIsTaskEditing,
+  useTaskActions,
+  useTaskTitle,
+} from "@/entities/task";
 import { Sound } from "expo-av/build/Audio";
 
 export const ToggleTask: FC<Pick<ITask, "id">> = ({ id }) => {
   const [sound, setSound] = useState<Sound | undefined>();
-  const { isCompleted, title, isEditing } = useTaskData(id);
+  const isCompleted = useIsTaskCompleted(id);
+  const isEditing = useIsTaskEditing(id);
+  const title = useTaskTitle(id);
   const { toggleTask } = useTaskActions();
 
   const loadSound = async () => {
     const { sound } = await Audio.Sound.createAsync(
-      require('@/assets/audio/success.mp3')
+      require("@/assets/audio/success.mp3")
     );
     setSound(sound);
     await sound.playAsync();

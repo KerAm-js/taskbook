@@ -1,4 +1,4 @@
-import { ITask, TaskRow, useTaskActions, useTaskData } from "@/entities/task";
+import { ITask, TaskRow, useIsTaskEditing, useTaskActions, useTaskData, useTaskTitle } from "@/entities/task";
 import { ToggleTask } from "@/features/tasks/toggle-task";
 import { ThemedView, useKeyboard, VIEW_SHADOW } from "@/shared";
 import React, { FC } from "react";
@@ -18,16 +18,16 @@ import {
 } from "react-native-reanimated";
 import { useFastInputMode } from "@/entities/settings";
 import { router } from "expo-router";
+import { TASK_ADDING_MENU_HEIGHT } from "../config/consts";
 
-const TASK_ADDING_MENU_HEIGHT = 40;
 const { height: HEIGHT } = Dimensions.get("screen");
 
 type TPropTypes = Pick<ITask, "id"> & { getIsSwiped: () => boolean };
 
 export const Card: FC<TPropTypes> = React.memo(
   ({ id, getIsSwiped }) => {
-    const task = useTaskData(id);
-    const { isEditing, title } = task;
+    const isEditing = useIsTaskEditing(id);
+    const title = useTaskTitle(id);
     const { startTaskEdition } = useTaskActions();
     const keyboardHeight = useKeyboard();
     const fastInputMode = useFastInputMode();
@@ -126,8 +126,7 @@ export const Card: FC<TPropTypes> = React.memo(
         </View>
       </ThemedView>
     );
-  }
-  ,
+  },
   () => true
 );
 

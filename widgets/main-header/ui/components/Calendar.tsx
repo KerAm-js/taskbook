@@ -82,7 +82,7 @@ const Calendar = () => {
     };
   }, [scrollToStartBtnOpacity.value]);
 
-  const monthString =
+  const monthName =
     t(MONTHS[titleData.months[0]]) +
     (typeof titleData.months[1] === "number"
       ? " / " + t(MONTHS[titleData.months[1]])
@@ -93,7 +93,7 @@ const Calendar = () => {
     <View style={styles.container}>
       <View style={styles.monthContainer}>
         <CustomText translate={false} style={styles.title}>
-          {monthString}
+          {monthName}
         </CustomText>
         <Animated.View style={scrollToStartBtnStyleAnim}>
           <ScrollToStartButton onPress={scrollToStart} />

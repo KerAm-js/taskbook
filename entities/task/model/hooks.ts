@@ -15,13 +15,34 @@ export const useTaskActions = () => {
 
 export const useTaskData = (id: number) => {
   const data = useSelector((state: RootState) => selectTaskById(state, id));
-  return data || {};
+  return data;
+};
+
+export const useTaskTitle = (id: number) => {
+  const title = useSelector(
+    (state: RootState) => state.tasks.entities[id]?.title
+  );
+  return title;
+};
+
+export const useIsTaskEditing = (id: number) => {
+  const isEditing = useSelector(
+    (state: RootState) => state.tasks.entities[id]?.isEditing
+  );
+  return isEditing;
+};
+
+export const useIsTaskCompleted = (id: number) => {
+  const isCompleted = useSelector(
+    (state: RootState) => state.tasks.entities[id]?.isCompleted
+  );
+  return isCompleted;
 };
 
 export const useTaskEntities = () => {
   const data = useSelector((state: RootState) => state.tasks.entities);
   return data || {};
-}
+};
 
 export const useTaskToEdit = () => {
   const id = useSelector((state: RootState) => state.tasks.taskToEditId);
