@@ -17,7 +17,7 @@ import { TaskTitle } from "./Title";
 import { getTimeString } from "@/shared";
 import { useTaskData } from "../model/hooks";
 
-export const TaskRow: FC<Pick<ITask, "id">> = ({ id }) => {
+export const TaskRow: FC<Pick<ITask, "id">> = React.memo(({ id }) => {
   const task = useTaskData(id);
   const { remindTime, isRegular, isCompleted, description, isEditing, title } =
     task;
@@ -26,6 +26,7 @@ export const TaskRow: FC<Pick<ITask, "id">> = ({ id }) => {
     ? getTimeString({ dateNumber: remindTime })
     : null;
 
+  console.log('row', title);
   const translateX = useSharedValue(isEditing && !title ? -28 : 0);
   const opacity = useSharedValue(isCompleted ? 0.4 : 1);
 
@@ -70,13 +71,13 @@ export const TaskRow: FC<Pick<ITask, "id">> = ({ id }) => {
       </View>
     </Animated.View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 10,
     paddingBottom: 8,
+    paddingTop: 11,
   },
   containerNight: {
     shadowOpacity: 0,

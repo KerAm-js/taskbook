@@ -50,15 +50,15 @@ async function requestPermissionsAsync() {
 export type TSetNotificationArg = {
   title: string;
   body: string;
-  trigger: Notifications.SchedulableNotificationTriggerInput;
-  id: string;
+  date: number | Date;
+  id: string | number;
 };
 
 export const setNotification = async ({
   title,
   body,
-  trigger,
-  id
+  date,
+  id,
 }: TSetNotificationArg) => {
   try {
     const isNotifictaionAvailable = await requestPermissionsAsync();
@@ -78,8 +78,8 @@ export const setNotification = async ({
           sound: "../../assets/notification-sound.wav",
           vibrate: [0, 250, 250, 250],
         },
-        trigger,
-        identifier: id
+        trigger: new Date(date),
+        identifier: typeof id === "number" ? id.toString() : id,
       });
       return identifier;
     }
@@ -97,9 +97,13 @@ export const getAllNotifications = async () => {
   }
 };
 
-export const deleteNotification = async (notificationId: string) => {
+export const deleteNotification = async (notificationId: string | number) => {
   try {
-    await Notifications.cancelScheduledNotificationAsync(notificationId);
+    const id =
+      typeof notificationId === "number"
+        ? notificationId.toString()
+        : notificationId;
+    await Notifications.cancelScheduledNotificationAsync(id);
   } catch (error) {
     console.log("deleteNotification", error);
   }

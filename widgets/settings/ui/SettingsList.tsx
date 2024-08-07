@@ -1,8 +1,8 @@
 import { bellSvg } from "@/assets/svg/bell";
 import { dialogSvg } from "@/assets/svg/dialog";
 import { dollarSvg } from "@/assets/svg/dollar";
-import { earthSvg } from "@/assets/svg/earth";
-import { forwardLeftSvg } from "@/assets/svg/forwardLeft";
+import { translateSvg } from "@/assets/svg/translate";
+import { shareSvg } from "@/assets/svg/share";
 import { keyboardSvg } from "@/assets/svg/keyboard";
 import { medalSvg } from "@/assets/svg/medal";
 import { paletteSvg } from "@/assets/svg/palette";
@@ -102,13 +102,13 @@ export const SettingsList = () => {
           type="navigate"
           title="language"
           onPress={() => router.navigate("settings/language")}
-          xmlGetter={earthSvg}
+          xmlGetter={translateSvg}
         />
         <Setting
           type="navigate"
           title="shareWithFriend"
           onPress={shareApp}
-          xmlGetter={forwardLeftSvg}
+          xmlGetter={shareSvg}
         />
         <Setting
           type="navigate"
@@ -132,12 +132,12 @@ export const SettingsList = () => {
       <ThemedView
         style={[styles.copyRightContainer, { paddingBottom }]}
         colorName="background"
-        borderColorName="lineGrey"
+        borderColorName="accent_ultra_opacity"
       >
-        <ThemedText colorName="textGrey" style={styles.appName}>
+        <ThemedText colorName="accent" style={styles.appName}>
           Taskbook {appJson.expo.version}
         </ThemedText>
-        <ThemedText colorName="textGrey" style={styles.authorName}>
+        <ThemedText colorName="accent" style={styles.authorName}>
           Developed by Amir Shishany
         </ThemedText>
       </ThemedView>

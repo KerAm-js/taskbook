@@ -7,14 +7,14 @@ import { CheckList } from "@/shared";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 
-type TDataType = Array<{
+type TDataType = {
   title: string;
-  value: Partial<ISettingsState["reminders"]["dailyReminder"]["end"]>;
-}>;
+  value: ISettingsState["reminders"]["dailyReminder"]["end"];
+};
 
 type TReminderType = keyof ISettingsState["reminders"]["dailyReminder"];
 
-const data: { [key in TReminderType]: TDataType } = {
+const data: { [key in TReminderType]: Array<TDataType> } = {
   beginning: [
     { title: "02:00", value: { hour: 2, minute: 0 } },
     { title: "03:00", value: { hour: 3, minute: 0 } },
@@ -63,14 +63,20 @@ export const SetDailyReminder: FC<{
   ) => {
     return (
       value.hour === dailyReminder[type].hour &&
-      value.minute === dailyReminder[type].minute
+      value.minute === dailyReminder[type].minute &&
+      value.turnedOff === dailyReminder[type].turnedOff
     );
+  };
+
+  const firstItem: TDataType = {
+    title: t("off"),
+    value: { hour: 0, minute: 0, turnedOff: true },
   };
 
   return (
     <CheckList
       checkMethod={checkMethod}
-      data={[{ title: t("off"), value: { turnedOff: true } }, ...data[type]]}
+      data={[firstItem, ...data[type]]}
       onPress={onPress}
     />
   );

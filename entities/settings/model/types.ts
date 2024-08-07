@@ -5,8 +5,9 @@ export type TDailyNotificationIds = {
 };
 
 export type TDailyNotificationData = {
-  hour?: number;
-  minute?: number;
+  hour: number;
+  minute: number;
+  turnedOff?: boolean;
 };
 
 export interface ISettingsState {

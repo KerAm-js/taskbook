@@ -15,6 +15,7 @@ import {
   useReminderSettings,
 } from "@/entities/settings";
 import { useTranslation } from "react-i18next";
+import { ListItem } from "./ListItem";
 
 const keyExtractor = (item: number) => item.toString();
 
@@ -22,10 +23,10 @@ export const TaskList = () => {
   const taskIds = useTaskIds();
   const entities = useTaskEntities();
   const { t } = useTranslation();
+  const selectedDate = useSelectedDate();
   const {
     dailyReminder: { end, beginning },
   } = useReminderSettings();
-  const selectedDate = useSelectedDate();
   const isInitialRender = useSharedValue(true);
 
   const completedTasksCount = useMemo(() => {
@@ -45,8 +46,7 @@ export const TaskList = () => {
   }, [selectedDate]);
 
   useEffect(() => {
-    const { hour, minute } = end;
-    if (hour !== undefined && minute !== undefined) {
+    if (!end.turnedOff) {
       for (let date in taskIds) {
         updateDailyNotification({
           type: "end",
@@ -56,46 +56,40 @@ export const TaskList = () => {
             completed: completedTasksCount,
           }),
           date: Number(date),
-          hour,
-          minute,
+          ...end,
         });
       }
     }
   }, [end]);
 
   useEffect(() => {
-    const { hour, minute } = beginning;
-    if (hour !== undefined && minute !== undefined) {
+    if (!beginning.turnedOff) {
       for (let date in taskIds) {
         updateDailyNotification({
           type: "beginning",
           title: t("plansForToday"),
           body: t("tasksToDo", { count: taskIds[date].length }),
           date: Number(date),
-          hour,
-          minute,
+          ...beginning,
         });
       }
     }
   }, [beginning]);
 
   useEffect(() => {
-    const { hour, minute } = beginning;
-    if (hour !== undefined && minute !== undefined) {
+    if (!beginning.turnedOff) {
       updateDailyNotification({
         type: "beginning",
         title: t("plansForToday"),
         body: t("tasksToDo", { count: taskIds[selectedDate].length }),
         date: selectedDate,
-        hour,
-        minute,
+        ...beginning,
       });
     }
   }, [taskIds[selectedDate].length]);
 
   useEffect(() => {
-    const { hour, minute } = end;
-    if (hour !== undefined && minute !== undefined) {
+    if (!end.turnedOff) {
       updateDailyNotification({
         type: "end",
         title: t("reviewOfTheDay"),
@@ -104,8 +98,7 @@ export const TaskList = () => {
           completed: completedTasksCount,
         }),
         date: selectedDate,
-        hour,
-        minute,
+        ...end,
       });
     }
   }, [completedTasksCount]);
@@ -119,7 +112,9 @@ export const TaskList = () => {
       data={taskIds[selectedDate]}
       renderItem={({ item, index }: ListRenderItemInfo<number>) => {
         const i = { value: index };
-        return <Card isInitialRender={isInitialRender} index={i} id={item} />;
+        return (
+          <ListItem isInitialRender={isInitialRender} index={i} id={item} />
+        );
       }}
       keyExtractor={keyExtractor}
       ListEmptyComponent={EmptyListImage}

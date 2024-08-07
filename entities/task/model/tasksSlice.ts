@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ITask, ITasksState, TTaskActionType } from "./types";
-import { endOfDay } from "@/shared";
+import { deleteNotification, endOfDay } from "@/shared";
+import { setTaskNotification } from "../lib/setTaskNotification";
 
 const initialState: ITasksState = {
   idCounter: 0,
@@ -71,6 +72,7 @@ const onUndoDelete = (state: ITasksState) => {
     if (!state.entities[id]) {
       state.entities[id] = state.cache.entities[id];
       state.entities[id].isSelected = false;
+      setTaskNotification(state.entities[id]);
     }
   });
   onClearCache(state);
@@ -104,6 +106,7 @@ export const tasksSlice = createSlice({
       state.ids[state.selectedDate] = state.ids[state.selectedDate].filter(
         (item) => {
           if (item === id) {
+            deleteNotification(id);
             delete state.entities[id];
           }
           return item !== id;
@@ -114,7 +117,10 @@ export const tasksSlice = createSlice({
 
     toggleTask: (state, action: PayloadAction<ITask["id"]>) => {
       const task = state.entities[action.payload];
-      if (task) task.isCompleted = !task.isCompleted;
+      if (task) {
+        task.isCompleted = !task.isCompleted;
+        if (task.isCompleted) deleteNotification(task.id);
+      }
     },
 
     setReminder: (
@@ -123,7 +129,10 @@ export const tasksSlice = createSlice({
     ) => {
       const { id, hour, minute } = action.payload;
       const task = state.entities[id];
-      if (task) task.remindTime = new Date().setHours(hour, minute, 0, 0);
+      if (task) {
+        const remindTime = new Date().setHours(hour, minute, 0, 0);
+        task.remindTime = remindTime;
+      }
     },
 
     setTaskTitle: (
@@ -148,7 +157,9 @@ export const tasksSlice = createSlice({
     ) => {
       const { id, ...newData } = action.payload;
       const task = state.entities[id];
-      state.entities[id] = { ...task, ...newData, isEditing: false };
+      const newTask = { ...task, ...newData, isEditing: false };
+      state.entities[id] = newTask;
+      setTaskNotification(newTask);
       if (state.taskToEditId !== id) return; //it should happen only during add next task action;
       stopTaskEditing(state);
     },
@@ -192,6 +203,7 @@ export const tasksSlice = createSlice({
           const { isSelected } = state.entities[id];
           if (isSelected) {
             state.cache.entities[id] = state.entities[id];
+            deleteNotification(id);
             delete state.entities[id];
             count++;
           }

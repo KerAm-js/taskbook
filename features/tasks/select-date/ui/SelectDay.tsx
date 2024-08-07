@@ -19,6 +19,7 @@ const BUTTON_WIDTH = WIDTH * 0.132;
 
 export const SelectDay: FC<TPropTypes> = React.memo(
   ({ day, isSelected }) => {
+    console.log(new Date(day).toLocaleDateString())
     const { selectDate } = useTaskActions();
     return (
       <Pressable onPress={() => selectDate(day)} style={styles.container}>

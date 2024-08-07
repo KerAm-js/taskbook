@@ -1,7 +1,7 @@
 import { ISettingsState } from "@/entities/settings";
 import { setNotification } from "@/shared";
 
-export const updateDailyNotification = ({
+export const updateDailyNotification = async ({
   type,
   title,
   body,
@@ -17,14 +17,15 @@ export const updateDailyNotification = ({
   hour: number;
   minute: number;
 }) => {
-  const id = `${date}:${type}`;
   const notificationDate = new Date(date).setHours(hour, minute, 0, 0);
+  const isTimeExpired = Date.now() >= notificationDate;
+  if (isTimeExpired) return;
+
+  const id = `${date}:${type}`;
   setNotification({
     title,
     body,
     id,
-    trigger: {
-      date: notificationDate,
-    },
+    date: notificationDate,
   });
 };

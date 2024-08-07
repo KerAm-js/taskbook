@@ -81,14 +81,15 @@ const styles = StyleSheet.create({
   container: {
     paddingRight: 15,
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center'
   },
   title: {
     ...TEXT_STYLES.standart,
   },
   input: {
     ...TEXT_STYLES.standart,
-    textAlignVertical: "center",
-    paddingVertical: 0,
+    paddingTop: 0,
+    lineHeight: 19
+    // backgroundColor: '#dedede',
   },
 });
